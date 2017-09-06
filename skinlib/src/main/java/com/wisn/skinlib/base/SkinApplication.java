@@ -1,9 +1,12 @@
 package com.wisn.skinlib.base;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.FileUitls;
+import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +19,18 @@ public class SkinApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initSkinLoader();
-            }
-        }).start();
+        configSkin();
+
+    }
+    public void configSkin(){
+        initSkinLoader();
+        SkinManager.getInstance().init(this);
+        //夜间模式使用
+        if(SpUtils.isNightMode(this)){
+            SkinManager.getInstance().nightMode();
+        }else{
+            SkinManager.getInstance().loadSkin();
+        }
     }
 
     private void initSkinLoader() {
