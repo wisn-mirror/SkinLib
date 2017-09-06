@@ -21,7 +21,12 @@ public class SkinItem {
         if(SkinUtils.isEmpty(attrs))
             return ;
         for (SkinAttr skinAttr:attrs) {
-
+            skinAttr.apply(view);
+        }
+    }
+    public void clear(){
+        if(!SkinUtils.isEmpty(attrs)){
+            attrs.clear();
         }
     }
 }

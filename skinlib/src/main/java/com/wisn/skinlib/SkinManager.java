@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 
 import com.wisn.skinlib.font.TypeFaceUtils;
@@ -29,7 +30,7 @@ public class SkinManager implements IWatchObserver {
 
     private Context context;
     private List<ISkinUpdate> mSkinObservers;
-    private boolean mNightMode;
+    private boolean mNightMode = false;
     private boolean isDefaultSkin = true;
     private String skinPath;
     private Resources mResources;
@@ -47,6 +48,10 @@ public class SkinManager implements IWatchObserver {
             }
         }
         return manager;
+    }
+
+    public boolean isNightMode() {
+        return mNightMode;
     }
 
     public void init(Context ctx) {
@@ -173,4 +178,11 @@ public class SkinManager implements IWatchObserver {
         }.execute(skinName);
     }
 
+    public int getColor(int resId){
+        return  0;
+    }
+
+    public Drawable getDrawable(int attrValueRefId) {
+        return null;
+    }
 }

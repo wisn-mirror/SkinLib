@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.LogUtils;
 
@@ -39,6 +38,7 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
         View view = delegate.createView(parent, name, context, attrs);
         if (view instanceof TextView && SkinConfig.isChangeFont) {
             //todo  change font style
+            LogUtils.i(TAG,"onCreateView:"+((TextView)view).getText().toString());
         }
         if (attributeBooleanValue || SkinConfig.isGlobalChangeSkin) {
             if (view == null) {
@@ -62,7 +62,15 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
         }
 
     }
-    public void applySkin(){}
+    public void applySkin(){
+        if(mSkinItemMap==null||mSkinItemMap.isEmpty())return ;
+        for(View view:mSkinItemMap.keySet()){
+            if(view==null){
+                continue;
+            }
+            mSkinItemMap.get(view).apply();
+        }
+    }
 
     public void clear() {}
 }
