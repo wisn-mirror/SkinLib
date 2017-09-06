@@ -7,8 +7,9 @@ package com.wisn.skinlib.attr.base;
 public class DynamicAttr {
     public String attrName;
     public int refResId;
-    public DynamicAttr(String attrName,int refResId){
-        this.attrName=attrName;
-        this.refResId=refResId;
+
+    public DynamicAttr(String attrName, int refResId) {
+        this.attrName = attrName;
+        this.refResId = refResId;
     }
 }
