@@ -8,5 +8,5 @@ public interface SkinLoaderListener {
     void start();
     void onSuccess();
     void onFailed(String error);
-    void onSuccess(int progress);
+    void onProgress(int progress,int sum);
 }

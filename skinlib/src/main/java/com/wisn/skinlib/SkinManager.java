@@ -1,6 +1,9 @@
 package com.wisn.skinlib;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
@@ -8,8 +11,13 @@ import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdate;
 import com.wisn.skinlib.interfaces.IWatchObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.loader.ResourceCompat;
+import com.wisn.skinlib.utils.FileUitls;
 import com.wisn.skinlib.utils.SpUtils;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +30,9 @@ public class SkinManager implements IWatchObserver {
     private Context context;
     private List<ISkinUpdate> mSkinObservers;
     private boolean mNightMode;
+    private boolean isDefaultSkin = true;
+    private String skinPath;
+    private Resources mResources;
 
     private SkinManager() {}
 
@@ -78,11 +89,11 @@ public class SkinManager implements IWatchObserver {
     }
 
     public void loadSkin(SkinLoaderListener listener) {
-        if(SpUtils.isDefaultSkin(context)){
-            return ;
+        if (SpUtils.isDefaultSkin(context)) {
+            return;
         }
         String customSkinName = SpUtils.getCustomSkinName(context);
-        loadSkin(customSkinName,listener);
+        loadSkin(customSkinName, listener);
     }
 
     public void loadSkin() {
@@ -90,27 +101,76 @@ public class SkinManager implements IWatchObserver {
     }
 
     public void loadSkin(String skinName, final SkinLoaderListener listener) {
-        new AsyncTask<String,Void,Resources>(){
+        new AsyncTask<String, Void, Resources>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                if(listener!=null){
+                if (listener != null) {
                     listener.start();
                 }
             }
 
             @Override
             protected Resources doInBackground(String... strings) {
-                if(strings!=null&&strings.length==1){
+                try {
+                    if (strings != null && strings.length == 1 && strings[0] != null) {
+                        String skinPath = FileUitls.getCacherDir(context) + File.separator + strings[0];
+                        File skinFile = new File(skinPath);
+                        if (!skinFile.exists()) {
+                            return null;
+                        }
+                        PackageManager packageManager = context.getPackageManager();
+                        PackageInfo
+                                packageArchiveInfo =
+                                packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
+                        if (packageArchiveInfo == null) return null;
+                        String packageName = packageArchiveInfo.packageName;
 
+                        AssetManager assetManager = AssetManager.class.newInstance();
+
+                        Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
+
+                        addAssetPath.invoke(assetManager, strings[0]);
+
+                        Resources superRes = context.getResources();
+                        Resources
+                                resource =
+                                ResourceCompat.getResource(assetManager,
+                                                           superRes.getDisplayMetrics(),
+                                                           superRes.getConfiguration());
+                        SpUtils.setCustomSkinName(context, strings[0]);
+                        SkinManager.this.skinPath = skinPath;
+                        return resource;
+                    }
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Resources resources) {
-                super.onPostExecute(resources);
+//                super.onPostExecute(resources);
+                if (resources != null) {
+                    mResources = resources;
+                    isDefaultSkin = false;
+                    mNightMode = false;
+                    SpUtils.setNightMode(context, false);
+                    if (listener != null) listener.onSuccess();
+                    notifyUpdate();
+                } else {
+                    isDefaultSkin = true;
+                    if (listener != null) listener.onFailed(" Resource is null ");
+
+                }
             }
         }.execute(skinName);
     }
+
 }
