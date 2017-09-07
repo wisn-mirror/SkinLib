@@ -1,1 +1,1 @@
-include ':app', ':skinlib'
+include ':app', ':skinlib', ':skin1', ':skin2'
