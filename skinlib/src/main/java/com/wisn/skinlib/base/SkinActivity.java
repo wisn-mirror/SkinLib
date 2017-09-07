@@ -45,6 +45,10 @@ public class SkinActivity extends AppCompatActivity implements ISkinUpdate, Dyna
         skinInflaterFactory.clear();
     }
 
+    public SkinInflaterFactory getSkinInflaterFactory(){
+        return skinInflaterFactory;
+    }
+
     @Override
     public void onThemUpdate() {
         skinInflaterFactory.applySkin();

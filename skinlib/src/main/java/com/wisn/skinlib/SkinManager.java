@@ -34,6 +34,7 @@ public class SkinManager implements IWatchObserver {
     private boolean isDefaultSkin = true;
     private String skinPath;
     private Resources mResources;
+    private String mPackageName;
 
     private SkinManager() {}
 
@@ -129,9 +130,10 @@ public class SkinManager implements IWatchObserver {
                                 packageArchiveInfo =
                                 packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
                         if (packageArchiveInfo == null) return null;
-                        String packageName = packageArchiveInfo.packageName;
+                        mPackageName = packageArchiveInfo.packageName;
 
                         AssetManager assetManager = AssetManager.class.newInstance();
+
 
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
 
@@ -161,7 +163,6 @@ public class SkinManager implements IWatchObserver {
 
             @Override
             protected void onPostExecute(Resources resources) {
-//                super.onPostExecute(resources);
                 if (resources != null) {
                     mResources = resources;
                     isDefaultSkin = false;
@@ -172,17 +173,21 @@ public class SkinManager implements IWatchObserver {
                 } else {
                     isDefaultSkin = true;
                     if (listener != null) listener.onFailed(" Resource is null ");
-
                 }
             }
         }.execute(skinName);
     }
 
-    public int getColor(int resId){
-        return  0;
+    public int getColor(int resId) {
+        return 0;
     }
 
     public Drawable getDrawable(int attrValueRefId) {
         return null;
     }
+    public Drawable getDrawable(int attrValueRefId,String dir) {
+        return null;
+    }
+
+
 }
