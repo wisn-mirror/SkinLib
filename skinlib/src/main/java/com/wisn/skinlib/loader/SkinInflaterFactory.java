@@ -1,6 +1,7 @@
 package com.wisn.skinlib.loader;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -8,11 +9,13 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.SkinAttr;
 import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.LogUtils;
+import com.wisn.skinlib.utils.SkinUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,27 +60,82 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
 
     private void dealSkinAttr(Context context, AttributeSet attrs, View view) {
         int attributeCount = attrs.getAttributeCount();
-        List<SkinItem> viewAttrs = new ArrayList<>();
+        List<SkinAttr> viewAttrs = new ArrayList<>();
         for (int i = 0; i < attributeCount; i++) {
             String attributeName = attrs.getAttributeName(i);
             String attributeValue = attrs.getAttributeValue(i);
             LogUtils.i(TAG, attributeName + " " + attributeValue);
             // TODO: 2017/9/7 style
             if(SkinConfig.Attrs_deal_char_style.equals(attributeName)){
-
+//                style="@style/AppTheme"
+                String styleName = attributeValue.substring(attributeValue.indexOf("/" + 1));
+                int
+                        identifier =
+                        context.getResources()
+                               .getIdentifier(styleName,
+                                              SkinConfig.Attrs_deal_char_style,
+                                              context.getPackageName());
+                int[] skinAttrs=new int[]{android.R.attr.textColor,android.R.attr.background};
+                TypedArray typedArray = context.getTheme().obtainStyledAttributes(identifier, skinAttrs);
+                int textColor=typedArray.getResourceId(0,-1);
+                int background=typedArray.getResourceId(1,-1);
+                // TODO: 2017/9/7 deal textcolor
+                if(textColor!=-1){
+                    String resourceEntryName = context.getResources().getResourceEntryName(textColor);
+                    String resourceTypeName = context.getResources().getResourceTypeName(textColor);
+                    SkinAttr
+                            skinAttr =
+                            SkinAttrFactory.get(SkinConfig.Attrs_Support_textColor,
+                                                textColor,
+                                                resourceEntryName,
+                                                resourceTypeName);
+                    if(skinAttr!=null)viewAttrs.add(skinAttr);
+                }
+                //TODO: 2017/9/7   deal  baground
+                if(background!=-1){
+                    String resourceEntryName = context.getResources().getResourceEntryName(background);
+                    String resourceTypeName = context.getResources().getResourceTypeName(background);
+                    SkinAttr
+                            skinAttr =
+                            SkinAttrFactory.get(SkinConfig.Attrs_Support_background,
+                                                background,
+                                                resourceEntryName,
+                                                resourceTypeName);
+                    if(skinAttr!=null)viewAttrs.add(skinAttr);
+                }
+                typedArray.recycle();
+                continue;
             }
 
             // TODO: 2017/9/7 endregion
             if(attributeValue.startsWith(SkinConfig.Attrs_deal_char_index) && SkinAttrFactory.isSupport(attributeName)){
-
+                try{
+                    int id = Integer.parseInt(attributeValue.substring(1));
+                    if(id==0)continue;
+                    String resourceEntryName = context.getResources().getResourceEntryName(id);
+                    String resourceTypeName = context.getResources().getResourceTypeName(id);
+                    SkinAttr
+                            skinAttr =
+                            SkinAttrFactory.get(attributeName,
+                                                id,
+                                                resourceEntryName,
+                                                resourceTypeName);
+                    if(skinAttr!=null)viewAttrs.add(skinAttr);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             // TODO: 2017/9/7 attrs add map
-
-
-
         }
-
-
+        if(!SkinUtils.isEmpty(viewAttrs)){
+            SkinItem skinItem=new SkinItem();
+            skinItem.view=view;
+            skinItem.attrs=viewAttrs;
+            mSkinItemMap.put(view,skinItem);
+            if(SkinManager.getInstance().isExternalSkin()){
+                skinItem.apply();
+            }
+        }
     }
 
     public void applySkin() {
