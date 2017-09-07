@@ -7,6 +7,8 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdate;
@@ -178,15 +180,87 @@ public class SkinManager implements IWatchObserver {
         }.execute(skinName);
     }
 
+    /**
+     *
+     * @param resId
+     * @return
+     */
     public int getColor(int resId) {
-        return 0;
+        int color = 0;
+        if (mResources == null || isDefaultSkin) {
+            color = ContextCompat.getColor(context, resId);
+            return color;
+        }
+        int  colorResId =
+                mResources.getIdentifier(context.getResources().getResourceEntryName(resId),
+                                         "color",
+                                         mPackageName);
+        if (colorResId == 0) {
+            color = ContextCompat.getColor(context, resId);
+        } else {
+            color = mResources.getColor(colorResId);
+        }
+        return color;
     }
 
+    /**
+     *
+     * @param attrValueRefId
+     * @return
+     */
     public Drawable getDrawable(int attrValueRefId) {
-        return null;
+        Drawable drawable=null;
+        if (mResources == null || isDefaultSkin) {
+            drawable = ContextCompat.getDrawable(context, attrValueRefId);
+            return drawable;
+        }
+        int  drawableid =
+                mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
+                                         "drawable",
+                                         mPackageName);
+        if(drawableid==0){
+            drawableid=mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
+                                                "mipmap",
+                                                mPackageName);
+        }
+        if(drawableid==0){
+            drawable = ContextCompat.getDrawable(context, attrValueRefId);
+        }else{
+            if(Build.VERSION.SDK_INT<22){
+                drawable = mResources.getDrawable(drawableid);
+            }else{
+                drawable = mResources.getDrawable(drawableid,null);
+            }
+        }
+        return drawable;
     }
-    public Drawable getDrawable(int attrValueRefId,String dir) {
-        return null;
+
+    /**
+     *
+     * @param attrValueRefId
+     * @param dir  drawable/mipmap
+     * @return
+     */
+    public Drawable getDrawable(int attrValueRefId, String dir) {
+        Drawable drawable=null;
+        if (mResources == null || isDefaultSkin) {
+            drawable = ContextCompat.getDrawable(context, attrValueRefId);
+            return drawable;
+        }
+        int  drawableid =
+                mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
+                                         dir,
+                                         mPackageName);
+        if(drawableid==0){
+            drawable = ContextCompat.getDrawable(context, attrValueRefId);
+        }else{
+            if(Build.VERSION.SDK_INT<22){
+                drawable = mResources.getDrawable(drawableid);
+            }else{
+                drawable = mResources.getDrawable(drawableid,null);
+            }
+        }
+        return drawable;
     }
 
 
