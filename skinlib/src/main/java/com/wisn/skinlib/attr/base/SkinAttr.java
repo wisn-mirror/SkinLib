@@ -19,27 +19,34 @@ public abstract class SkinAttr {
 
     public abstract void applySkin(View view);
 
-    /**
-     * Night skin
-     * @param view
-     */
-    public  void applyNightSkin(View view){
+    public void applyNightSkin(View view) {
 
     }
 
-    public void apply(View view){
-        if(SkinManager.getInstance().isNightMode()){
+    public void apply(View view) {
+        if (SkinManager.getInstance().isNightMode()) {
             applySkin(view);
-        }else{
+        } else {
             applySkin(view);
         }
     }
+
     protected boolean isDrawable() {
         return RES_TYPE_NAME_DRAWABLE.equals(attrValueTypeName)
                || RES_TYPE_NAME_MIPMAP.equals(attrValueTypeName);
     }
+
     protected boolean isColor() {
         return RES_TYPE_NAME_COLOR.equals(attrValueTypeName);
     }
 
+    @Override
+    protected SkinAttr clone() {
+        try {
+            return (SkinAttr) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

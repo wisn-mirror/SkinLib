@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.wisn.skinlib.attr.base.SkinAttr;
+import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.LogUtils;
@@ -39,7 +41,6 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
         View view = delegate.createView(parent, name, context, attrs);
         if (view instanceof TextView && SkinConfig.isChangeFont) {
             // TODO: 2017/9/7 change font style
-//            LogUtils.i(TAG, "onCreateView:" + ((TextView) view).getText().toString());
             FontRepository.add(mAppCompatActivity, view);
         }
         if (attributeBooleanValue || SkinConfig.isGlobalChangeSkin) {
@@ -61,8 +62,21 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
             String attributeName = attrs.getAttributeName(i);
             String attributeValue = attrs.getAttributeValue(i);
             LogUtils.i(TAG, attributeName + " " + attributeValue);
+            // TODO: 2017/9/7 style
+            if(SkinConfig.Attrs_deal_char_style.equals(attributeName)){
+
+            }
+
+            // TODO: 2017/9/7 endregion
+            if(attributeValue.startsWith(SkinConfig.Attrs_deal_char_index) && SkinAttrFactory.isSupport(attributeName)){
+
+            }
+            // TODO: 2017/9/7 attrs add map
+
+
+
         }
-        // TODO: 2017/9/7 attrs add map
+
 
     }
 

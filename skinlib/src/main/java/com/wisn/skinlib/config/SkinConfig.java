@@ -26,4 +26,16 @@ public class SkinConfig {
     public static final  boolean isChangeFont=false;
     public static final  boolean isGlobalChangeSkin=false;
 
+
+    //suport Attr
+    public static final  String Attrs_Support_background="background";
+    public static final  String Attrs_Support_src="src";
+    public static final  String Attrs_Support_textColor="textColor";
+    //deal
+    public static final  String Attrs_deal_char_style="style";
+    public static final  String Attrs_deal_char_index="@";
+
+
+
+
 }
