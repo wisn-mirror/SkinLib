@@ -4,4 +4,4 @@
 # ./gradlew clean :skin2:assembleRelease
 # ./gradlew  app:assembleRelease
  ./gradlew  skin1:assembleRelease
- ./gradlew  skin2:assembleRelease
+# ./gradlew  skin2:assembleRelease
