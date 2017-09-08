@@ -8,7 +8,7 @@ import com.wisn.skinlib.SkinManager;
  * Created by wisn on 2017/9/5.
  */
 
-public abstract class SkinAttr {
+public abstract class SkinAttr implements Cloneable {
     protected static final String RES_TYPE_NAME_COLOR = "color";
     protected static final String RES_TYPE_NAME_DRAWABLE = "drawable";
     protected static final String RES_TYPE_NAME_MIPMAP = "mipmap";
@@ -48,5 +48,15 @@ public abstract class SkinAttr {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "SkinAttr{" +
+               "attrName='" + attrName + '\'' +
+               ", attrValueRefId=" + attrValueRefId +
+               ", attrValueRefName='" + attrValueRefName + '\'' +
+               ", attrValueTypeName='" + attrValueTypeName + '\'' +
+               '}';
     }
 }

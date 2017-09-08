@@ -53,6 +53,7 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
             if (view == null) {
                 return null;
             }
+            LogUtils.i(TAG,"dealSkinAttr");
             dealSkinAttr(context, attrs, view);
         }
         return view;
@@ -68,7 +69,8 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
             // TODO: 2017/9/7 style
             if(SkinConfig.Attrs_deal_char_style.equals(attributeName)){
 //                style="@style/AppTheme"
-                String styleName = attributeValue.substring(attributeValue.indexOf("/" + 1));
+                LogUtils.i(TAG,"Attrs_deal_char_style");
+                String styleName = attributeValue.substring(attributeValue.indexOf("/")+ 1);
                 int
                         identifier =
                         context.getResources()
@@ -109,11 +111,13 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
 
             // TODO: 2017/9/7 endregion
             if(attributeValue.startsWith(SkinConfig.Attrs_deal_char_index) && SkinAttrFactory.isSupport(attributeName)){
+                LogUtils.i(TAG,"Attrs_deal_char_index");
                 try{
                     int id = Integer.parseInt(attributeValue.substring(1));
                     if(id==0)continue;
                     String resourceEntryName = context.getResources().getResourceEntryName(id);
                     String resourceTypeName = context.getResources().getResourceTypeName(id);
+                    LogUtils.i(TAG,"attributeName:"+attributeName+" id"+id+" resourceEntryName:"+resourceEntryName+" resourceTypeName:"+resourceTypeName);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(attributeName,
@@ -125,9 +129,12 @@ public class SkinInflaterFactory implements LayoutInflaterFactory {
                     e.printStackTrace();
                 }
             }
-            // TODO: 2017/9/7 attrs add map
         }
         if(!SkinUtils.isEmpty(viewAttrs)){
+            // TODO: 2017/9/7 attrs add map
+            for (SkinAttr skinAttr:viewAttrs) {
+                LogUtils.e(TAG,"skinAttr:"+skinAttr.toString());
+            }
             SkinItem skinItem=new SkinItem();
             skinItem.view=view;
             skinItem.attrs=viewAttrs;

@@ -4,6 +4,7 @@ import com.wisn.skinlib.attr.BackgroundAttr;
 import com.wisn.skinlib.attr.ImageViewAttr;
 import com.wisn.skinlib.attr.TextColorAttr;
 import com.wisn.skinlib.config.SkinConfig;
+import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
  */
 
 public class SkinAttrFactory {
-
+    private static final String TAG="SkinAttrFactory";
     private static HashMap<String, SkinAttr> attrs = new HashMap<>();
 
     static {
@@ -25,7 +26,9 @@ public class SkinAttrFactory {
                                int attrValueRefId,
                                String attrValueRefName,
                                String attrValueTypeName) {
+//        LogUtils.e(TAG,"skinAttr:"+attrs+" -------[[[[[ "+attrs.get(attrName));
         SkinAttr skinAttr = attrs.get(attrName).clone();
+//        LogUtils.e(TAG,"skinAttr:"+skinAttr.toString());
         if (skinAttr == null) return null;
         skinAttr.attrName = attrName;
         skinAttr.attrValueRefId = attrValueRefId;

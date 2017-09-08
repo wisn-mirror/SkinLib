@@ -24,7 +24,7 @@ public class SkinConfig {
 
     //
     public static final  boolean isChangeFont=false;
-    public static final  boolean isGlobalChangeSkin=false;
+    public static final  boolean isGlobalChangeSkin=true;
 
 
     //suport Attr

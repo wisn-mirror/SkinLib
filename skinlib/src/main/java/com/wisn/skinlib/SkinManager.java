@@ -16,6 +16,7 @@ import com.wisn.skinlib.interfaces.IWatchObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.loader.ResourceCompat;
 import com.wisn.skinlib.utils.FileUitls;
+import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
@@ -29,7 +30,7 @@ import java.util.List;
  */
 
 public class SkinManager implements IWatchObserver {
-
+    private static final String TAG="SkinManager";
     private Context context;
     private List<ISkinUpdate> mSkinObservers;
     private boolean mNightMode = false;
@@ -64,13 +65,18 @@ public class SkinManager implements IWatchObserver {
 
 
     public void nightMode() {
-        reSetDefaultThem();
+        resetDefaultThem();
         mNightMode = true;
         SpUtils.setNightMode(context, true);
         notifyUpdate();
     }
 
-    private void reSetDefaultThem() {}
+    public  void resetDefaultThem() {
+        isDefaultSkin=true;
+        mNightMode=false;
+        SpUtils.setNightMode(context, false);
+        notifyUpdate();
+    }
 
     @Override
     public void attach(ISkinUpdate observer) {
@@ -122,7 +128,8 @@ public class SkinManager implements IWatchObserver {
             protected Resources doInBackground(String... strings) {
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
-                        String skinPath = FileUitls.getCacherDir(context) + File.separator + strings[0];
+                        String skinPath = FileUitls.getSkinCache(context) + File.separator+File.separator + strings[0];
+                        LogUtils.i(TAG,skinPath);
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
                             return null;
@@ -139,7 +146,7 @@ public class SkinManager implements IWatchObserver {
 
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
 
-                        addAssetPath.invoke(assetManager, strings[0]);
+                        addAssetPath.invoke(assetManager, skinPath);
 
                         Resources superRes = context.getResources();
                         Resources
@@ -149,6 +156,7 @@ public class SkinManager implements IWatchObserver {
                                                            superRes.getConfiguration());
                         SpUtils.setCustomSkinName(context, strings[0]);
                         SkinManager.this.skinPath = skinPath;
+                        mResources = resource;
                         return resource;
                     }
                 } catch (InstantiationException e) {
@@ -181,6 +189,7 @@ public class SkinManager implements IWatchObserver {
     }
 
     public boolean isExternalSkin() {
+//        return true;
         return mResources != null && !isDefaultSkin;
     }
 
@@ -215,19 +224,25 @@ public class SkinManager implements IWatchObserver {
     public Drawable getDrawable(int attrValueRefId) {
         Drawable drawable = null;
         if (mResources == null || isDefaultSkin) {
+            LogUtils.i(TAG,"  mResources is null");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
             return drawable;
         }
+        LogUtils.i(TAG,"  getDrawable drawableid");
         int drawableid =
                 mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                          "drawable",
                                          mPackageName);
+        LogUtils.i(TAG,"  drawableid :"+drawableid+" mPackageName:"+mPackageName);
         if (drawableid == 0) {
             drawableid = mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                                   "mipmap",
                                                   mPackageName);
+            LogUtils.i(TAG,"  drawableid :"+drawableid);
+
         }
         if (drawableid == 0) {
+            LogUtils.i(TAG,"  drawableid is 0 ");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
         } else {
             if (Build.VERSION.SDK_INT < 22) {
@@ -236,6 +251,7 @@ public class SkinManager implements IWatchObserver {
                 drawable = mResources.getDrawable(drawableid, null);
             }
         }
+        LogUtils.i(TAG," drawable: "+drawable);
         return drawable;
     }
 
