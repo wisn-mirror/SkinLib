@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.interfaces.DynamicView;
-import com.wisn.skinlib.loader.SkinInflaterFactory;
+import com.wisn.skinlib.loader.SkinAppCompatInflaterFactory;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public class SkinFragment extends Fragment implements DynamicView {
-    private SkinInflaterFactory mSkinInflaterFactory;
+    private SkinAppCompatInflaterFactory mSkinInflaterFactory;
 
     @Override
     public void onAttach(Context context) {
@@ -36,15 +36,15 @@ public class SkinFragment extends Fragment implements DynamicView {
         super.onDestroyView();
     }
 
-    public final SkinInflaterFactory getSkinInflaterFactory() {
+    public final SkinAppCompatInflaterFactory getSkinInflaterFactory() {
         if (mSkinInflaterFactory == null) {
             synchronized (SkinFragment.class) {
-                if (getActivity() instanceof SkinActivity) {
-                    mSkinInflaterFactory = ((SkinActivity) getActivity()).getSkinInflaterFactory();
+                if (getActivity() instanceof SkinAppCompatActivity) {
+                    mSkinInflaterFactory = ((SkinAppCompatActivity) getActivity()).getSkinInflaterFactory();
                     return mSkinInflaterFactory;
                 } else {
                     throw new RuntimeException(
-                            " your  activity should extends SkinActivity and  create SkinInflaterFactory");
+                            " your  activity should extends SkinAppCompatActivity and  create SkinAppCompatInflaterFactory");
                 }
             }
         }

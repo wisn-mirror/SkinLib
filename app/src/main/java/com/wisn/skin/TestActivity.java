@@ -5,11 +5,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.wisn.skinlib.SkinManager;
-import com.wisn.skinlib.base.SkinActivity;
+import com.wisn.skinlib.base.SkinAppCompatActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
 
-public class TestActivity extends SkinActivity implements View.OnClickListener,SkinLoaderListener {
+public class TestActivity extends SkinAppCompatActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="TestActivity";
     private Button mChangeSkin,resetSkin;
 
