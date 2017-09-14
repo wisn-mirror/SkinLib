@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".TestActivity"></activity>
+        <activity android:name=".TestAppCompatActivity"></activity>
     </application>
 
 </manifest>

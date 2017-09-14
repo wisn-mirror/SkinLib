@@ -2,6 +2,7 @@ package com.wisn.skin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,12 +23,20 @@ public class MainActivity extends SkinAppCompatActivity implements View.OnClickL
         resetSkin = (Button) findViewById(R.id.resetSkin);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
-        startActivity(new Intent(this,TestActivity.class));
+        startActivity(new Intent(this,TestAppCompatActivity.class));
     }
 
     @Override
     public void onClick(View v) {
         if(v==mChangeSkin){
+//           String result1= new String(Base64.decode("admin:admin"));
+//           String result2= new String(Base64.decode("admin:admin".getBytes()));
+//           String result3= new String(Base64_2.decode("admin:admin"));
+//           String result4= new String(Base64_2.decode("admin:admin".getBytes()));
+//            Log.e(TAG,result1);
+//            Log.e(TAG,result2);
+//            Log.e(TAG,result3);
+//            Log.e(TAG,result4);
             SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--16-1.0-2017-09-08-09-55-06.skin",
                                                this);
         }else if(v==resetSkin){

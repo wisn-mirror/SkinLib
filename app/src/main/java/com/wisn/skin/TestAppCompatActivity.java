@@ -6,24 +6,23 @@ import android.view.View;
 import android.widget.Button;
 
 import com.wisn.skinlib.SkinManager;
-import com.wisn.skinlib.base.SkinActivity;
 import com.wisn.skinlib.base.SkinAppCompatActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
 
-public class TestActivity extends SkinActivity implements View.OnClickListener, SkinLoaderListener {
+public class TestAppCompatActivity extends SkinAppCompatActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="TestActivity";
     private Button mChangeSkin,resetSkin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_testappcomp);
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
-
+        startActivity(new Intent(this, TestActivity.class));
     }
 
     @Override
