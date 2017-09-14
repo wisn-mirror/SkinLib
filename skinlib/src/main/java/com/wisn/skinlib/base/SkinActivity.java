@@ -26,7 +26,6 @@ public class SkinActivity extends Activity implements ISkinUpdate, DynamicView {
         skinInflaterFactory.setActivity(this);
         getLayoutInflater().setFactory( skinInflaterFactory);
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

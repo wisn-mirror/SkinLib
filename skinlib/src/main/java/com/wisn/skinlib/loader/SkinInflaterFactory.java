@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by wisn on 2017/9/9.
  */
 
-public class SkinInflaterFactory implements Factory2 {
+public class SkinInflaterFactory extends SkinInflater implements Factory2 {
     private static final String TAG = "SkinInflaterFactory";
     private Activity mActivity = null;
     private Map<View, SkinItem> mSkinItemMap = new HashMap<>();

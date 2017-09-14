@@ -2,8 +2,7 @@ package com.wisn.skinlib.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,24 +11,27 @@ import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.interfaces.DynamicView;
 import com.wisn.skinlib.interfaces.ISkinUpdate;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
-import com.wisn.skinlib.loader.SkinAppCompatInflaterFactory;
+import com.wisn.skinlib.loader.SkinInflater;
+import com.wisn.skinlib.loader.SkinInflaterFactory;
 
 import java.util.List;
 
 /**
- * Created by wisn on 2017/9/5.
+ * Created by wisn on 2017/9/14.
  */
 
-public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpdate, DynamicView,LayoutInflaterIns {
-    private SkinAppCompatInflaterFactory skinInflaterFactory;
+public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdate,
+                                                                      DynamicView,
+                                                                      LayoutInflaterIns {
+
+    private SkinInflaterFactory skinInflaterFactory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        skinInflaterFactory = new SkinAppCompatInflaterFactory();
-        skinInflaterFactory.setAppCompatActivity(this);
-        LayoutInflaterCompat.setFactory(getLayoutInflater(), skinInflaterFactory);
+        skinInflaterFactory = new SkinInflaterFactory();
+        skinInflaterFactory.setActivity(this);
+        getLayoutInflater().setFactory(skinInflaterFactory);
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -46,7 +48,7 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
         skinInflaterFactory.clear();
     }
 
-    public SkinAppCompatInflaterFactory getSkinInflaterFactory(){
+    public SkinInflater getSkinInflaterFactory() {
         return skinInflaterFactory;
     }
 
@@ -70,3 +72,4 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
 
     }
 }
+

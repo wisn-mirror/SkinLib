@@ -1,14 +1,16 @@
 package com.wisn.skinlib.base;
 
-import android.app.Fragment;
+
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.interfaces.DynamicView;
-import com.wisn.skinlib.loader.SkinAppCompatInflaterFactory;
+import com.wisn.skinlib.interfaces.LayoutInflaterIns;
+import com.wisn.skinlib.loader.SkinInflater;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ import java.util.List;
  */
 
 public class SkinFragment extends Fragment implements DynamicView {
-    private SkinAppCompatInflaterFactory mSkinInflaterFactory;
+    private SkinInflater mSkinInflaterFactory;
 
     @Override
     public void onAttach(Context context) {
@@ -36,11 +38,12 @@ public class SkinFragment extends Fragment implements DynamicView {
         super.onDestroyView();
     }
 
-    public final SkinAppCompatInflaterFactory getSkinInflaterFactory() {
+    public final SkinInflater getSkinInflaterFactory() {
         if (mSkinInflaterFactory == null) {
             synchronized (SkinFragment.class) {
-                if (getActivity() instanceof SkinAppCompatActivity) {
-                    mSkinInflaterFactory = ((SkinAppCompatActivity) getActivity()).getSkinInflaterFactory();
+                Object obj = getActivity();
+                if (obj instanceof SkinInflater) {
+                    mSkinInflaterFactory = ((LayoutInflaterIns) getActivity()).getSkinInflaterFactory();
                     return mSkinInflaterFactory;
                 } else {
                     throw new RuntimeException(
