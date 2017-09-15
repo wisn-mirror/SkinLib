@@ -80,16 +80,16 @@ public class SkinFileUitls {
     }
 
     /**
-     * 拷贝单个文件，使用路径
+     * 保存新添加的皮肤
      *
      * @param fromFilePath
-     * @param toFilePath
+     * @param skinName
      *
      * @return
      */
-    public static boolean copyFile(String fromFilePath, String toFilePath) {
-        if (fromFilePath == null || toFilePath == null) return false;
-        return copyFile(new File(fromFilePath), new File(toFilePath));
+    public static boolean saveSkinFile(Context context, String fromFilePath, String skinName) {
+        if (fromFilePath == null || skinName == null) return false;
+        return copyFile(new File(fromFilePath), new File(SkinFileUitls.getSkinPath(context), skinName));
     }
 
     /**
@@ -100,7 +100,7 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static boolean copyFile(File fromFile, File toFile) {
+    private static boolean copyFile(File fromFile, File toFile) {
         if (fromFile == null || toFile == null) return false;
         try {
             if (!toFile.exists()) toFile.createNewFile();
@@ -112,9 +112,9 @@ public class SkinFileUitls {
     }
 
     /**
-     * 解压缩一个文件
+     * 解压缩皮肤
      *
-     * @param zipFile    压缩文件
+     * @param zipFile    解压路径
      * @param folderPath 解压缩的目标目录
      */
     private static void upZipFile(File zipFile, String folderPath) {
@@ -156,7 +156,7 @@ public class SkinFileUitls {
     private static boolean copyFileStream(InputStream inputStream, OutputStream outputStream) {
         try {
             int index = 0;
-            byte[] bytes = new byte[1024*1024];
+            byte[] bytes = new byte[1024 * 1024];
             while ((index = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, index);
             }
