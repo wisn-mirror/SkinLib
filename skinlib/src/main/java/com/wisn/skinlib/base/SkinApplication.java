@@ -1,11 +1,10 @@
 package com.wisn.skinlib.base;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.utils.FileUitls;
+import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
@@ -38,10 +37,10 @@ public class SkinApplication extends Application {
             String[] skinFile=getAssets().list(SkinConfig.SkinDir);
             if(skinFile==null||skinFile.length==0)return ;
             for (String fileName:skinFile){
-                File toFile=new File(FileUitls.getSkinCache(this), fileName);
+                File toFile=new File(SkinFileUitls.getSkinCache(this), fileName);
                 if(!toFile.exists()){
                     toFile.createNewFile();
-                    FileUitls.CopyAssetsToDir(this,fileName,toFile.getPath());
+                    SkinFileUitls.CopyAssetsToDir(this, fileName, toFile.getPath());
                 }
             }
 

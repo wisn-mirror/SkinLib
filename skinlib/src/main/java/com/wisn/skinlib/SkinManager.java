@@ -15,7 +15,7 @@ import com.wisn.skinlib.interfaces.ISkinUpdate;
 import com.wisn.skinlib.interfaces.IWatchObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.loader.ResourceCompat;
-import com.wisn.skinlib.utils.FileUitls;
+import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SpUtils;
 
@@ -128,7 +128,7 @@ public class SkinManager implements IWatchObserver {
             protected Resources doInBackground(String... strings) {
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
-                        String skinPath = FileUitls.getSkinCache(context) + File.separator+File.separator + strings[0];
+                        String skinPath = SkinFileUitls.getSkinCache(context) + File.separator + File.separator + strings[0];
                         LogUtils.i(TAG,skinPath);
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {

@@ -8,10 +8,11 @@ import android.widget.Button;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinAppCompatActivity;
+import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
 
-public class MainActivity extends SkinAppCompatActivity implements View.OnClickListener, SkinLoaderListener {
+public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="MainActivity";
     private Button mChangeSkin,resetSkin;
 
