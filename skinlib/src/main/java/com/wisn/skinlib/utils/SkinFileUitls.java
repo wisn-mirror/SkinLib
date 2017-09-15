@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.wisn.skinlib.config.SkinConfig;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,6 @@ import java.util.zip.ZipFile;
  */
 
 public class SkinFileUitls {
-    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
 
     /**
      * copy skin from assets
@@ -30,43 +30,21 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String CopyAssetsToDir(Context context, String skinName, String toFilePath) {
+    public static String CopyAssetsToSkinDir(Context context, String skinName, String toFilePath) {
         InputStream is = null;
-        OutputStream os = null;
         try {
             is = context.getAssets().open(SkinConfig.SkinDir + File.separator + skinName);
             File fileDir = new File(toFilePath);
             if (!fileDir.exists()) {
                 fileDir.mkdirs();
             }
-            os = new FileOutputStream(fileDir);
-            int index = 0;
-            byte[] bytes = new byte[1024];
-
-            while ((index = is.read(bytes)) != -1) {
-                os.write(bytes, 0, index);
-            }
+            copyFileStream(is, new FileOutputStream(fileDir));
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
         }
         return toFilePath;
     }
+
 
     /**
      * get skin FilePath
@@ -75,7 +53,7 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String getSkinCache(Context context) {
+    public static String getSkinPath(Context context) {
         File skinDir = new File(getCacherDir(context), SkinConfig.SkinDir);
         if (!skinDir.exists()) {
             skinDir.mkdirs();
@@ -102,12 +80,44 @@ public class SkinFileUitls {
     }
 
     /**
+     * 拷贝单个文件，使用路径
+     *
+     * @param fromFilePath
+     * @param toFilePath
+     *
+     * @return
+     */
+    public static boolean copyFile(String fromFilePath, String toFilePath) {
+        if (fromFilePath == null || toFilePath == null) return false;
+        return copyFile(new File(fromFilePath), new File(toFilePath));
+    }
+
+    /**
+     * 拷贝单个文件到指定文件
+     *
+     * @param fromFile
+     * @param toFile
+     *
+     * @return
+     */
+    public static boolean copyFile(File fromFile, File toFile) {
+        if (fromFile == null || toFile == null) return false;
+        try {
+            if (!toFile.exists()) toFile.createNewFile();
+            return copyFileStream(new FileInputStream(fromFile), new FileOutputStream(toFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 解压缩一个文件
      *
      * @param zipFile    压缩文件
      * @param folderPath 解压缩的目标目录
      */
-    public static void upZipFile(File zipFile, String folderPath) {
+    private static void upZipFile(File zipFile, String folderPath) {
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdirs();
@@ -128,17 +138,47 @@ public class SkinFileUitls {
                     }
                     desFile.createNewFile();
                 }
-                OutputStream out = new FileOutputStream(desFile);
-                byte buffer[] = new byte[BUFF_SIZE];
-                int realLength;
-                while ((realLength = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, realLength);
-                }
-                in.close();
-                out.close();
+                copyFileStream(in, new FileOutputStream(desFile));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 拷贝流
+     *
+     * @param inputStream
+     * @param outputStream
+     *
+     * @return
+     */
+    private static boolean copyFileStream(InputStream inputStream, OutputStream outputStream) {
+        try {
+            int index = 0;
+            byte[] bytes = new byte[1024*1024];
+            while ((index = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, index);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (outputStream != null)
+                        outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }
+
 }

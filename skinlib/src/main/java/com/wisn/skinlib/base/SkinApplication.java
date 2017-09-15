@@ -37,10 +37,10 @@ public class SkinApplication extends Application {
             String[] skinFile=getAssets().list(SkinConfig.SkinDir);
             if(skinFile==null||skinFile.length==0)return ;
             for (String fileName:skinFile){
-                File toFile=new File(SkinFileUitls.getSkinCache(this), fileName);
+                File toFile=new File(SkinFileUitls.getSkinPath(this), fileName);
                 if(!toFile.exists()){
                     toFile.createNewFile();
-                    SkinFileUitls.CopyAssetsToDir(this, fileName, toFile.getPath());
+                    SkinFileUitls.CopyAssetsToSkinDir(this, fileName, toFile.getPath());
                 }
             }
 

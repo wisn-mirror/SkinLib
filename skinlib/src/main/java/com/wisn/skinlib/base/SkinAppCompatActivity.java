@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.interfaces.DynamicView;
-import com.wisn.skinlib.interfaces.ISkinUpdate;
+import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
 import com.wisn.skinlib.loader.SkinAppCompatInflaterFactory;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by wisn on 2017/9/5.
  */
 
-public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpdate, DynamicView,LayoutInflaterIns {
+public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpdateObserver, DynamicView, LayoutInflaterIns {
     private SkinAppCompatInflaterFactory skinInflaterFactory;
 
     @Override

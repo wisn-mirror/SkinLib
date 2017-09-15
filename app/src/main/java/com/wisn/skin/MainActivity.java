@@ -24,7 +24,10 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         resetSkin = (Button) findViewById(R.id.resetSkin);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
-        startActivity(new Intent(this,TestAppCompatActivity.class));
+//        startActivity(new Intent(this,TestAppCompatActivity.class));
+        final float scale = this.getResources().getDisplayMetrics().density;
+        LogUtils.e(TAG,"aaa:"+scale);
+//        return (int) (dpValue * scale + 0.5f);
     }
 
     @Override

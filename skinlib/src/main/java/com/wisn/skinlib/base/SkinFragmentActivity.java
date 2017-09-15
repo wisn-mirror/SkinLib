@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.interfaces.DynamicView;
-import com.wisn.skinlib.interfaces.ISkinUpdate;
+import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
 import com.wisn.skinlib.loader.SkinInflater;
 import com.wisn.skinlib.loader.SkinInflaterFactory;
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by wisn on 2017/9/14.
  */
 
-public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdate,
+public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdateObserver,
                                                                       DynamicView,
                                                                       LayoutInflaterIns {
 

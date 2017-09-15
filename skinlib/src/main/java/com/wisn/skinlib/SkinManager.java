@@ -11,12 +11,12 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
 import com.wisn.skinlib.font.TypeFaceUtils;
-import com.wisn.skinlib.interfaces.ISkinUpdate;
-import com.wisn.skinlib.interfaces.IWatchObserver;
+import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.loader.ResourceCompat;
-import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.LogUtils;
+import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
@@ -29,10 +29,10 @@ import java.util.List;
  * Created by wisn on 2017/9/6.
  */
 
-public class SkinManager implements IWatchObserver {
-    private static final String TAG="SkinManager";
+public class SkinManager implements SubObserver {
+    private static final String TAG = "SkinManager";
     private Context context;
-    private List<ISkinUpdate> mSkinObservers;
+    private List<ISkinUpdateObserver> mSkinObservers;
     private boolean mNightMode = false;
     private boolean isDefaultSkin = true;
     private String skinPath;
@@ -71,15 +71,15 @@ public class SkinManager implements IWatchObserver {
         notifyUpdate();
     }
 
-    public  void resetDefaultThem() {
-        isDefaultSkin=true;
-        mNightMode=false;
+    public void resetDefaultThem() {
+        isDefaultSkin = true;
+        mNightMode = false;
         SpUtils.setNightMode(context, false);
         notifyUpdate();
     }
 
     @Override
-    public void attach(ISkinUpdate observer) {
+    public void attach(ISkinUpdateObserver observer) {
         if (mSkinObservers == null) {
             mSkinObservers = new ArrayList<>();
         }
@@ -87,7 +87,7 @@ public class SkinManager implements IWatchObserver {
     }
 
     @Override
-    public void detach(ISkinUpdate observer) {
+    public void detach(ISkinUpdateObserver observer) {
         if (mSkinObservers == null) return;
         if (mSkinObservers.contains(observer)) {
             mSkinObservers.remove(observer);
@@ -97,7 +97,7 @@ public class SkinManager implements IWatchObserver {
     @Override
     public void notifyUpdate() {
         if (mSkinObservers == null) return;
-        for (ISkinUpdate iSkinUpdate : mSkinObservers) {
+        for (ISkinUpdateObserver iSkinUpdate : mSkinObservers) {
             iSkinUpdate.onThemUpdate();
         }
     }
@@ -114,6 +114,18 @@ public class SkinManager implements IWatchObserver {
         loadSkin(null);
     }
 
+    public void saveSkin(String skinPath,
+                         String skinName,
+                         SkinLoaderListener listener,
+                         boolean isLoadImmediately) {
+        //// TODO: 2017/9/15 拷贝到皮肤文件夹
+
+        //// TODO: 2017/9/15 是否立即加载皮肤
+        if (isLoadImmediately) {
+            loadSkin(skinName, listener);
+        }
+    }
+
     public void loadSkin(String skinName, final SkinLoaderListener listener) {
         new AsyncTask<String, Void, Resources>() {
             @Override
@@ -128,8 +140,13 @@ public class SkinManager implements IWatchObserver {
             protected Resources doInBackground(String... strings) {
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
-                        String skinPath = SkinFileUitls.getSkinCache(context) + File.separator + File.separator + strings[0];
-                        LogUtils.i(TAG,skinPath);
+                        String
+                                skinPath =
+                                SkinFileUitls.getSkinPath(context) +
+                                File.separator +
+                                File.separator +
+                                strings[0];
+                        LogUtils.i(TAG, skinPath);
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
                             return null;
@@ -189,7 +206,6 @@ public class SkinManager implements IWatchObserver {
     }
 
     public boolean isExternalSkin() {
-//        return true;
         return mResources != null && !isDefaultSkin;
     }
 
@@ -224,25 +240,25 @@ public class SkinManager implements IWatchObserver {
     public Drawable getDrawable(int attrValueRefId) {
         Drawable drawable = null;
         if (mResources == null || isDefaultSkin) {
-            LogUtils.i(TAG,"  mResources is null");
+            LogUtils.i(TAG, "  mResources is null");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
             return drawable;
         }
-        LogUtils.i(TAG,"  getDrawable drawableid");
+        LogUtils.i(TAG, "  getDrawable drawableid");
         int drawableid =
                 mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                          "drawable",
                                          mPackageName);
-        LogUtils.i(TAG,"  drawableid :"+drawableid+" mPackageName:"+mPackageName);
+        LogUtils.i(TAG, "  drawableid :" + drawableid + " mPackageName:" + mPackageName);
         if (drawableid == 0) {
             drawableid = mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                                   "mipmap",
                                                   mPackageName);
-            LogUtils.i(TAG,"  drawableid :"+drawableid);
+            LogUtils.i(TAG, "  drawableid :" + drawableid);
 
         }
         if (drawableid == 0) {
-            LogUtils.i(TAG,"  drawableid is 0 ");
+            LogUtils.i(TAG, "  drawableid is 0 ");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
         } else {
             if (Build.VERSION.SDK_INT < 22) {
@@ -251,7 +267,7 @@ public class SkinManager implements IWatchObserver {
                 drawable = mResources.getDrawable(drawableid, null);
             }
         }
-        LogUtils.i(TAG," drawable: "+drawable);
+        LogUtils.i(TAG, " drawable: " + drawable);
         return drawable;
     }
 
