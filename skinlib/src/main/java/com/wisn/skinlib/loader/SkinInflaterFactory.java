@@ -43,10 +43,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
      */
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View view = createView(context, name, attrs);
-        if (view == null) {
-            view = ViewInflat.createViewFromTag(context, name, attrs);
-        }
+        View  view = ViewInflat.createViewFromTag(context, name, attrs);
         if (view == null) {
             return null;
         }
@@ -216,7 +213,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
     }
 
-    private View createView(Context context, String name, AttributeSet attrs) {
+   /* private View createView(Context context, String name, AttributeSet attrs) {
         View view = null;
         try {
             if (-1 == name.indexOf('.')) {
@@ -240,5 +237,5 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
             view = null;
         }
         return view;
-    }
+    }*/
 }
