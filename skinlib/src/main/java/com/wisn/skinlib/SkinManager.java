@@ -57,10 +57,6 @@ public class SkinManager implements SubObserver {
         return manager;
     }
 
-    public boolean isNightMode() {
-        return mNightMode;
-    }
-
     public void init(Context ctx) {
         context = ctx.getApplicationContext();
         SkinConfig.Density = context.getResources().getDisplayMetrics().density;
@@ -68,66 +64,35 @@ public class SkinManager implements SubObserver {
         TypeFaceUtils.getTypeFace(context);
     }
 
-    private int getFirstIndex() {
-        int firstIndex = 1;
-        if (SkinConfig.Density < 1) {
-            //ldpi
-            firstIndex = 0;
-        } else if (SkinConfig.Density < 1.5) {
-            //mdpi
-            firstIndex = 1;
-        } else if (SkinConfig.Density < 2) {
-            //hdpi
-            firstIndex = 3;
-        } else if (SkinConfig.Density < 3) {
-            //xhdpi
-            firstIndex = 4;
-        } else if (SkinConfig.Density < 4) {
-            //xxhdpi
-            firstIndex = 5;
-        }
-        return firstIndex;
+    /**
+     * updateSkinPath
+     *
+     * @param newSkinRootPath
+     * @param skinPathChangeLister
+     */
+    public void updateSkinPath(String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
+        SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
     }
 
-    public void updateSkinPath(String newSkinPath, SkinPathChangeLister skinPathChangeLister) {
-        //// TODO: 2017/9/16复制皮肤到新的皮肤文件中
 
-
-    }
-
-    public void nightMode() {
-        resetDefaultThem();
-        mNightMode = true;
-        SpUtils.setNightMode(context, true);
-        notifyUpdate();
-    }
-
-    public void resetDefaultThem() {
-        isDefaultSkin = true;
-        mNightMode = false;
-        skinPath = null;
-        skinPathRes = null;
-        SpUtils.setNightMode(context, false);
-        SpUtils.setDefaultSkin(context);
-        notifyUpdate();
-    }
-
+    /**
+     *
+     * @param listener
+     */
     public void loadSkin(SkinLoaderListener listener) {
         if (SpUtils.isDefaultSkin(context)) {
             skinPath = null;
             skinPathRes = null;
             return;
         }
-        String customSkinName = SpUtils.getCustomSkinName(context);
-        loadSkin(customSkinName, listener);
+        if(!SpUtils.isDefaultSkin(context)){
+            String customSkinName = SpUtils.getCustomSkinName(context);
+            loadSkin(customSkinName, listener);
+        }
     }
 
-    public void loadSkin() {
-        loadSkin(null);
-    }
 
     /**
-     *
      * @param skinFilePath
      * @param skinName
      * @param listener
@@ -137,10 +102,8 @@ public class SkinManager implements SubObserver {
                          String skinName,
                          SkinLoaderListener listener,
                          boolean isLoadImmediately) {
-        //// TODO: 2017/9/15 拷贝到皮肤文件夹
-        SkinFileUitls.saveSkinFile(context,skinFilePath,skinName);
-        SkinFileUitls.upZipSkin(context,skinFilePath,skinName);
-        //// TODO: 2017/9/15 是否立即加载皮肤
+        SkinFileUitls.saveSkinFile(context, skinFilePath, skinName);
+        SkinFileUitls.upZipSkin(context, skinFilePath, skinName);
         if (isLoadImmediately) {
             loadSkin(skinName, listener);
         }
@@ -166,12 +129,12 @@ public class SkinManager implements SubObserver {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
                         String
                                 skinPath =
-                                SkinFileUitls.getSkinPath(context) +
+                                SkinFileUitls.getSkinPath(context, false) +
                                 File.separator +
                                 strings[0];
                         String
                                 skinPathRes =
-                                SkinFileUitls.getSkinResPath(context) +
+                                SkinFileUitls.getSkinPath(context, true) +
                                 File.separator +
                                 strings[0];
                         LogUtils.i(TAG, skinPath);
@@ -236,6 +199,27 @@ public class SkinManager implements SubObserver {
 
     public boolean isExternalSkin() {
         return mResources != null && !isDefaultSkin;
+    }
+
+    public boolean isNightMode() {
+        return mNightMode;
+    }
+
+    public void nightMode() {
+        resetDefaultThem();
+        mNightMode = true;
+        SpUtils.setNightMode(context, true);
+        notifyUpdate();
+    }
+
+    public void resetDefaultThem() {
+        isDefaultSkin = true;
+        mNightMode = false;
+        skinPath = null;
+        skinPathRes = null;
+        SpUtils.setNightMode(context, false);
+        SpUtils.setDefaultSkin(context);
+        notifyUpdate();
     }
 
     @Override
@@ -353,5 +337,25 @@ public class SkinManager implements SubObserver {
         return drawable;
     }
 
+    private int getFirstIndex() {
+        int firstIndex = 1;
+        if (SkinConfig.Density < 1) {
+            //ldpi
+            firstIndex = 0;
+        } else if (SkinConfig.Density < 1.5) {
+            //mdpi
+            firstIndex = 1;
+        } else if (SkinConfig.Density < 2) {
+            //hdpi
+            firstIndex = 3;
+        } else if (SkinConfig.Density < 3) {
+            //xhdpi
+            firstIndex = 4;
+        } else if (SkinConfig.Density < 4) {
+            //xxhdpi
+            firstIndex = 5;
+        }
+        return firstIndex;
+    }
 
 }

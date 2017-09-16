@@ -14,6 +14,9 @@ public class SkinConfig {
     public static final  String SP_Font_Path="SP_Font_Path";
     public static final  String SP_Custom_Skin_Path="SP_Custom_Skin_Path";
 
+    public static final  String SP_Skin_Root_Path="SP_Skin_Root_Path";
+    public static final  String SP_Default_Skin_Root_Path="SP_Default_Root_Path";
+
     public static final  String SP_Default_Skin_Path="SP_Default_Skin_Path";
 
     public static final  String SP_Night_Mode="SP_Night_Mode";

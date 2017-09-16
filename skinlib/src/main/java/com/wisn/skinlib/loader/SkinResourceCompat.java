@@ -26,7 +26,7 @@ public class SkinResourceCompat {
     public static void loadSkinFile(Context context, String skinName) {
         File
                 file =
-                new File(SkinFileUitls.getSkinResPath(context) +
+                new File(SkinFileUitls.getSkinPath(context,true) +
                          File.separator +
                          skinName +
                          File.separator +
