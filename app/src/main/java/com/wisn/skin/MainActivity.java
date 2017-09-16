@@ -32,7 +32,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if(v==mChangeSkin){
-            SkinResourceCompat.loadSkinFile("");
+            SkinResourceCompat.loadSkinFile(this,"theme-com.wisn.skin1--16-1.0-2017-09-08-09-55-06.skin");
 //           String result1= new String(Base64.decode("admin:admin"));
 //           String result2= new String(Base64.decode("admin:admin".getBytes()));
 //           String result3= new String(Base64_2.decode("admin:admin"));

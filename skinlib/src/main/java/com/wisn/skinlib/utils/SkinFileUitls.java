@@ -30,7 +30,7 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String CopyAssetsToSkinDir(Context context, String skinName, String toFilePath) {
+    public static String copyAssetsToSkinDir(Context context, String skinName, String toFilePath) {
         InputStream is = null;
         try {
             is = context.getAssets().open(SkinConfig.SkinDir + File.separator + skinName);
@@ -43,6 +43,43 @@ public class SkinFileUitls {
             e.printStackTrace();
         }
         return toFilePath;
+    }
+
+    /**
+     * 保存新添加的皮肤
+     *
+     * @param fromFilePath
+     * @param skinName
+     *
+     * @return
+     */
+    public static boolean saveSkinFile(Context context, String fromFilePath, String skinName) {
+        if (fromFilePath == null || skinName == null) return false;
+        return copyFile(new File(fromFilePath), new File(SkinFileUitls.getSkinPath(context), skinName));
+    }
+
+    public  static boolean upZipSkin(Context context, String zipFile,String skinName) {
+        if (zipFile == null) return false;
+        return upZipFile(new File(zipFile), getSkinResPath(context)+File.separator+skinName);
+    }
+
+    /**
+     * 拷贝单个文件到指定文件
+     *
+     * @param fromFile
+     * @param toFile
+     *
+     * @return
+     */
+    private static boolean copyFile(File fromFile, File toFile) {
+        if (fromFile == null || toFile == null) return false;
+        try {
+            if (!toFile.exists()) toFile.createNewFile();
+            return copyFileStream(new FileInputStream(fromFile), new FileOutputStream(toFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -86,43 +123,6 @@ public class SkinFileUitls {
         }
         File cacheDir = context.getCacheDir();
         return cacheDir.getAbsolutePath();
-    }
-
-    /**
-     * 保存新添加的皮肤
-     *
-     * @param fromFilePath
-     * @param skinName
-     *
-     * @return
-     */
-    public static boolean saveSkinFile(Context context, String fromFilePath, String skinName) {
-        if (fromFilePath == null || skinName == null) return false;
-        return copyFile(new File(fromFilePath), new File(SkinFileUitls.getSkinPath(context), skinName));
-    }
-
-    public  static boolean upZipSkin(Context context, String zipFile) {
-        if (zipFile == null) return false;
-        return upZipFile(new File(zipFile), getSkinResPath(context));
-    }
-
-    /**
-     * 拷贝单个文件到指定文件
-     *
-     * @param fromFile
-     * @param toFile
-     *
-     * @return
-     */
-    private static boolean copyFile(File fromFile, File toFile) {
-        if (fromFile == null || toFile == null) return false;
-        try {
-            if (!toFile.exists()) toFile.createNewFile();
-            return copyFileStream(new FileInputStream(fromFile), new FileOutputStream(toFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
 

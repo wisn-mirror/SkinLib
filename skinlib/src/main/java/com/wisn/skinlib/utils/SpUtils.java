@@ -23,6 +23,9 @@ public class SpUtils {
         return SkinPreferencesUtils.getBoolean(context, SkinConfig.SP_Night_Mode, false);
     }
 
+    public static void setDefaultSkin(Context context) {
+        SkinPreferencesUtils.putString(context, SkinConfig.SP_Custom_Skin_Path, SkinConfig.SP_Default_Skin_Path);
+    }
     public static void setCustomSkinName(Context context, String path) {
         SkinPreferencesUtils.putString(context, SkinConfig.SP_Custom_Skin_Path, path);
     }

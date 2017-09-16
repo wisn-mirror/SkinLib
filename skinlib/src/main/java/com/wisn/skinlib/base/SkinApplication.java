@@ -42,7 +42,7 @@ public class SkinApplication extends Application {
                 File toFile = new File(SkinFileUitls.getSkinPath(this), fileName);
                 if (!toFile.exists()) {
                     toFile.createNewFile();
-                    SkinFileUitls.CopyAssetsToSkinDir(this, fileName, toFile.getPath());
+                    SkinFileUitls.copyAssetsToSkinDir(this, fileName, toFile.getPath());
                 }
             }
             //检测皮肤目录和解压目录的一致性
@@ -53,7 +53,7 @@ public class SkinApplication extends Application {
                 if (skinRes.exists() && skinRes.isDirectory()) {
                     continue;
                 }
-                SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName);
+                SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName,fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();

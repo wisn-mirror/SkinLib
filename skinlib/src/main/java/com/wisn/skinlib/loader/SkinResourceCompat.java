@@ -1,10 +1,10 @@
 package com.wisn.skinlib.loader;
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
@@ -32,6 +32,9 @@ public class SkinResourceCompat {
                          File.separator +
                          "res");
         if (file.exists() && file.isDirectory()) {
+            if (skinData != null) {
+                skinData.clear();
+            }
             pasFileIndex(file);
         }
     }
@@ -80,17 +83,19 @@ public class SkinResourceCompat {
     }
 
     public static String getPath(String imageName) {
-        String basePath = Environment.getExternalStorageDirectory().getPath() + "/dd/the/res";
-        LinkedHashMap<String, String> stringStringLinkedHashMap = skinData.get(imageName);
-        if (stringStringLinkedHashMap == null) {
+        if (SkinManager.getInstance().skinPathRes == null) {
+            return imageName;
+        }
+        LinkedHashMap<String, String> skinImgRes = skinData.get(imageName);
+        if (skinImgRes == null) {
             return imageName;
         } else {
-            String indexFirst = getBestIndex(stringStringLinkedHashMap);
-            String s = stringStringLinkedHashMap.get(indexFirst);
+            String indexFirst = getBestIndex(skinImgRes);
+            String s = skinImgRes.get(indexFirst);
             if (TextUtils.isEmpty(s)) {
                 return imageName;
             }
-            return basePath + File.separator + indexFirst + File.separator + s;
+            return SkinManager.getInstance().skinPathRes + File.separator + indexFirst + File.separator + s;
         }
     }
 

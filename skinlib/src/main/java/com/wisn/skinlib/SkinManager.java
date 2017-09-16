@@ -37,10 +37,10 @@ public class SkinManager implements SubObserver {
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean mNightMode = false;
     private boolean isDefaultSkin = true;
-    private String skinPath;
     private Resources mResources;
     private String mPackageName;
-
+    public String skinPath;
+    public String skinPathRes;
 
     private SkinManager() {}
 
@@ -89,11 +89,12 @@ public class SkinManager implements SubObserver {
         return firstIndex;
     }
 
-    public void updateSkinPath(String newSkinPath,SkinPathChangeLister skinPathChangeLister ){
+    public void updateSkinPath(String newSkinPath, SkinPathChangeLister skinPathChangeLister) {
         //// TODO: 2017/9/16复制皮肤到新的皮肤文件中
 
 
     }
+
     public void nightMode() {
         resetDefaultThem();
         mNightMode = true;
@@ -104,36 +105,17 @@ public class SkinManager implements SubObserver {
     public void resetDefaultThem() {
         isDefaultSkin = true;
         mNightMode = false;
+        skinPath = null;
+        skinPathRes = null;
         SpUtils.setNightMode(context, false);
+        SpUtils.setDefaultSkin(context);
         notifyUpdate();
-    }
-
-    @Override
-    public void attach(ISkinUpdateObserver observer) {
-        if (mSkinObservers == null) {
-            mSkinObservers = new ArrayList<>();
-        }
-        mSkinObservers.add(observer);
-    }
-
-    @Override
-    public void detach(ISkinUpdateObserver observer) {
-        if (mSkinObservers == null) return;
-        if (mSkinObservers.contains(observer)) {
-            mSkinObservers.remove(observer);
-        }
-    }
-
-    @Override
-    public void notifyUpdate() {
-        if (mSkinObservers == null) return;
-        for (ISkinUpdateObserver iSkinUpdate : mSkinObservers) {
-            iSkinUpdate.onThemUpdate();
-        }
     }
 
     public void loadSkin(SkinLoaderListener listener) {
         if (SpUtils.isDefaultSkin(context)) {
+            skinPath = null;
+            skinPathRes = null;
             return;
         }
         String customSkinName = SpUtils.getCustomSkinName(context);
@@ -144,12 +126,20 @@ public class SkinManager implements SubObserver {
         loadSkin(null);
     }
 
-    public void saveSkin(String skinPath,
+    /**
+     *
+     * @param skinFilePath
+     * @param skinName
+     * @param listener
+     * @param isLoadImmediately
+     */
+    public void saveSkin(String skinFilePath,
                          String skinName,
                          SkinLoaderListener listener,
                          boolean isLoadImmediately) {
         //// TODO: 2017/9/15 拷贝到皮肤文件夹
-
+        SkinFileUitls.saveSkinFile(context,skinFilePath,skinName);
+        SkinFileUitls.upZipSkin(context,skinFilePath,skinName);
         //// TODO: 2017/9/15 是否立即加载皮肤
         if (isLoadImmediately) {
             loadSkin(skinName, listener);
@@ -178,6 +168,10 @@ public class SkinManager implements SubObserver {
                                 skinPath =
                                 SkinFileUitls.getSkinPath(context) +
                                 File.separator +
+                                strings[0];
+                        String
+                                skinPathRes =
+                                SkinFileUitls.getSkinResPath(context) +
                                 File.separator +
                                 strings[0];
                         LogUtils.i(TAG, skinPath);
@@ -207,6 +201,7 @@ public class SkinManager implements SubObserver {
                                                            superRes.getConfiguration());
                         SpUtils.setCustomSkinName(context, strings[0]);
                         SkinManager.this.skinPath = skinPath;
+                        SkinManager.this.skinPathRes = skinPathRes;
                         mResources = resource;
                         return resource;
                     }
@@ -241,6 +236,30 @@ public class SkinManager implements SubObserver {
 
     public boolean isExternalSkin() {
         return mResources != null && !isDefaultSkin;
+    }
+
+    @Override
+    public void attach(ISkinUpdateObserver observer) {
+        if (mSkinObservers == null) {
+            mSkinObservers = new ArrayList<>();
+        }
+        mSkinObservers.add(observer);
+    }
+
+    @Override
+    public void detach(ISkinUpdateObserver observer) {
+        if (mSkinObservers == null) return;
+        if (mSkinObservers.contains(observer)) {
+            mSkinObservers.remove(observer);
+        }
+    }
+
+    @Override
+    public void notifyUpdate() {
+        if (mSkinObservers == null) return;
+        for (ISkinUpdateObserver iSkinUpdate : mSkinObservers) {
+            iSkinUpdate.onThemUpdate();
+        }
     }
 
     /**
