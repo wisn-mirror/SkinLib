@@ -2,7 +2,7 @@ package com.wisn.skinlib.attr.base;
 
 import android.view.View;
 
-import com.wisn.skinlib.utils.SkinUtils;
+import com.wisn.skinlib.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +18,14 @@ public class SkinItem {
         attrs=new ArrayList<>();
     }
     public void apply(){
-        if(SkinUtils.isEmpty(attrs))
+        if(ArrayUtils.isEmpty(attrs))
             return ;
         for (SkinAttr skinAttr:attrs) {
             skinAttr.apply(view);
         }
     }
     public void clear(){
-        if(!SkinUtils.isEmpty(attrs)){
+        if(!ArrayUtils.isEmpty(attrs)){
             attrs.clear();
         }
     }

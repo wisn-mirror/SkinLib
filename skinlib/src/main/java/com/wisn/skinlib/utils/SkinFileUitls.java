@@ -61,6 +61,15 @@ public class SkinFileUitls {
         return skinDir.getAbsolutePath();
     }
 
+
+    public static String getSkinResPath(Context context) {
+        File skinDir = new File(getCacherDir(context), SkinConfig.SkinResDir);
+        if (!skinDir.exists()) {
+            skinDir.mkdirs();
+        }
+        return skinDir.getAbsolutePath();
+    }
+
     /**
      * get CacheDir
      *
@@ -92,6 +101,11 @@ public class SkinFileUitls {
         return copyFile(new File(fromFilePath), new File(SkinFileUitls.getSkinPath(context), skinName));
     }
 
+    public  static boolean upZipSkin(Context context, String zipFile) {
+        if (zipFile == null) return false;
+        return upZipFile(new File(zipFile), getSkinResPath(context));
+    }
+
     /**
      * 拷贝单个文件到指定文件
      *
@@ -111,13 +125,14 @@ public class SkinFileUitls {
         }
     }
 
+
     /**
      * 解压缩皮肤
      *
      * @param zipFile    解压路径
      * @param folderPath 解压缩的目标目录
      */
-    private static void upZipFile(File zipFile, String folderPath) {
+    private static boolean upZipFile(File zipFile, String folderPath) {
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdirs();
@@ -142,7 +157,9 @@ public class SkinFileUitls {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     /**

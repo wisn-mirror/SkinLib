@@ -14,6 +14,7 @@ import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.loader.ResourceCompat;
 import com.wisn.skinlib.utils.LogUtils;
@@ -62,11 +63,37 @@ public class SkinManager implements SubObserver {
 
     public void init(Context ctx) {
         context = ctx.getApplicationContext();
-        SkinConfig.Density=context.getResources().getDisplayMetrics().density;
+        SkinConfig.Density = context.getResources().getDisplayMetrics().density;
+        SkinConfig.FirstIndex = getFirstIndex();
         TypeFaceUtils.getTypeFace(context);
     }
 
+    private int getFirstIndex() {
+        int firstIndex = 1;
+        if (SkinConfig.Density < 1) {
+            //ldpi
+            firstIndex = 0;
+        } else if (SkinConfig.Density < 1.5) {
+            //mdpi
+            firstIndex = 1;
+        } else if (SkinConfig.Density < 2) {
+            //hdpi
+            firstIndex = 3;
+        } else if (SkinConfig.Density < 3) {
+            //xhdpi
+            firstIndex = 4;
+        } else if (SkinConfig.Density < 4) {
+            //xxhdpi
+            firstIndex = 5;
+        }
+        return firstIndex;
+    }
 
+    public void updateSkinPath(String newSkinPath,SkinPathChangeLister skinPathChangeLister ){
+        //// TODO: 2017/9/16复制皮肤到新的皮肤文件中
+
+
+    }
     public void nightMode() {
         resetDefaultThem();
         mNightMode = true;
@@ -129,6 +156,10 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param skinName
+     * @param listener
+     */
     public void loadSkin(String skinName, final SkinLoaderListener listener) {
         new AsyncTask<String, Void, Resources>() {
             @Override

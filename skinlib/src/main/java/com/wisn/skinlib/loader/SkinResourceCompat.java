@@ -1,35 +1,37 @@
-package com.wisn.skinlib.utils;
+package com.wisn.skinlib.loader;
 
+import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.wisn.skinlib.config.SkinConfig;
+import com.wisn.skinlib.utils.SkinFileUitls;
 
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by wisn on 2017/9/6.
  */
 
-public class SkinUtils {
-    private static final String TAG = "SkinUtils";
+public class SkinResourceCompat {
+    private static final String TAG = "SkinResourceCompat";
     private static LinkedHashMap<String, LinkedHashMap<String, String>>
             skinData =
-            new LinkedHashMap<String, LinkedHashMap<String, String>>();
+            new LinkedHashMap<>();
 
-    public static boolean isEmpty(List list) {
-        if (list == null || list.size() == 0) return true;
-        return false;
-    }
-
-    public static void getAllFileIndex(String skinName) {
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/dd/the/res");
-        if (file.isDirectory()) {
+    public static void loadSkinFile(Context context, String skinName) {
+        File
+                file =
+                new File(SkinFileUitls.getSkinResPath(context) +
+                         File.separator +
+                         skinName +
+                         File.separator +
+                         "res");
+        if (file.exists() && file.isDirectory()) {
             pasFileIndex(file);
         }
     }
@@ -83,13 +85,16 @@ public class SkinUtils {
         if (stringStringLinkedHashMap == null) {
             return imageName;
         } else {
-            String indexFirst = getBestPath(stringStringLinkedHashMap);
+            String indexFirst = getBestIndex(stringStringLinkedHashMap);
             String s = stringStringLinkedHashMap.get(indexFirst);
+            if (TextUtils.isEmpty(s)) {
+                return imageName;
+            }
             return basePath + File.separator + indexFirst + File.separator + s;
         }
     }
 
-    private static String getBestPath(LinkedHashMap<String, String> densityMap) {
+    private static String getBestIndex(LinkedHashMap<String, String> densityMap) {
         String[] index = new String[7];
         Iterator<String> iterator = densityMap.keySet().iterator();
         while (iterator.hasNext()) {
@@ -110,53 +115,31 @@ public class SkinUtils {
                 index[6] = next;
             }
         }
-        int firstIndex = getFirstIndex();
-        String keyForindex = getKeyForHight(index, firstIndex);
+        String keyForindex = getIndexForHight(index, SkinConfig.FirstIndex);
         if (TextUtils.isEmpty(keyForindex)) {
-            keyForindex = getKeyForLow(index, firstIndex);
+            keyForindex = getIndexForLow(index, SkinConfig.FirstIndex);
         }
         return keyForindex;
     }
 
-    private static String getKeyForLow(String[] index, int firstIndex) {
+    private static String getIndexForLow(String[] index, int firstIndex) {
         if (firstIndex < 0) return null;
         String str0 = index[firstIndex];
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {
-            return getKeyForHight(index, firstIndex--);
+            return getIndexForHight(index, firstIndex--);
         }
     }
 
-    private static String getKeyForHight(String[] index, int firstIndex) {
+    private static String getIndexForHight(String[] index, int firstIndex) {
         if (firstIndex >= index.length) return null;
         String str0 = index[firstIndex];
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {
-            return getKeyForHight(index, firstIndex++);
+            return getIndexForHight(index, firstIndex++);
         }
-    }
-
-    private static int getFirstIndex() {
-        int Firstindex = 1;
-        if (SkinConfig.Density < 1) {
-            //ldpi
-            Firstindex = 0;
-        } else if (SkinConfig.Density < 1.5) {
-            //mdpi
-            Firstindex = 1;
-        } else if (SkinConfig.Density < 2) {
-            //hdpi
-            Firstindex = 3;
-        } else if (SkinConfig.Density < 3) {
-            //xhdpi
-            Firstindex = 4;
-        } else if (SkinConfig.Density < 4) {
-            //xxhdpi
-            Firstindex = 5;
-        }
-        return Firstindex;
     }
 
 }

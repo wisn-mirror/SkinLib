@@ -15,8 +15,8 @@ import com.wisn.skinlib.attr.base.SkinAttr;
 import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
+import com.wisn.skinlib.utils.ArrayUtils;
 import com.wisn.skinlib.utils.LogUtils;
-import com.wisn.skinlib.utils.SkinUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,7 +167,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                 }
             }
         }
-        if (!SkinUtils.isEmpty(viewAttrs)) {
+        if (!ArrayUtils.isEmpty(viewAttrs)) {
             // TODO: 2017/9/7 attrs add map
             for (SkinAttr skinAttr : viewAttrs) {
                 LogUtils.e(TAG, "skinAttr:" + skinAttr.toString());
