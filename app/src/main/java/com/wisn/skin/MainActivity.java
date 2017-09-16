@@ -11,6 +11,7 @@ import com.wisn.skinlib.base.SkinAppCompatActivity;
 import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
+import com.wisn.skinlib.utils.SkinUtils;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="MainActivity";
@@ -33,6 +34,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if(v==mChangeSkin){
+            SkinUtils.getAllFileIndex("");
 //           String result1= new String(Base64.decode("admin:admin"));
 //           String result2= new String(Base64.decode("admin:admin".getBytes()));
 //           String result3= new String(Base64_2.decode("admin:admin"));
@@ -44,6 +46,9 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--16-1.0-2017-09-08-09-55-06.skin",
                                                this);
         }else if(v==resetSkin){
+//            SkinUtils.print();
+            String path = SkinUtils.getPath("abc_tab_indicator_mtrl_alpha.9");
+            Log.e(TAG,"33333333333"+path);
             SkinManager.getInstance().resetDefaultThem();
         }
     }

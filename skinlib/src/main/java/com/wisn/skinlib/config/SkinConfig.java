@@ -35,7 +35,7 @@ public class SkinConfig {
     public static final  String Attrs_deal_char_style="style";
     public static final  String Attrs_deal_char_index="@";
 
-
+    public static float Density=1;
 
 
 }

@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
+import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
@@ -39,6 +40,7 @@ public class SkinManager implements SubObserver {
     private Resources mResources;
     private String mPackageName;
 
+
     private SkinManager() {}
 
     public static SkinManager manager;
@@ -60,6 +62,7 @@ public class SkinManager implements SubObserver {
 
     public void init(Context ctx) {
         context = ctx.getApplicationContext();
+        SkinConfig.Density=context.getResources().getDisplayMetrics().density;
         TypeFaceUtils.getTypeFace(context);
     }
 
