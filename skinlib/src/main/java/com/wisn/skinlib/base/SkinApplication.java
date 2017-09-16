@@ -1,6 +1,7 @@
 package com.wisn.skinlib.base;
 
 import android.app.Application;
+import android.os.Environment;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
@@ -23,8 +24,11 @@ public class SkinApplication extends Application {
     }
 
     public void configSkin() {
-        initSkinLoader();
         SkinManager.getInstance().init(this);
+        SkinManager.getInstance().setSkinRootPath(Environment.getExternalStorageDirectory() +
+                                                  File.separator +
+                                                  "dd");
+        initSkinLoader();
         //夜间模式使用
         if (SpUtils.isNightMode(this)) {
             SkinManager.getInstance().nightMode();

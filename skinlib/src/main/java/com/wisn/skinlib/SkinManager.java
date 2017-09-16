@@ -17,6 +17,7 @@ import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.loader.ResourceCompat;
+import com.wisn.skinlib.loader.SkinResourceCompat;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.SpUtils;
@@ -73,7 +74,9 @@ public class SkinManager implements SubObserver {
     public void updateSkinPath(String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
     }
-
+    public void setSkinRootPath(String newSkinRootPath){
+        SpUtils.setSkinRootPath(context, newSkinRootPath);
+    }
 
     /**
      *
@@ -162,6 +165,7 @@ public class SkinManager implements SubObserver {
                                 ResourceCompat.getResource(assetManager,
                                                            superRes.getDisplayMetrics(),
                                                            superRes.getConfiguration());
+                        SkinResourceCompat.loadSkinFile(context,strings[0]);
                         SpUtils.setCustomSkinName(context, strings[0]);
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;

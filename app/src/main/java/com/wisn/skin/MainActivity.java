@@ -1,6 +1,7 @@
 package com.wisn.skin;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -8,8 +9,11 @@ import android.widget.Button;
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.loader.SkinResourceCompat;
 import com.wisn.skinlib.utils.LogUtils;
+
+import java.io.File;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="MainActivity";
@@ -27,26 +31,43 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         final float scale = this.getResources().getDisplayMetrics().density;
         LogUtils.e(TAG,"aaa:"+scale);
 //        return (int) (dpValue * scale + 0.5f);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+             /*   SkinManager.getInstance().updateSkinPath(Environment.getExternalStorageDirectory() +
+                                                         File.separator +
+                                                         "dd",
+                                                         new SkinPathChangeLister() {
+                                                             @Override
+                                                             public void start() {
+                                                                 LogUtils.e(TAG,"SkinPathChangeLister:start:");
+                                                             }
+
+                                                             @Override
+                                                             public void progress(int current, int progress) {
+                                                                 LogUtils.e(TAG,"SkinPathChangeLister:progress:current:"+current+" progress"+progress);
+                                                             }
+
+                                                             @Override
+                                                             public void finish() {
+                                                                 LogUtils.e(TAG,"SkinPathChangeLister:finish:");
+                                                             }
+                                                         });*/
+            }
+        }).start();
+
     }
 
     @Override
     public void onClick(View v) {
         if(v==mChangeSkin){
-            SkinResourceCompat.loadSkinFile(this,"theme-com.wisn.skin1--16-1.0-2017-09-08-09-55-06.skin");
-//           String result1= new String(Base64.decode("admin:admin"));
-//           String result2= new String(Base64.decode("admin:admin".getBytes()));
-//           String result3= new String(Base64_2.decode("admin:admin"));
-//           String result4= new String(Base64_2.decode("admin:admin".getBytes()));
-//            Log.e(TAG,result1);
-//            Log.e(TAG,result2);
-//            Log.e(TAG,result3);
-//            Log.e(TAG,result4);
-            SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--16-1.0-2017-09-08-09-55-06.skin",
+            SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--28-1.0-2017-09-16-10-24-16.skin",
                                                this);
+            SkinResourceCompat.print();
         }else if(v==resetSkin){
 //            SkinResourceCompat.print();
             long start=System.currentTimeMillis();
-            String path = SkinResourceCompat.getPath("abc_tab_indicator_mtrl_alpha.9");
+            String path = SkinResourceCompat.getPath("aaaaa");
             SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
             SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
             SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
