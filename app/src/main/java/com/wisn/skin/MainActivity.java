@@ -185,7 +185,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
             SkinResourceCompat.getPath("abc_ic_star_black_16dp");
             SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            Log.e(TAG,(System.currentTimeMillis()-start)+"::33333333333"+path);
+            Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
             SkinManager.getInstance().resetDefaultThem();
         }
     }

@@ -26,7 +26,7 @@ public class SkinResourceCompat {
     public static void loadSkinFile(Context context, String skinName) {
         File
                 file =
-                new File(SkinFileUitls.getSkinPath(context,true) +
+                new File(SkinFileUitls.getSkinPath(context, true) +
                          File.separator +
                          skinName +
                          File.separator +
@@ -82,7 +82,15 @@ public class SkinResourceCompat {
         }
     }
 
+    public static String getPathForRN(String imageName) {
+        return getPath(imageName, true);
+    }
+
     public static String getPath(String imageName) {
+        return getPath(imageName, false);
+    }
+
+    public static String getPath(String imageName, boolean isRN) {
         if (SkinManager.getInstance().skinPathRes == null) {
             return imageName;
         }
@@ -95,7 +103,20 @@ public class SkinResourceCompat {
             if (TextUtils.isEmpty(s)) {
                 return imageName;
             }
-            return SkinManager.getInstance().skinPathRes + File.separator + indexFirst + File.separator + s;
+            if (isRN) {
+                return "file://" +
+                       SkinManager.getInstance().skinPathRes +
+                       File.separator +
+                       indexFirst +
+                       File.separator +
+                       s;
+            } else {
+                return SkinManager.getInstance().skinPathRes +
+                       File.separator +
+                       indexFirst +
+                       File.separator +
+                       s;
+            }
         }
     }
 
