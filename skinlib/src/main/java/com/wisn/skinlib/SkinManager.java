@@ -75,6 +75,8 @@ public class SkinManager implements SubObserver {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
     }
     public void setSkinRootPath(String newSkinRootPath){
+        File file=new File(newSkinRootPath);
+        file.mkdirs();
         SpUtils.setSkinRootPath(context, newSkinRootPath);
     }
 

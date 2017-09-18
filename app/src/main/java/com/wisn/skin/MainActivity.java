@@ -31,6 +31,43 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         final float scale = this.getResources().getDisplayMetrics().density;
         LogUtils.e(TAG,"aaa:"+scale);
 //        return (int) (dpValue * scale + 0.5f);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v==mChangeSkin){
+            SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--30-1.0-2017-09-18-09-16-10.skin",
+                                               this);
+            Log.e(TAG,"printprintprint--------------------------------------------------");
+            SkinResourceCompat.print();
+        }else if(v==resetSkin){
+//            SkinResourceCompat.print();
+            long start=System.currentTimeMillis();
+            String path = SkinResourceCompat.getPath("aaaaa");
+            for(int i=0;i<10;i++){
+                Log.e(TAG,  SkinResourceCompat.getPath("gift_0"));
+                Log.e(TAG,SkinResourceCompat.getPath("gift_1"));
+                Log.e(TAG,SkinResourceCompat.getPath("ic_launcher_round"));
+            }
+            Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
+//            SkinManager.getInstance().resetDefaultThem();
+        }
+    }
+
+    @Override
+    public void start() {
+        LogUtils.e(TAG,"start");
+    }
+
+    @Override
+    public void onSuccess() {
+        LogUtils.e(TAG,"onSuccess");
+
+    }
+
+    public void updateSkinPath(){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -55,152 +92,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
                                                          });*/
             }
         }).start();
-
     }
-
-    @Override
-    public void onClick(View v) {
-        if(v==mChangeSkin){
-            SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--28-1.0-2017-09-16-10-24-16.skin",
-                                               this);
-            SkinResourceCompat.print();
-        }else if(v==resetSkin){
-//            SkinResourceCompat.print();
-            long start=System.currentTimeMillis();
-            String path = SkinResourceCompat.getPath("aaaaa");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_half_black_36dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            SkinResourceCompat.getPath("abc_ic_star_black_16dp");
-            SkinResourceCompat.getPath("abc_ic_menu_copy_mtrl_am_alpha");
-            Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
-            SkinManager.getInstance().resetDefaultThem();
-        }
-    }
-
-    @Override
-    public void start() {
-        LogUtils.e(TAG,"start");
-    }
-
-    @Override
-    public void onSuccess() {
-        LogUtils.e(TAG,"onSuccess");
-
-    }
-
     @Override
     public void onFailed(String error) {
         LogUtils.e(TAG,"onFailed"+error);

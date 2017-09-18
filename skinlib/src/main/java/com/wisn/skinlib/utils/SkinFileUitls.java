@@ -2,6 +2,7 @@ package com.wisn.skinlib.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.SkinPathChangeLister;
@@ -140,6 +141,7 @@ public class SkinFileUitls {
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
+        Log.d("SkinFileUtils",skinDir.getAbsolutePath());
         return skinDir.getAbsolutePath();
     }
 

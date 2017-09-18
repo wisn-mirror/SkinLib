@@ -2,6 +2,7 @@ package com.wisn.skinlib.base;
 
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
@@ -25,9 +26,10 @@ public class SkinApplication extends Application {
 
     public void configSkin() {
         SkinManager.getInstance().init(this);
-        SkinManager.getInstance().setSkinRootPath(Environment.getExternalStorageDirectory() +
+        /*SkinManager.getInstance().setSkinRootPath(Environment.getExternalStorageDirectory() +
                                                   File.separator +
-                                                  "dd");
+                                                  "dd");*/
+        SkinManager.getInstance().setSkinRootPath( SkinConfig.SP_Default_Skin_Root_Path);
         initSkinLoader();
         //夜间模式使用
         if (SpUtils.isNightMode(this)) {
@@ -43,15 +45,21 @@ public class SkinApplication extends Application {
             //拷贝assets到皮肤目录
             if (skinFile == null || skinFile.length == 0) return;
             for (String fileName : skinFile) {
+                Log.d("SkinApplication","   "+fileName);
                 File toFile = new File(SkinFileUitls.getSkinPath(this,false), fileName);
+                Log.d("SkinApplication","   "+SkinFileUitls.getSkinPath(this,false)+File.separator+fileName);
                 if (!toFile.exists()) {
                     toFile.createNewFile();
+//                    toFile.mkdirs();
                     SkinFileUitls.copyAssetsToSkinDir(this, fileName, toFile.getPath());
                 }
             }
             //检测皮肤目录和解压目录的一致性
             String skinPath = SkinFileUitls.getSkinPath(this,false);
-            String[] Skin = new File(skinPath).list();
+            File file=new File(skinPath);
+            if(!file.exists())return ;
+            String[] Skin = file.list();
+            if(Skin==null)return ;
             for (String fileName : Skin) {
                 File skinRes = new File(SkinFileUitls.getSkinPath(this,true), fileName);
                 if (skinRes.exists() && skinRes.isDirectory()) {

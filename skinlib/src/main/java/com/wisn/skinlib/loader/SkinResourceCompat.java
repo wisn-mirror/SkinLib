@@ -46,11 +46,11 @@ public class SkinResourceCompat {
                 pasFileIndex(file);
             } else {
                 if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
-                    Log.e(TAG,
+                   /* Log.e(TAG,
                           "getName:" + file.getName().substring(0, file.getName().lastIndexOf(".")) +
                           " getName:" + file.getName() +
                           " getParent:" + file.getParent() +
-                          "   getParentFile:" + file.getParentFile().getName());
+                          "   getParentFile:" + file.getParentFile().getName());*/
 
                     String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
                     LinkedHashMap<String, String> strings = skinData.get(fileName);
@@ -98,8 +98,17 @@ public class SkinResourceCompat {
         if (skinImgRes == null) {
             return imageName;
         } else {
+            Iterator<Map.Entry<String, String>> iterator2 = skinImgRes.entrySet().iterator();
+            String value = " value :";
+            while (iterator2.hasNext()) {
+                Map.Entry<String, String> next1 = iterator2.next();
+                value = value + " getKey:" + next1.getKey() + " getValue:" + next1.getValue();
+            }
+            Log.e(TAG, "imageName:"+imageName+"  " + value);
             String indexFirst = getBestIndex(skinImgRes);
+
             String s = skinImgRes.get(indexFirst);
+            Log.e(TAG, "indexFirstddd:"+indexFirst+" "+s);
             if (TextUtils.isEmpty(s)) {
                 return imageName;
             }
@@ -133,17 +142,17 @@ public class SkinResourceCompat {
                 index[2] = next;
             } else if (next.contains("-hdpi")) {
                 index[3] = next;
-            } else if (next.contains("-xdpi")) {
+            } else if (next.contains("-xhdpi")) {
                 index[4] = next;
-            } else if (next.contains("-xxdpi")) {
+            } else if (next.contains("-xxhdpi")) {
                 index[5] = next;
-            } else if (next.contains("-xxxdpi")) {
+            } else if (next.contains("-xxxhdpi")) {
                 index[6] = next;
             }
         }
         String keyForindex = getIndexForHight(index, SkinConfig.FirstIndex);
         if (TextUtils.isEmpty(keyForindex)) {
-            keyForindex = getIndexForLow(index, SkinConfig.FirstIndex);
+            keyForindex = getIndexForLow(index, SkinConfig.FirstIndex-1);
         }
         return keyForindex;
     }
@@ -151,20 +160,22 @@ public class SkinResourceCompat {
     private static String getIndexForLow(String[] index, int firstIndex) {
         if (firstIndex < 0) return null;
         String str0 = index[firstIndex];
+        Log.e(TAG,"getIndexForLow: str0 :"+str0+ " firstIndex:"+firstIndex);
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {
-            return getIndexForHight(index, firstIndex--);
+            return getIndexForLow(index, --firstIndex);
         }
     }
 
     private static String getIndexForHight(String[] index, int firstIndex) {
-        if (firstIndex >= index.length) return null;
+        if (firstIndex >= 7) return null;
         String str0 = index[firstIndex];
+        Log.e(TAG,"getIndexForHight :str0 :"+str0+ " firstIndex:"+firstIndex);
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {
-            return getIndexForHight(index, firstIndex++);
+            return getIndexForHight(index, ++firstIndex);
         }
     }
 
