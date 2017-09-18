@@ -102,10 +102,11 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                                .getIdentifier(styleName,
                                               SkinConfig.Attrs_deal_char_style,
                                               context.getPackageName());
-                int[] skinAttrs = new int[]{android.R.attr.textColor, android.R.attr.background};
+                int[] skinAttrs = new int[]{android.R.attr.textColor, android.R.attr.background,android.R.attr.drawableTop};
                 TypedArray typedArray = context.getTheme().obtainStyledAttributes(identifier, skinAttrs);
                 int textColor = typedArray.getResourceId(0, -1);
                 int background = typedArray.getResourceId(1, -1);
+                int drawableTop= typedArray.getResourceId(2, -1);
                 // TODO: 2017/9/7 deal textcolor
                 if (textColor != -1) {
                     String resourceEntryName = context.getResources().getResourceEntryName(textColor);
@@ -126,6 +127,18 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                             skinAttr =
                             SkinAttrFactory.get(SkinConfig.Attrs_Support_background,
                                                 background,
+                                                resourceEntryName,
+                                                resourceTypeName);
+                    if (skinAttr != null) viewAttrs.add(skinAttr);
+                }
+                //TODO: 2017/9/7   deal  drawableTop
+                if (drawableTop != -1) {
+                    String resourceEntryName = context.getResources().getResourceEntryName(drawableTop);
+                    String resourceTypeName = context.getResources().getResourceTypeName(drawableTop);
+                    SkinAttr
+                            skinAttr =
+                            SkinAttrFactory.get(SkinConfig.Attrs_Support_drawableTop,
+                                                drawableTop,
                                                 resourceEntryName,
                                                 resourceTypeName);
                     if (skinAttr != null) viewAttrs.add(skinAttr);

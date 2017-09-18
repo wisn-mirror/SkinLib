@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinFragmentActivity;
@@ -24,6 +26,8 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setPressed(true);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
@@ -52,7 +56,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
                 Log.e(TAG,SkinResourceCompat.getPath("ic_launcher_round"));
             }
             Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
-//            SkinManager.getInstance().resetDefaultThem();
+            SkinManager.getInstance().resetDefaultThem();
         }
     }
 

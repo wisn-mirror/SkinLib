@@ -1,10 +1,10 @@
 package com.wisn.skinlib.attr.base;
 
 import com.wisn.skinlib.attr.BackgroundAttr;
-import com.wisn.skinlib.attr.ImageViewAttr;
+import com.wisn.skinlib.attr.DrawableTopAttr;
+import com.wisn.skinlib.attr.ImageDrawableAttr;
 import com.wisn.skinlib.attr.TextColorAttr;
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.HashMap;
 
@@ -18,8 +18,9 @@ public class SkinAttrFactory {
 
     static {
         attrs.put(SkinConfig.Attrs_Support_background, new BackgroundAttr());
-        attrs.put(SkinConfig.Attrs_Support_src, new ImageViewAttr());
+        attrs.put(SkinConfig.Attrs_Support_src, new ImageDrawableAttr());
         attrs.put(SkinConfig.Attrs_Support_textColor, new TextColorAttr());
+        attrs.put(SkinConfig.Attrs_Support_drawableTop, new DrawableTopAttr());
     }
 
     public static SkinAttr get(String attrName,

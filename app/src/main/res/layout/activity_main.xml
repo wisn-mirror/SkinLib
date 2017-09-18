@@ -38,7 +38,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/radioButton"
+            android:id="@+id/imageButton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:background="@drawable/radiobutton_bg_gift"/>
@@ -54,6 +54,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@mipmap/tabbar_home_highlighted" />
+        <RadioButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:drawableTop="@drawable/radiobutton_bg_gift"/>
     </LinearLayout>
 
 </LinearLayout>

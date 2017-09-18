@@ -11,7 +11,7 @@ import com.wisn.skinlib.attr.base.SkinAttr;
  * Created by wisn on 2017/9/6.
  */
 
-public class ImageViewAttr extends SkinAttr {
+public class ImageDrawableAttr extends SkinAttr {
     @Override
     public void applySkin(View view) {
         if (view instanceof ImageView) {
