@@ -114,13 +114,13 @@ public class SkinResourceCompat {
             }
             if (isRN) {
                 return "file://" +
-                       SkinManager.getInstance().skinPathRes +
+                       SkinManager.getInstance().skinPathRes +File.separator+"res"+
                        File.separator +
                        indexFirst +
                        File.separator +
                        s;
             } else {
-                return SkinManager.getInstance().skinPathRes +
+                return SkinManager.getInstance().skinPathRes +File.separator+"res"+
                        File.separator +
                        indexFirst +
                        File.separator +
