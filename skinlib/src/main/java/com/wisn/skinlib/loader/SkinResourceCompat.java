@@ -91,7 +91,7 @@ public class SkinResourceCompat {
     }
 
     public static String getPath(String imageName, boolean isRN) {
-        if (SkinManager.getInstance().skinPathRes == null) {
+        if (SkinManager.getInstance().skinPathRes == null||SkinManager.getInstance().isDefaultSkin) {
             return imageName;
         }
         LinkedHashMap<String, String> skinImgRes = skinData.get(imageName);

@@ -40,7 +40,7 @@ public class SkinManager implements SubObserver {
     private Context context;
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean mNightMode = false;
-    private boolean isDefaultSkin = true;
+    public boolean isDefaultSkin = true;
     private Resources mResources;
     private String mPackageName;
     public String skinPath;
