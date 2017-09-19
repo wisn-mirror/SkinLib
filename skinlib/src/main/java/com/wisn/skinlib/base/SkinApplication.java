@@ -27,9 +27,6 @@ public class SkinApplication extends Application {
 
     public void configSkin() {
         SkinManager.getInstance().init(this);
-        /*SkinManager.getInstance().setSkinRootPath(Environment.getExternalStorageDirectory() +
-                                                  File.separator +
-                                                  "dd");*/
         SkinManager.getInstance().setSkinRootPath(SkinConfig.SP_Default_Skin_Root_Path);
         new Thread(new Runnable() {
             @Override

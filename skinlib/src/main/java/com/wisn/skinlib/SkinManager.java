@@ -8,8 +8,11 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 
+import com.wisn.skinlib.base.SkinApplication;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
@@ -192,9 +195,17 @@ public class SkinManager implements SubObserver {
                     mResources = resources;
                     isDefaultSkin = false;
                     mNightMode = false;
-                    SpUtils.setNightMode(context, false);
-                    if (listener != null) listener.onSuccess();
-                    notifyUpdate();
+                    new Handler(Looper.getMainLooper()).post(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    SpUtils.setNightMode(context, false);
+                                    if (listener != null) listener.onSuccess();
+                                    notifyUpdate();
+                                }
+                            }
+                    );
+
                 } else {
                     isDefaultSkin = true;
                     if (listener != null) listener.onFailed(" Resource is null ");
