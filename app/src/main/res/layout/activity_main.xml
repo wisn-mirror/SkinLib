@@ -27,6 +27,12 @@
             android:layout_height="wrap_content"
             android:text="Reset"
             android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/getcolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:textColor="@color/colorAccent" />
 
     </LinearLayout>
 

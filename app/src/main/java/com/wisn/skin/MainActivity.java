@@ -2,6 +2,7 @@ package com.wisn.skin;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,24 +14,27 @@ import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.loader.SkinResourceCompat;
+import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.LogUtils;
 
 import java.io.File;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="MainActivity";
-    private Button mChangeSkin,resetSkin;
+    private Button mChangeSkin,resetSkin,getcolor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
+        getcolor = (Button) findViewById(R.id.getcolor);
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         imageButton.setPressed(true);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
+        getcolor.setOnClickListener(this);
 //        startActivity(new Intent(this,TestAppCompatActivity.class));
         final float scale = this.getResources().getDisplayMetrics().density;
         LogUtils.e(TAG,"aaa:"+scale);
@@ -45,6 +49,10 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--30-1.0-2017-09-18-09-16-10.skin",
                                                this);
             Log.e(TAG,"printprintprint--------------------------------------------------");
+            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimary)));
+            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimaryDark)));
+            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorAccent)));
+            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.primary)));
             SkinResourceCompat.print();
         }else if(v==resetSkin){
 //            SkinResourceCompat.print();
@@ -57,6 +65,12 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             }
             Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
             SkinManager.getInstance().resetDefaultThem();
+        }else if(v==getcolor){
+            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimary"));
+            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
+            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorAccent"));
+            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("primary"));
+
         }
     }
 

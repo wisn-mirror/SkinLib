@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 
-import com.wisn.skinlib.base.SkinApplication;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
@@ -21,6 +20,7 @@ import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.loader.ResourceCompat;
 import com.wisn.skinlib.loader.SkinResourceCompat;
+import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.SpUtils;
@@ -77,14 +77,14 @@ public class SkinManager implements SubObserver {
     public void updateSkinPath(String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
     }
-    public void setSkinRootPath(String newSkinRootPath){
-        File file=new File(newSkinRootPath);
+
+    public void setSkinRootPath(String newSkinRootPath) {
+        File file = new File(newSkinRootPath);
         file.mkdirs();
         SpUtils.setSkinRootPath(context, newSkinRootPath);
     }
 
     /**
-     *
      * @param listener
      */
     public void loadSkin(SkinLoaderListener listener) {
@@ -93,7 +93,7 @@ public class SkinManager implements SubObserver {
             skinPathRes = null;
             return;
         }
-        if(!SpUtils.isDefaultSkin(context)){
+        if (!SpUtils.isDefaultSkin(context)) {
             String customSkinName = SpUtils.getCustomSkinName(context);
             loadSkin(customSkinName, listener);
         }
@@ -170,7 +170,7 @@ public class SkinManager implements SubObserver {
                                 ResourceCompat.getResource(assetManager,
                                                            superRes.getDisplayMetrics(),
                                                            superRes.getConfiguration());
-                        SkinResourceCompat.loadSkinFile(context,strings[0]);
+                        SkinResourceCompat.loadSkinFile(context, strings[0]);
                         SpUtils.setCustomSkinName(context, strings[0]);
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;
@@ -284,6 +284,32 @@ public class SkinManager implements SubObserver {
             color = mResources.getColor(colorResId);
         }
         return color;
+    }
+
+    /**
+     * RN通过颜色名获取颜色
+     *
+     * @param colorName
+     *
+     * @return
+     */
+    public String getColorForRN(String colorName) {
+        int color = 0;
+        int colorResId = 0;
+        if (mResources != null) {
+            colorResId =
+                    mResources.getIdentifier(colorName,
+                                             "color",
+                                             mPackageName);
+            color = mResources.getColor(colorResId);
+        } else {
+            colorResId = context.getResources().getIdentifier(colorName,
+                                                              "color",
+                                                              context.getPackageName());
+            color = context.getResources().getColor(colorResId);
+        }
+        if (color == 0) return null;
+        return ColorUtils.colorToRGB(color);
     }
 
     /**
