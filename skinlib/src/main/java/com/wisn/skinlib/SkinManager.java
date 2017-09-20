@@ -19,7 +19,6 @@ import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.interfaces.SubObserver;
-import com.wisn.skinlib.loader.ResourceCompat;
 import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
@@ -49,9 +48,7 @@ public class SkinManager implements SubObserver {
     public String skinPath;
     public String skinPathRes;
     private LinkedHashMap<String, LinkedHashMap<String, String>> skinData = new LinkedHashMap<>();
-
     private SkinManager() {}
-
     public static SkinManager manager;
 
     public static SkinManager getInstance() {
@@ -89,12 +86,6 @@ public class SkinManager implements SubObserver {
      */
     public void updateSkinPath(String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
-    }
-
-    public void setSkinRootPath(String newSkinRootPath) {
-        File file = new File(newSkinRootPath);
-        file.mkdirs();
-        SpUtils.setSkinRootPath(context, newSkinRootPath);
     }
 
     /**
@@ -180,13 +171,14 @@ public class SkinManager implements SubObserver {
 
                         Resources superRes = context.getResources();
                         Resources
-                                resource =
-                                ResourceCompat.getResource(assetManager,
-                                                           superRes.getDisplayMetrics(),
-                                                           superRes.getConfiguration());
+                                resource =new Resources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;
-                        LogUtils.e(TAG, "skinPath:" +SkinManager.this.skinPath +"   skinPathRes:" +SkinManager.this.skinPathRes);
+                        LogUtils.e(TAG,
+                                   "skinPath:" +
+                                   SkinManager.this.skinPath +
+                                   "   skinPathRes:" +
+                                   SkinManager.this.skinPathRes);
                         loadSkinFile(skinPathRes);
                         SpUtils.setCustomSkinName(context, strings[0]);
                         mResources = resource;
@@ -235,97 +227,6 @@ public class SkinManager implements SubObserver {
                 skinData.clear();
                 pasFileIndex(file);
             }
-        }
-    }
-
-    private void pasFileIndex(File fileDir) {
-        File[] files = fileDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                pasFileIndex(file);
-            } else {
-                if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
-                    String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
-                    LinkedHashMap<String, String> strings = skinData.get(fileName);
-                    if (strings != null) {
-                        strings.put(file.getParentFile().getName(), file.getName());
-                    } else {
-                        LinkedHashMap<String, String> strings1 = new LinkedHashMap<>();
-                        strings1.put(file.getParentFile().getName(), file.getName());
-                        skinData.put(fileName, strings1);
-                    }
-                }
-            }
-        }
-    }
-
-    private String getPath(String imageName, boolean isRN) {
-        if (SkinManager.getInstance().skinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
-            return imageName;
-        }
-        LinkedHashMap<String, String> skinImgRes = skinData.get(imageName);
-        if (skinImgRes == null) {
-            return imageName;
-        } else {
-            String indexFirst = getBestIndex(skinImgRes);
-            String s = skinImgRes.get(indexFirst);
-            if (TextUtils.isEmpty(s)) {
-                return imageName;
-            }
-            if (isRN) {
-                return "file://" +
-                       SkinManager.getInstance().skinPathRes + indexFirst + "/" + s;
-            } else {
-                return SkinManager.getInstance().skinPathRes + indexFirst + "/" + s;
-            }
-        }
-    }
-
-    private String getBestIndex(LinkedHashMap<String, String> densityMap) {
-        String[] index = new String[7];
-        Iterator<String> iterator = densityMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            String next = iterator.next();
-            if (next.contains("-ldpi")) {
-                index[0] = next;
-            } else if (next.equals("drawable") || next.equals("mipmap")) {
-                index[1] = next;
-            } else if (next.contains("-mdpi")) {
-                index[2] = next;
-            } else if (next.contains("-hdpi")) {
-                index[3] = next;
-            } else if (next.contains("-xhdpi")) {
-                index[4] = next;
-            } else if (next.contains("-xxhdpi")) {
-                index[5] = next;
-            } else if (next.contains("-xxxhdpi")) {
-                index[6] = next;
-            }
-        }
-        String keyForindex = getIndexForHight(index, SkinConfig.FirstIndex);
-        if (TextUtils.isEmpty(keyForindex)) {
-            keyForindex = getIndexForLow(index, SkinConfig.FirstIndex - 1);
-        }
-        return keyForindex;
-    }
-
-    private String getIndexForLow(String[] index, int firstIndex) {
-        if (firstIndex < 0) return null;
-        String str0 = index[firstIndex];
-        if (!TextUtils.isEmpty(str0)) {
-            return str0;
-        } else {
-            return getIndexForLow(index, --firstIndex);
-        }
-    }
-
-    private String getIndexForHight(String[] index, int firstIndex) {
-        if (firstIndex >= 7) return null;
-        String str0 = index[firstIndex];
-        if (!TextUtils.isEmpty(str0)) {
-            return str0;
-        } else {
-            return getIndexForHight(index, ++firstIndex);
         }
     }
 
@@ -495,6 +396,16 @@ public class SkinManager implements SubObserver {
         return drawable;
     }
 
+    /**
+     * @param newSkinRootPath
+     */
+    public void setSkinRootPath(String newSkinRootPath) {
+        File file = new File(newSkinRootPath);
+        file.mkdirs();
+        SpUtils.setSkinRootPath(context, newSkinRootPath);
+    }
+
+
     private int getFirstIndex() {
         int firstIndex = 1;
         if (SkinConfig.Density < 1) {
@@ -515,6 +426,98 @@ public class SkinManager implements SubObserver {
         }
         return firstIndex;
     }
+
+    private void pasFileIndex(File fileDir) {
+        File[] files = fileDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                pasFileIndex(file);
+            } else {
+                if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
+                    String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
+                    LinkedHashMap<String, String> strings = skinData.get(fileName);
+                    if (strings != null) {
+                        strings.put(file.getParentFile().getName(), file.getName());
+                    } else {
+                        LinkedHashMap<String, String> strings1 = new LinkedHashMap<>();
+                        strings1.put(file.getParentFile().getName(), file.getName());
+                        skinData.put(fileName, strings1);
+                    }
+                }
+            }
+        }
+    }
+
+    private String getPath(String imageName, boolean isRN) {
+        if (SkinManager.getInstance().skinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
+            return imageName;
+        }
+        LinkedHashMap<String, String> skinImgRes = skinData.get(imageName);
+        if (skinImgRes == null) {
+            return imageName;
+        } else {
+            String indexFirst = getBestIndex(skinImgRes);
+            String s = skinImgRes.get(indexFirst);
+            if (TextUtils.isEmpty(s)) {
+                return imageName;
+            }
+            if (isRN) {
+                return "file://" +
+                       SkinManager.getInstance().skinPathRes + indexFirst + "/" + s;
+            } else {
+                return SkinManager.getInstance().skinPathRes + indexFirst + "/" + s;
+            }
+        }
+    }
+
+    private String getBestIndex(LinkedHashMap<String, String> densityMap) {
+        String[] index = new String[7];
+        Iterator<String> iterator = densityMap.keySet().iterator();
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (next.contains("-ldpi")) {
+                index[0] = next;
+            } else if (next.equals("drawable") || next.equals("mipmap")) {
+                index[1] = next;
+            } else if (next.contains("-mdpi")) {
+                index[2] = next;
+            } else if (next.contains("-hdpi")) {
+                index[3] = next;
+            } else if (next.contains("-xhdpi")) {
+                index[4] = next;
+            } else if (next.contains("-xxhdpi")) {
+                index[5] = next;
+            } else if (next.contains("-xxxhdpi")) {
+                index[6] = next;
+            }
+        }
+        String keyForindex = getIndexForHight(index, SkinConfig.FirstIndex);
+        if (TextUtils.isEmpty(keyForindex)) {
+            keyForindex = getIndexForLow(index, SkinConfig.FirstIndex - 1);
+        }
+        return keyForindex;
+    }
+
+    private String getIndexForLow(String[] index, int firstIndex) {
+        if (firstIndex < 0) return null;
+        String str0 = index[firstIndex];
+        if (!TextUtils.isEmpty(str0)) {
+            return str0;
+        } else {
+            return getIndexForLow(index, --firstIndex);
+        }
+    }
+
+    private String getIndexForHight(String[] index, int firstIndex) {
+        if (firstIndex >= 7) return null;
+        String str0 = index[firstIndex];
+        if (!TextUtils.isEmpty(str0)) {
+            return str0;
+        } else {
+            return getIndexForHight(index, ++firstIndex);
+        }
+    }
+
 
     public void print() {
         Iterator<Map.Entry<String, LinkedHashMap<String, String>>> iterator = skinData.entrySet().iterator();
