@@ -1,23 +1,17 @@
 package com.wisn.skin;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
-import com.wisn.skinlib.interfaces.SkinPathChangeLister;
-import com.wisn.skinlib.loader.SkinResourceCompat;
 import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.LogUtils;
-
-import java.io.File;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG="MainActivity";
@@ -59,18 +53,18 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         }else if(v==resetSkin){
 //            SkinResourceCompat.print();
             long start=System.currentTimeMillis();
-            String path = SkinResourceCompat.getPath("aaaaa");
+            String path = SkinManager.getInstance().getPath("aaaaa");
             for(int i=0;i<200;i++){
-                SkinResourceCompat.getPath("gift_0");
-                SkinResourceCompat.getPath("gift_1");
-                SkinResourceCompat.getPath("ic_launcher_round");
+                SkinManager.getInstance().getPath("gift_0");
+                SkinManager.getInstance().getPath("gift_1");
+                SkinManager.getInstance().getPath("ic_launcher_round");
             }
            long end= System.currentTimeMillis()-start;
             count=count+200*3;
             sum=sum+end;
             Log.e(TAG,end+":"+path);
 
-//            SkinManager.getInstance().resetDefaultThem();
+            SkinManager.getInstance().resetDefaultThem();
         }else if(v==getcolor){
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimary"));
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
