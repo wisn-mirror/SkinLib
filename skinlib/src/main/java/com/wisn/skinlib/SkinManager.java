@@ -135,16 +135,14 @@ public class SkinManager implements SubObserver {
             protected Resources doInBackground(String... strings) {
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
-                        String
-                                skinPath =
+                        String skinPath =
                                 SkinFileUitls.getSkinPath(context, false) +
                                 File.separator +
                                 strings[0];
-                        String
-                                skinPathRes =
+                        String  skinPathRes =
                                 SkinFileUitls.getSkinPath(context, true) +
                                 File.separator +
-                                strings[0];
+                                strings[0] + "/res/";
                         LogUtils.i(TAG, skinPath);
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
@@ -170,10 +168,11 @@ public class SkinManager implements SubObserver {
                                 ResourceCompat.getResource(assetManager,
                                                            superRes.getDisplayMetrics(),
                                                            superRes.getConfiguration());
-                        SkinResourceCompat.loadSkinFile(context, strings[0]);
-                        SpUtils.setCustomSkinName(context, strings[0]);
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;
+                        LogUtils.e(TAG,"this.skinPath:"+SkinManager.this.skinPath+"   SkinManager.this.skinPathRes:"+ SkinManager.this.skinPathRes);
+                        SkinResourceCompat.loadSkinFile(skinPathRes);
+                        SpUtils.setCustomSkinName(context, strings[0]);
                         mResources = resource;
                         return resource;
                     }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
+import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
 import java.io.File;
@@ -23,19 +24,13 @@ public class SkinResourceCompat {
             skinData =
             new LinkedHashMap<>();
 
-    public static void loadSkinFile(Context context, String skinName) {
-        File
-                file =
-                new File(SkinFileUitls.getSkinPath(context, true) +
-                         File.separator +
-                         skinName +
-                         File.separator +
-                         "res");
+    public static void loadSkinFile(String skinPathRes) {
+        File file =new File(skinPathRes);
         if (file.exists() && file.isDirectory()) {
             if (skinData != null) {
                 skinData.clear();
+                pasFileIndex(file);
             }
-            pasFileIndex(file);
         }
     }
 
@@ -46,11 +41,11 @@ public class SkinResourceCompat {
                 pasFileIndex(file);
             } else {
                 if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
-                   /* Log.e(TAG,
+                    Log.e(TAG,
                           "getName:" + file.getName().substring(0, file.getName().lastIndexOf(".")) +
                           " getName:" + file.getName() +
                           " getParent:" + file.getParent() +
-                          "   getParentFile:" + file.getParentFile().getName());*/
+                          "   getParentFile:" + file.getParentFile().getName());
 
                     String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
                     LinkedHashMap<String, String> strings = skinData.get(fileName);
@@ -78,7 +73,7 @@ public class SkinResourceCompat {
                 Map.Entry<String, String> next1 = iterator2.next();
                 value = value + " getKey:" + next1.getKey() + " getValue:" + next1.getValue();
             }
-            Log.e(TAG, next.getKey() + value);
+            LogUtils.e(TAG, next.getKey() + value);
         }
     }
 
@@ -90,7 +85,7 @@ public class SkinResourceCompat {
         return getPath(imageName, false);
     }
 
-    public static String getPath(String imageName, boolean isRN) {
+    private  static String getPath(String imageName, boolean isRN) {
         if (SkinManager.getInstance().skinPathRes == null||SkinManager.getInstance().isDefaultSkin) {
             return imageName;
         }
@@ -98,33 +93,26 @@ public class SkinResourceCompat {
         if (skinImgRes == null) {
             return imageName;
         } else {
-            Iterator<Map.Entry<String, String>> iterator2 = skinImgRes.entrySet().iterator();
-            String value = " value :";
-            while (iterator2.hasNext()) {
-                Map.Entry<String, String> next1 = iterator2.next();
-                value = value + " getKey:" + next1.getKey() + " getValue:" + next1.getValue();
-            }
-            Log.e(TAG, "imageName:"+imageName+"  " + value);
+            /*if (SkinConfig.isDebug) {
+                Iterator<Map.Entry<String, String>> iterator2 = skinImgRes.entrySet().iterator();
+                String value = " value :";
+                while (iterator2.hasNext()) {
+                    Map.Entry<String, String> next1 = iterator2.next();
+                    value = value + " getKey:" + next1.getKey() + " getValue:" + next1.getValue();
+                }
+                LogUtils.e(TAG, "imageName:"+imageName+"  " + value);
+            }*/
             String indexFirst = getBestIndex(skinImgRes);
-
             String s = skinImgRes.get(indexFirst);
-            Log.e(TAG, "indexFirstddd:"+indexFirst+" "+s);
+//            LogUtils.e(TAG, "indexFirstddd:" + indexFirst + " " + s);
             if (TextUtils.isEmpty(s)) {
                 return imageName;
             }
             if (isRN) {
                 return "file://" +
-                       SkinManager.getInstance().skinPathRes +File.separator+"res"+
-                       File.separator +
-                       indexFirst +
-                       File.separator +
-                       s;
+                       SkinManager.getInstance().skinPathRes+ indexFirst +"／"+s;
             } else {
-                return SkinManager.getInstance().skinPathRes +File.separator+"res"+
-                       File.separator +
-                       indexFirst +
-                       File.separator +
-                       s;
+                return SkinManager.getInstance().skinPathRes + indexFirst +"／"+s;
             }
         }
     }
@@ -160,7 +148,7 @@ public class SkinResourceCompat {
     private static String getIndexForLow(String[] index, int firstIndex) {
         if (firstIndex < 0) return null;
         String str0 = index[firstIndex];
-        Log.e(TAG,"getIndexForLow: str0 :"+str0+ " firstIndex:"+firstIndex);
+//        LogUtils.e(TAG,"getIndexForLow: str0 :"+str0+ " firstIndex:"+firstIndex);
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {
@@ -171,7 +159,7 @@ public class SkinResourceCompat {
     private static String getIndexForHight(String[] index, int firstIndex) {
         if (firstIndex >= 7) return null;
         String str0 = index[firstIndex];
-        Log.e(TAG,"getIndexForHight :str0 :"+str0+ " firstIndex:"+firstIndex);
+//        LogUtils.e(TAG,"getIndexForHight :str0 :"+str0+ " firstIndex:"+firstIndex);
         if (!TextUtils.isEmpty(str0)) {
             return str0;
         } else {

@@ -43,6 +43,8 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
 
     }
 
+    long sum=0;
+    int count =0;
     @Override
     public void onClick(View v) {
         if(v==mChangeSkin){
@@ -53,24 +55,28 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimaryDark)));
             Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorAccent)));
             Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.primary)));
-            SkinResourceCompat.print();
+//            SkinResourceCompat.print();
         }else if(v==resetSkin){
 //            SkinResourceCompat.print();
             long start=System.currentTimeMillis();
             String path = SkinResourceCompat.getPath("aaaaa");
-            for(int i=0;i<10;i++){
-                Log.e(TAG,  SkinResourceCompat.getPath("gift_0"));
-                Log.e(TAG,SkinResourceCompat.getPath("gift_1"));
-                Log.e(TAG,SkinResourceCompat.getPath("ic_launcher_round"));
+            for(int i=0;i<200;i++){
+                SkinResourceCompat.getPath("gift_0");
+                SkinResourceCompat.getPath("gift_1");
+                SkinResourceCompat.getPath("ic_launcher_round");
             }
-            Log.e(TAG,(System.currentTimeMillis()-start)+":"+path);
-            SkinManager.getInstance().resetDefaultThem();
+           long end= System.currentTimeMillis()-start;
+            count=count+200*3;
+            sum=sum+end;
+            Log.e(TAG,end+":"+path);
+
+//            SkinManager.getInstance().resetDefaultThem();
         }else if(v==getcolor){
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimary"));
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorAccent"));
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("primary"));
-
+            Log.e(TAG,"count:"+count +"sum:"+sum+" v:"+((double)sum)/((double)count));
         }
     }
 
