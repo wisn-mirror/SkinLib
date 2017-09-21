@@ -31,7 +31,13 @@
             android:id="@+id/getcolor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="getcolor"
+            android:text="ExistSkin"
+            android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/getSkinPath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SkinPathFromSdcard"
             android:textColor="@color/colorAccent" />
 
     </LinearLayout>

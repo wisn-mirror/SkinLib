@@ -250,6 +250,17 @@ public class SkinManager implements SubObserver {
         notifyUpdate();
     }
 
+    public String getCurrentThemName() {
+        if (SpUtils.isDefaultSkin(context)) {
+            return null;
+        } else {
+            return SpUtils.getCustomSkinName(context);
+        }
+    }
+    public  List<String> getSkinListName(boolean isRes,boolean isPath) {
+        return SkinFileUitls.getSkinListName(context,isRes,isPath);
+    }
+
     public void resetDefaultThem() {
         isDefaultSkin = true;
         mNightMode = false;

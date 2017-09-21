@@ -8,4 +8,5 @@ public interface SkinPathChangeLister {
     void start();
     void progress(int current,int progress);
     void finish();
+    void error(String msg);
 }
