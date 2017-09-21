@@ -69,6 +69,20 @@ public class SkinManager implements SubObserver {
         SkinConfig.Density = context.getResources().getDisplayMetrics().density;
         SkinConfig.FirstIndex = getFirstIndex();
         TypeFaceUtils.getTypeFace(context);
+        if (SpUtils.isNightMode(context)) {
+            SkinManager.getInstance().nightMode();
+        } else {
+            SkinManager.getInstance().loadSkin(null);
+        }
+        printInfo();
+    }
+
+    public void printInfo() {
+        LogUtils.e(TAG, "printInfo:getCustomSkinName:" + SpUtils.getCustomSkinName(context));
+        LogUtils.e(TAG, "printInfo:isDefaultSkin:" + SpUtils.isDefaultSkin(context));
+        LogUtils.e(TAG, "printInfo:getSkinRootPath:" + SpUtils.getSkinRootPath(context));
+        LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, false));
+        LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, true));
     }
 
 
@@ -97,30 +111,30 @@ public class SkinManager implements SubObserver {
         if (SpUtils.isDefaultSkin(context)) {
             skinPath = null;
             skinPathRes = null;
+            LogUtils.e(TAG, "default skin");
             return;
-        }
-        if (!SpUtils.isDefaultSkin(context)) {
+        } else {
             String customSkinName = SpUtils.getCustomSkinName(context);
             loadSkin(customSkinName, listener);
         }
     }
 
-
     /**
      * @param skinFilePath
      * @param skinName
-     * @param listener
-     * @param isLoadImmediately
+     *
+     * @return
      */
-    public void saveSkin(String skinFilePath,
-                         String skinName,
-                         SkinLoaderListener listener,
-                         boolean isLoadImmediately) {
-        SkinFileUitls.saveSkinFile(context, skinFilePath, skinName);
-        SkinFileUitls.upZipSkin(context, skinFilePath, skinName);
-        if (isLoadImmediately) {
-            loadSkin(skinName, listener);
-        }
+    public boolean saveSkin(String skinFilePath,
+                            String skinName) {
+        List<String> skinListName = getSkinListName(false, false);
+        List<String> skinResListName = getSkinListName(true, false);
+        if (skinListName != null &&
+            skinListName.contains(skinName) &&
+            skinResListName != null &&
+            skinResListName.contains(skinName)) return true;
+        return (SkinFileUitls.saveSkinFile(context, skinFilePath, skinName) &&
+                SkinFileUitls.upZipSkin(context, skinFilePath, skinName));
     }
 
     /**
@@ -128,7 +142,7 @@ public class SkinManager implements SubObserver {
      * @param listener
      */
     public void loadSkin(String skinName, final SkinLoaderListener listener) {
-        if (skinName == null || skinName.equals(SpUtils.getCustomSkinName(context))) {
+        if (skinName == null) {
             return;
         }
         new AsyncTask<String, Void, Resources>() {
@@ -207,11 +221,12 @@ public class SkinManager implements SubObserver {
                     mResources = resources;
                     isDefaultSkin = false;
                     mNightMode = false;
+                    SpUtils.setNightMode(context, false);
                     new Handler(Looper.getMainLooper()).post(
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    SpUtils.setNightMode(context, false);
+
                                     if (listener != null) listener.onSuccess();
                                     notifyUpdate();
                                 }
@@ -257,8 +272,9 @@ public class SkinManager implements SubObserver {
             return SpUtils.getCustomSkinName(context);
         }
     }
-    public  List<String> getSkinListName(boolean isRes,boolean isPath) {
-        return SkinFileUitls.getSkinListName(context,isRes,isPath);
+
+    public List<String> getSkinListName(boolean isRes, boolean isPath) {
+        return SkinFileUitls.getSkinListName(context, isRes, isPath);
     }
 
     public void resetDefaultThem() {

@@ -25,44 +25,56 @@ import java.util.zip.ZipFile;
 
 public class SkinFileUitls {
 
-    public static void updateSkinPath(Context context,
-                                      String newSkinRootPath,
-                                      SkinPathChangeLister skinPathChangeLister) {
-        try {
-            if (skinPathChangeLister != null) {
-                skinPathChangeLister.start();
-            }
-            //// TODO: 2017/9/16复制皮肤到新的皮肤文件中
-            File skinFile = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
-            File skinFileRes = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
-            if (!skinFile.exists()) {
-                skinFile.mkdirs();
-            }
-            if (!skinFileRes.exists()) {
-                skinFileRes.mkdirs();
-            }
-            String skinPath = getSkinPath(context, false);
-            String[] Skin = new File(skinPath).list();
-            int i = 0;
-            for (String fileName : Skin) {
-                copyFile(new File(skinPath + File.separator + fileName),
-                         new File(skinFile, fileName));
-                upZipFile(new File(skinPath + File.separator + fileName),
-                          skinFileRes.getAbsolutePath() + File.separator
-                          + fileName);
-                i++;
-                if (skinPathChangeLister != null) {
-                    skinPathChangeLister.progress(i, Skin.length);
+    public static void updateSkinPath(final Context context,
+                                      final String newSkinRootPath,
+                                      final SkinPathChangeLister skinPathChangeLister) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (skinPathChangeLister != null) {
+                        skinPathChangeLister.start();
+                    }
+                    String skinPath = getSkinPath(context, false);
+                    if (skinPath.equals(newSkinRootPath + File.separator + SkinConfig.SkinDir)) {
+                        if (skinPathChangeLister != null) {
+                            skinPathChangeLister.error("skin rootPath already set");
+                        }
+                        return;
+                    }
+                    File skinFile = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
+                    File skinFileRes = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
+                    String[] Skin = new File(skinPath).list();
+                    if (!skinFile.exists()) {
+                        skinFile.mkdirs();
+                    }
+                    if (!skinFileRes.exists()) {
+                        skinFileRes.mkdirs();
+                    }
+                    int i = 0;
+                    for (String fileName : Skin) {
+                        copyFile(new File(skinPath + File.separator + fileName),
+                                 new File(skinFile, fileName));
+                        upZipFile(new File(skinPath + File.separator + fileName),
+                                  skinFileRes.getAbsolutePath() + File.separator
+                                  + fileName);
+                        i++;
+                        if (skinPathChangeLister != null) {
+                            skinPathChangeLister.progress(i, Skin.length);
+                        }
+                    }
+                    SpUtils.setSkinRootPath(context, newSkinRootPath);
+                    if (skinPathChangeLister != null) {
+                        skinPathChangeLister.finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (skinPathChangeLister != null) {
+                        skinPathChangeLister.error(e.getMessage());
+                    }
                 }
             }
-            SpUtils.setSkinRootPath(context, newSkinRootPath);
-            if (skinPathChangeLister != null) {
-                skinPathChangeLister.finish();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            skinPathChangeLister.error(e.getMessage());
-        }
+        }).start();
     }
 
     /**
@@ -182,14 +194,14 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static List<String> getSkinListName(Context context, boolean isRes,boolean isPath) {
+    public static List<String> getSkinListName(Context context, boolean isRes, boolean isPath) {
         File[] skinListFile = getSkinListFile(context, isRes);
         if (skinListFile == null) return null;
         List<String> skinListName = new ArrayList<>();
         for (File file : skinListFile) {
-            if(isPath){
+            if (isPath) {
                 skinListName.add(file.getAbsolutePath());
-            }else{
+            } else {
                 skinListName.add(file.getName());
             }
         }

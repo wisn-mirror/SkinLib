@@ -19,13 +19,14 @@ import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestActivity extends SkinActivity implements View.OnClickListener, SkinLoaderListener ,AdapterView.OnItemClickListener{
     private static final String TAG="TestActivity";
     private Button mChangeSkin,resetSkin,loadResPathList;
     private ListView mListView;
-    private List<String> mSkinListName;
+    private List<String> mSkinListName=new ArrayList<>();
     private BaseAdapter mAdapter;
 
     @Override
@@ -39,7 +40,6 @@ public class TestActivity extends SkinActivity implements View.OnClickListener, 
         loadResPathList.setOnClickListener(this);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
-        mSkinListName = SkinManager.getInstance().getSkinListName(true,false);
         if(mSkinListName!=null){
             mAdapter = new BaseAdapter() {
                 @Override
@@ -77,15 +77,21 @@ public class TestActivity extends SkinActivity implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
         if (v == mChangeSkin) {
-            mSkinListName = SkinManager.getInstance().getSkinListName(false,true);
+            List<String> mSkinListNameaa= SkinManager.getInstance().getSkinListName(false,true);
+            if(mSkinListNameaa==null)return ;
+            mSkinListName = mSkinListNameaa;
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(null);
         } else if (v == resetSkin) {
-            mSkinListName = SkinManager.getInstance().getSkinListName(false,false);
+            List<String> mSkinListNameaa= SkinManager.getInstance().getSkinListName(false,false);
+            if(mSkinListNameaa==null)return ;
+            mSkinListName = mSkinListNameaa;
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(this);
         }else if(v==loadResPathList){
-            mSkinListName = SkinManager.getInstance().getSkinListName(true,true);
+            List<String> mSkinListNameaa= SkinManager.getInstance().getSkinListName(true,true);
+            if(mSkinListNameaa==null)return ;
+            mSkinListName = mSkinListNameaa;
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(null);
         }

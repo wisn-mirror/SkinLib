@@ -6,7 +6,7 @@ package com.wisn.skinlib.interfaces;
 
 public interface SkinPathChangeLister {
     void start();
-    void progress(int current,int progress);
+    void progress(int current,int sum);
     void finish();
     void error(String msg);
 }

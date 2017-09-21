@@ -16,6 +16,7 @@ import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinAppCompatActivity;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SpUtils;
 
@@ -27,7 +28,7 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
                                                                             SkinLoaderListener,
                                                                             AdapterView.OnItemClickListener {
     private static final String TAG = "TestAppCompatActivity";
-    private Button mChangeSkin;
+    private Button mChangeSkin,changSkinPath;
     private ListView mListView;
     private List<String> mSkinListName=new ArrayList<>();
     private BaseAdapter mAdapter;
@@ -39,11 +40,12 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_testappcomp);
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
+        changSkinPath = (Button) findViewById(R.id.changSkinPath);
         mSdcardpath = (EditText) findViewById(R.id.sdcardpath);
         mSdcardpath.setText(Environment.getExternalStorageDirectory().getAbsolutePath()+"/skinPath");
         mListView = (ListView) findViewById(R.id.listview);
         mChangeSkin.setOnClickListener(this);
-        mSkinListName = SkinManager.getInstance().getSkinListName(true, false);
+        changSkinPath.setOnClickListener(this);
         if (mSkinListName != null) {
             mAdapter = new BaseAdapter() {
                 @Override
@@ -84,12 +86,18 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
         return skinListName;
     }
 
-
-
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SkinManager.getInstance().saveSkin(mPath + File.separator + mSkinListName.get(position),
-                                           mSkinListName.get(position),this,true);
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean b = SkinManager.getInstance().saveSkin(mPath + File.separator + mSkinListName.get(position),
+                                                               mSkinListName.get(position));
+                if(b){
+                    SkinManager.getInstance().loadSkin(mSkinListName.get(position),TestAppCompatActivity.this);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -104,6 +112,30 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
             mSkinListName=skinListFile;
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(this);
+        }else if(v==changSkinPath){
+            SkinManager.getInstance().updateSkinPath(Environment.getExternalStorageDirectory()
+                                                                .getAbsolutePath() + "/aa",
+                                                     new SkinPathChangeLister() {
+                                                         @Override
+                                                         public void start() {
+                                                             LogUtils.e(TAG, "start");
+                                                         }
+
+                                                         @Override
+                                                         public void progress(int current, int sum) {
+                                                             LogUtils.e(TAG, "progress:" + current + " sum:" + sum);
+                                                         }
+
+                                                         @Override
+                                                         public void finish() {
+                                                             LogUtils.e(TAG, "onSuccess");
+                                                         }
+
+                                                         @Override
+                                                         public void error(String msg) {
+                                                             LogUtils.e(TAG, "error:" + msg);
+                                                         }
+                                                     });
         }
     }
 

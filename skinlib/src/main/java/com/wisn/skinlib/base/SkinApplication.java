@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
+import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 import com.wisn.skinlib.utils.SpUtils;
 
@@ -18,33 +19,21 @@ import java.io.IOException;
  */
 
 public class SkinApplication extends Application {
+    private static String TAG="SkinApplication";
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtils.e(TAG,"onCreate");
         configSkin();
-
     }
 
     public void configSkin() {
         SkinManager.getInstance().init(this);
-        SkinManager.getInstance().setSkinRootPath(SkinConfig.SP_Default_Skin_Root_Path);
+//        SkinManager.getInstance().setSkinRootPath(SkinConfig.SP_Default_Skin_Root_Path);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 initSkinLoader();
-               new Handler(Looper.getMainLooper()).post(
-                       new Runnable() {
-                           @Override
-                           public void run() {
-                               //夜间模式使用
-                               if (SpUtils.isNightMode(SkinApplication.this)) {
-                                   SkinManager.getInstance().nightMode();
-                               } else {
-                                   SkinManager.getInstance().loadSkin(null);
-                               }
-                           }
-                       }
-               );
             }
         }).start();
 

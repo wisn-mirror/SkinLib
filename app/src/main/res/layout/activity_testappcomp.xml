@@ -18,13 +18,23 @@
             android:layout_height="match_parent"
             android:text="/sdcard/"
             />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <Button
             android:id="@+id/changeSkin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="loadPathList"
             android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/changSkinPath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="changSkinPath 更目录 aa"
+            android:textColor="@color/colorAccent" />
+            </LinearLayout>
 
     </LinearLayout>
 
