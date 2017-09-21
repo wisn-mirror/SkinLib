@@ -48,7 +48,9 @@ public class SkinManager implements SubObserver {
     public String skinPath;
     public String skinPathRes;
     private LinkedHashMap<String, LinkedHashMap<String, String>> skinData = new LinkedHashMap<>();
+
     private SkinManager() {}
+
     public static SkinManager manager;
 
     public static SkinManager getInstance() {
@@ -171,7 +173,10 @@ public class SkinManager implements SubObserver {
 
                         Resources superRes = context.getResources();
                         Resources
-                                resource =new Resources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
+                                resource =
+                                new Resources(assetManager,
+                                              superRes.getDisplayMetrics(),
+                                              superRes.getConfiguration());
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;
                         LogUtils.e(TAG,
@@ -312,17 +317,19 @@ public class SkinManager implements SubObserver {
     public String getColorForRN(String colorName) {
         int color = 0;
         int colorResId = 0;
-        if (mResources != null) {
+        if (mResources == null || isDefaultSkin) {
+            colorResId = context.getResources().getIdentifier(colorName,
+                                                              "color",
+                                                              context.getPackageName());
+            color = context.getResources().getColor(colorResId);
+            LogUtils.e(TAG, "colorName aaa:" + colorName + "value:" + color);
+        } else {
             colorResId =
                     mResources.getIdentifier(colorName,
                                              "color",
                                              mPackageName);
             color = mResources.getColor(colorResId);
-        } else {
-            colorResId = context.getResources().getIdentifier(colorName,
-                                                              "color",
-                                                              context.getPackageName());
-            color = context.getResources().getColor(colorResId);
+            LogUtils.e(TAG, "colorName:" + colorName + "value:" + color);
         }
         if (color == 0) return null;
         return ColorUtils.colorToRGB(color);

@@ -45,10 +45,10 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--30-1.0-2017-09-18-09-16-10.skin",
                                                this);
             Log.e(TAG,"printprintprint--------------------------------------------------");
-            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimary)));
-            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimaryDark)));
-            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorAccent)));
-            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.primary)));
+//            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimary)));
+//            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorPrimaryDark)));
+//            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.colorAccent)));
+//            Log.e(TAG," "+ColorUtils.colorToARGB(ContextCompat.getColor(this, R.color.primary)));
 //            SkinResourceCompat.print();
         }else if(v==resetSkin){
 //            SkinResourceCompat.print();
@@ -67,9 +67,9 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinManager.getInstance().resetDefaultThem();
         }else if(v==getcolor){
             Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimary"));
-            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
-            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorAccent"));
-            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("primary"));
+//            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
+//            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorAccent"));
+//            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("primary"));
             Log.e(TAG,"count:"+count +"sum:"+sum+" v:"+((double)sum)/((double)count));
         }
     }
