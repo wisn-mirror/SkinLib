@@ -127,7 +127,7 @@ Change Skin for Andorid and RN
     }
        
 ```
-##  React Native 通过本地调用换肤 Exaple
+##  React Native 通过本地调用换肤 Example
 
 ```js
 	/**
