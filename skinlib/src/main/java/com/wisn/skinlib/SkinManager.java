@@ -17,7 +17,6 @@ import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
-import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.LogUtils;
@@ -98,10 +97,10 @@ public class SkinManager implements SubObserver {
      * updateSkinPath
      *
      * @param newSkinRootPath
-     * @param skinPathChangeLister
+     * @param skinLoaderListener
      */
-    public void updateSkinPath(String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
-        SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinPathChangeLister);
+    public void updateSkinPath(String newSkinRootPath, SkinLoaderListener skinLoaderListener) {
+        SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinLoaderListener);
     }
 
     /**

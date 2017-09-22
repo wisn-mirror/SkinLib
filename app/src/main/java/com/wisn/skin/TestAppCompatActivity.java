@@ -1,6 +1,5 @@
 package com.wisn.skin;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -14,11 +13,8 @@ import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinAppCompatActivity;
-import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
-import com.wisn.skinlib.interfaces.SkinPathChangeLister;
 import com.wisn.skinlib.utils.LogUtils;
-import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -115,27 +111,28 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
         }else if(v==changSkinPath){
             SkinManager.getInstance().updateSkinPath(Environment.getExternalStorageDirectory()
                                                                 .getAbsolutePath() + "/aa",
-                                                     new SkinPathChangeLister() {
+                                                     new SkinLoaderListener() {
                                                          @Override
                                                          public void start() {
                                                              LogUtils.e(TAG, "start");
                                                          }
 
                                                          @Override
-                                                         public void progress(int current, int sum) {
-                                                             LogUtils.e(TAG, "progress:" + current + " sum:" + sum);
-                                                         }
-
-                                                         @Override
-                                                         public void finish() {
+                                                         public void onSuccess() {
                                                              LogUtils.e(TAG, "onSuccess");
                                                          }
 
                                                          @Override
-                                                         public void error(String msg) {
-                                                             LogUtils.e(TAG, "error:" + msg);
+                                                         public void onFailed(String error) {
+                                                             LogUtils.e(TAG, "onFailed:"+error);
                                                          }
-                                                     });
+
+                                                         @Override
+                                                         public void onProgress(int progress, int sum) {
+                                                             LogUtils.e(TAG, "progress:" + progress + " sum:" + sum);
+                                                         }
+                                                     }
+            );
         }
     }
 

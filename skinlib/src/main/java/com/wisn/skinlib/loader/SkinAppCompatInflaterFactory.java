@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
+import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.attr.base.SkinAttr;
 import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
@@ -188,10 +189,6 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         mSkinItemMap = null;
     }
 
-    public void addSkinView(Context context, View view, String attrName, int attrValueResId) {
-
-    }
-
     public void addSkinView(View view, SkinAttr skinAttr) {
         SkinItem skinItem = new SkinItem();
         skinItem.view = view;
@@ -200,6 +197,33 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         skinItem.attrs = viewAttrs;
         skinItem.apply();
         addSkinView(skinItem);
+    }
+
+    @Override
+    public void addSkinView(View view, List<DynamicAttr> attr) {
+        if (attr == null || attr.size() == 0) return;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        SkinItem skinItem = new SkinItem();
+        for (DynamicAttr dynamicAttr : attr) {
+            String entryName = mAppCompatActivity.getResources().getResourceEntryName(dynamicAttr.refResId);
+            String typeName = mAppCompatActivity.getResources().getResourceTypeName(dynamicAttr.refResId);
+            SkinAttr
+                    mSkinAttr =
+                    SkinAttrFactory.get(dynamicAttr.attrName, dynamicAttr.refResId, entryName, typeName);
+            viewAttrs.add(mSkinAttr);
+        }
+        skinItem.attrs = viewAttrs;
+        skinItem.view = view;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
+    @Override
+    public void addSkinView(View view, String attrName, int attrValueresId) {
+        String entryName = mAppCompatActivity.getResources().getResourceEntryName(attrValueresId);
+        String typeName = mAppCompatActivity.getResources().getResourceTypeName(attrValueresId);
+        SkinAttr mSkinAttr = SkinAttrFactory.get(attrName, attrValueresId, entryName, typeName);
+        addSkinView(view, mSkinAttr);
     }
 
     public void addSkinView(SkinItem skinItem) {
@@ -211,19 +235,6 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         }
     }
 
-    @Override
-    public void addSkinView(View view, String attrName, int attrValueresId) {
-        String entryName = mAppCompatActivity.getResources().getResourceEntryName(attrValueresId);
-        String typeName = mAppCompatActivity.getResources().getResourceTypeName(attrValueresId);
-        SkinAttr mSkinAttr = SkinAttrFactory.get(attrName, attrValueresId, entryName, typeName);
-        SkinItem skinItem = new SkinItem();
-        skinItem.view = view;
-        List<SkinAttr> viewAttrs = new ArrayList<>();
-        viewAttrs.add(mSkinAttr);
-        skinItem.attrs = viewAttrs;
-        skinItem.apply();
-        addSkinView(skinItem);
-    }
 
     public void removeSkinView(View view) {
         if (view == null || mSkinItemMap == null) return;

@@ -5,7 +5,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.interfaces.SkinPathChangeLister;
+import com.wisn.skinlib.interfaces.SkinLoaderListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,18 +27,18 @@ public class SkinFileUitls {
 
     public static void updateSkinPath(final Context context,
                                       final String newSkinRootPath,
-                                      final SkinPathChangeLister skinPathChangeLister) {
+                                      final SkinLoaderListener skinLoaderListener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (skinPathChangeLister != null) {
-                        skinPathChangeLister.start();
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.start();
                     }
                     String skinPath = getSkinPath(context, false);
                     if (skinPath.equals(newSkinRootPath + File.separator + SkinConfig.SkinDir)) {
-                        if (skinPathChangeLister != null) {
-                            skinPathChangeLister.error("skin rootPath already set");
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onFailed("skin rootPath already set");
                         }
                         return;
                     }
@@ -59,18 +59,18 @@ public class SkinFileUitls {
                                   skinFileRes.getAbsolutePath() + File.separator
                                   + fileName);
                         i++;
-                        if (skinPathChangeLister != null) {
-                            skinPathChangeLister.progress(i, Skin.length);
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onProgress(i, Skin.length);
                         }
                     }
                     SpUtils.setSkinRootPath(context, newSkinRootPath);
-                    if (skinPathChangeLister != null) {
-                        skinPathChangeLister.finish();
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.onSuccess();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (skinPathChangeLister != null) {
-                        skinPathChangeLister.error(e.getMessage());
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.onFailed(e.getMessage());
                     }
                 }
             }

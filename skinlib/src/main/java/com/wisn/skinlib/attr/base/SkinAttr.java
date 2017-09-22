@@ -24,7 +24,9 @@ public abstract class SkinAttr implements Cloneable {
 
     public void applyNightSkin(View view) {}
 
-    public SkinAttr() {}
+    public SkinAttr() {
+        super();
+    }
 
     public SkinAttr(String attrName,
                     int attrValueRefId) {

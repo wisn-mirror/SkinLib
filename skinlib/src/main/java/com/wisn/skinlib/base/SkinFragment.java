@@ -69,6 +69,8 @@ public class SkinFragment extends Fragment implements DynamicView {
 
     @Override
     public void dynamicAddView(View view, List<DynamicAttr> attr) {
+        if(mSkinInflaterFactory==null)return ;
+        mSkinInflaterFactory.addSkinView(view,attr);
     }
 
     @Override

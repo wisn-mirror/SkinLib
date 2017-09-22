@@ -26,13 +26,13 @@ public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdat
                                                                       DynamicView,
                                                                       LayoutInflaterIns {
 
-    private SkinInflaterFactory skinInflaterFactory;
+    private SkinInflaterFactory mSkinInflaterFactory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        skinInflaterFactory = new SkinInflaterFactory();
-        skinInflaterFactory.setActivity(this);
-        getLayoutInflater().setFactory(skinInflaterFactory);
+        mSkinInflaterFactory = new SkinInflaterFactory();
+        mSkinInflaterFactory.setActivity(this);
+        getLayoutInflater().setFactory(mSkinInflaterFactory);
         super.onCreate(savedInstanceState);
     }
 
@@ -47,27 +47,28 @@ public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdat
     protected void onDestroy() {
         super.onDestroy();
         SkinManager.getInstance().detach(this);
-        skinInflaterFactory.clear();
+        mSkinInflaterFactory.clear();
     }
 
     public SkinInflater getSkinInflaterFactory() {
-        return skinInflaterFactory;
+        return mSkinInflaterFactory;
     }
 
     @Override
     public void onThemUpdate() {
-        skinInflaterFactory.applySkin();
+        mSkinInflaterFactory.applySkin();
     }
 
     @Override
     public void dynamicAddView(View view, List<DynamicAttr> attr) {
-
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, attr);
     }
 
     @Override
     public void dynamicAddView(View view, String attrName, int attrValueresId) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(this,view,attrName,attrValueresId);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, attrName, attrValueresId);
     }
 
     @Override
@@ -77,14 +78,14 @@ public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdat
 
     @Override
     public void dynamicAddView(SkinItem skinItem) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(skinItem);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(skinItem);
     }
 
     @Override
     public void dynamicAddView(View view, SkinAttr skinAttr) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(view,skinAttr);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, skinAttr);
     }
 }
 

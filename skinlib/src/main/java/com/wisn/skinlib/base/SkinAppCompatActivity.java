@@ -22,14 +22,16 @@ import java.util.List;
  * Created by wisn on 2017/9/5.
  */
 
-public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpdateObserver, DynamicView, LayoutInflaterIns {
-    private SkinAppCompatInflaterFactory skinInflaterFactory;
+public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpdateObserver,
+                                                                        DynamicView,
+                                                                        LayoutInflaterIns {
+    private SkinAppCompatInflaterFactory mSkinInflaterFactory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        skinInflaterFactory = new SkinAppCompatInflaterFactory();
-        skinInflaterFactory.setAppCompatActivity(this);
-        LayoutInflaterCompat.setFactory(getLayoutInflater(), skinInflaterFactory);
+        mSkinInflaterFactory = new SkinAppCompatInflaterFactory();
+        mSkinInflaterFactory.setAppCompatActivity(this);
+        LayoutInflaterCompat.setFactory(getLayoutInflater(), mSkinInflaterFactory);
         super.onCreate(savedInstanceState);
 
     }
@@ -45,39 +47,40 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
     protected void onDestroy() {
         super.onDestroy();
         SkinManager.getInstance().detach(this);
-        skinInflaterFactory.clear();
+        mSkinInflaterFactory.clear();
     }
 
-    public SkinAppCompatInflaterFactory getSkinInflaterFactory(){
-        return skinInflaterFactory;
+    public SkinAppCompatInflaterFactory getSkinInflaterFactory() {
+        return mSkinInflaterFactory;
     }
 
     @Override
     public void onThemUpdate() {
-        skinInflaterFactory.applySkin();
+        mSkinInflaterFactory.applySkin();
     }
 
     @Override
     public void dynamicAddView(View view, List<DynamicAttr> attr) {
-
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, attr);
     }
 
     @Override
     public void dynamicAddView(View view, String attrName, int attrValueresId) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(this,view,attrName,attrValueresId);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, attrName, attrValueresId);
     }
 
     @Override
     public void dynamicAddView(SkinItem skinItem) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(skinItem);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(skinItem);
     }
 
     @Override
     public void dynamicAddView(View view, SkinAttr skinAttr) {
-        if(skinInflaterFactory==null)return ;
-        skinInflaterFactory.addSkinView(view,skinAttr);
+        if (mSkinInflaterFactory == null) return;
+        mSkinInflaterFactory.addSkinView(view, skinAttr);
     }
 
     @Override
