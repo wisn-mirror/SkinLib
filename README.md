@@ -9,10 +9,7 @@ Change Skin for Andorid and RN
 
 <img width="50%" src="./app/pic/a1.png" />
 
-
-
 <img width="50%" src="./app/pic/a2.png" />
-
 
 <img width="50%" src="./app/pic/a3.png" />
 
@@ -26,7 +23,7 @@ Change Skin for Andorid and RN
  设置指定皮肤
  SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin", new SkinLoaderListener());
  恢复默认皮肤
-  SkinManager.getInstance().resetDefaultThem();                                  
+ SkinManager.getInstance().resetDefaultThem();
                                               
 ```
 ## 保存皮肤
@@ -49,15 +46,17 @@ Change Skin for Andorid and RN
 ##  自定义View换肤：
 
 ```java
- 		DrawableTopAttr  drawableTopAttr=new DrawableTopAttr();
-       drawableTopAttr.setRes("drawableTop",attrValueresId);
-       dynamicAddView(view,drawableTopAttr);
+
+ DrawableTopAttr  drawableTopAttr=new DrawableTopAttr();
+ drawableTopAttr.setRes("drawableTop",attrValueresId);
+ dynamicAddView(view,drawableTopAttr);
        
 ```
 ##  React Native 本地Module：
 
 ```java
- 		 @ReactMethod
+
+ 	@ReactMethod
     public void getImage(String StateName, String imageName, Callback callback) {
         LogUtils.e("getImage", "StateName:" + StateName + " imageName:" + imageName);
         WritableMap params = Arguments.createMap();
