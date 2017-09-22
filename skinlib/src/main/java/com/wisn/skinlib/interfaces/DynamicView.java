@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.wisn.skinlib.attr.base.DynamicAttr;
+import com.wisn.skinlib.attr.base.SkinAttr;
+import com.wisn.skinlib.attr.base.SkinItem;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public interface DynamicView {
     void dynamicAddView(View view, List<DynamicAttr> attr);
     void dynamicAddView(View view, String attrName,int attrValueresId);
+    void dynamicAddView(SkinItem skinItem);
+    void dynamicAddView(View view, SkinAttr skinAttr);
     void dynamicAddFontView(TextView textView);
 
 }

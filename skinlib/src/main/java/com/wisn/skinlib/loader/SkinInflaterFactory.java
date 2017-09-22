@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.LayoutInflater.Factory2;
 import android.view.View;
 import android.widget.TextView;
@@ -43,7 +41,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
      */
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View  view = ViewInflat.createViewFromTag(context, name, attrs);
+        View view = ViewInflat.createViewFromTag(context, name, attrs);
         if (view == null) {
             return null;
         }
@@ -102,11 +100,15 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                                .getIdentifier(styleName,
                                               SkinConfig.Attrs_deal_char_style,
                                               context.getPackageName());
-                int[] skinAttrs = new int[]{android.R.attr.textColor, android.R.attr.background,android.R.attr.drawableTop};
+                int[]
+                        skinAttrs =
+                        new int[]{android.R.attr.textColor,
+                                  android.R.attr.background,
+                                  android.R.attr.drawableTop};
                 TypedArray typedArray = context.getTheme().obtainStyledAttributes(identifier, skinAttrs);
                 int textColor = typedArray.getResourceId(0, -1);
                 int background = typedArray.getResourceId(1, -1);
-                int drawableTop= typedArray.getResourceId(2, -1);
+                int drawableTop = typedArray.getResourceId(2, -1);
                 // TODO: 2017/9/7 deal textcolor
                 if (textColor != -1) {
                     String resourceEntryName = context.getResources().getResourceEntryName(textColor);
@@ -209,6 +211,31 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         mSkinItemMap = null;
     }
 
+    public void addSkinView(View view, SkinAttr skinAttr) {
+        SkinItem skinItem = new SkinItem();
+        skinItem.view = view;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        viewAttrs.add(skinAttr);
+        skinItem.attrs = viewAttrs;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
+
+    @Override
+    public void addSkinView(View view, String attrName, int attrValueresId) {
+        String entryName = mActivity.getResources().getResourceEntryName(attrValueresId);
+        String typeName = mActivity.getResources().getResourceTypeName(attrValueresId);
+        SkinAttr mSkinAttr = SkinAttrFactory.get(attrName, attrValueresId, entryName, typeName);
+        SkinItem skinItem = new SkinItem();
+        skinItem.view = view;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        viewAttrs.add(mSkinAttr);
+        skinItem.attrs = viewAttrs;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
     public void addSkinView(SkinItem skinItem) {
         if (skinItem == null || mSkinItemMap == null) return;
         if (mSkinItemMap.get(skinItem.view) != null) {
@@ -218,6 +245,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
     }
 
+
     public void removeSkinView(View view) {
         if (view == null || mSkinItemMap == null) return;
         SkinItem skinItem = mSkinItemMap.remove(view);
@@ -225,30 +253,4 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
             FontRepository.remove(mActivity, view);
         }
     }
-
-   /* private View createView(Context context, String name, AttributeSet attrs) {
-        View view = null;
-        try {
-            if (-1 == name.indexOf('.')) {
-                if ("View".equals(name)) {
-                    view = LayoutInflater.from(context).createView(name, "android.view.", attrs);
-                }
-                if (view == null) {
-                    view = LayoutInflater.from(context).createView(name, "android.widget.", attrs);
-                }
-                if (view == null) {
-                    view = LayoutInflater.from(context).createView(name, "android.webkit.", attrs);
-                }
-            } else {
-                view = LayoutInflater.from(context).createView(name, null, attrs);
-            }
-
-            Log.i(TAG, "about to create " + name);
-
-        } catch (Exception e) {
-            Log.i(TAG, "error while create 【" + name + "】 : " + e.getMessage());
-            view = null;
-        }
-        return view;
-    }*/
 }

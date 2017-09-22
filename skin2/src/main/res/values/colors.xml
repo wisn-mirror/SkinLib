@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#50577e</color>
     <color name="colorAccent">#916f7a</color>
     <color name="primary">#568981</color>
+    <color name="bottomTool">#f1cdb6</color>
+
 </resources>

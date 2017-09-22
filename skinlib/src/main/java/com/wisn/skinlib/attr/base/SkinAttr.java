@@ -4,6 +4,9 @@ import android.view.View;
 
 import com.wisn.skinlib.SkinManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by wisn on 2017/9/5.
  */
@@ -12,16 +15,29 @@ public abstract class SkinAttr implements Cloneable {
     protected static final String RES_TYPE_NAME_COLOR = "color";
     protected static final String RES_TYPE_NAME_DRAWABLE = "drawable";
     protected static final String RES_TYPE_NAME_MIPMAP = "mipmap";
-    protected String attrName;
-    protected int attrValueRefId;
-    protected String attrValueRefName;
-    protected String attrValueTypeName;
+    public String attrName;
+    public int attrValueRefId;
+    public String attrValueRefName;
+    public String attrValueTypeName;
 
     public abstract void applySkin(View view);
 
-    public void applyNightSkin(View view) {
+    public void applyNightSkin(View view) {}
 
+    public SkinAttr() {}
+
+    public SkinAttr(String attrName,
+                    int attrValueRefId) {
+        setRes(attrName,attrValueRefId);
     }
+    public void setRes(String attrName,
+                       int attrValueRefId){
+        this.attrName = attrName;
+        this.attrValueRefId = attrValueRefId;
+        this.attrValueRefName=SkinManager.getInstance().context.getResources().getResourceEntryName(attrValueRefId);
+        this.attrValueTypeName=SkinManager.getInstance().context.getResources().getResourceTypeName(attrValueRefId);
+    }
+
 
     public void apply(View view) {
         if (SkinManager.getInstance().isNightMode()) {

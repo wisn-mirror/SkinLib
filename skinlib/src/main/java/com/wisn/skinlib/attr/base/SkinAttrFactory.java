@@ -20,7 +20,7 @@ public class SkinAttrFactory {
         attrs.put(SkinConfig.Attrs_Support_background, new BackgroundAttr());
         attrs.put(SkinConfig.Attrs_Support_src, new ImageDrawableAttr());
         attrs.put(SkinConfig.Attrs_Support_textColor, new TextColorAttr());
-        attrs.put(SkinConfig.Attrs_Support_drawableTop, new DrawableTopAttr());
+//        attrs.put(SkinConfig.Attrs_Support_drawableTop, new DrawableTopAttr());
     }
 
     public static SkinAttr get(String attrName,

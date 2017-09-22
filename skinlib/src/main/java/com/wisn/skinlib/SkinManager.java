@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class SkinManager implements SubObserver {
     private static final String TAG = "SkinManager";
-    private Context context;
+    public  Context context;
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean mNightMode = false;
     public boolean isDefaultSkin = true;
@@ -198,7 +198,7 @@ public class SkinManager implements SubObserver {
                                    SkinManager.this.skinPath +
                                    "   skinPathRes:" +
                                    SkinManager.this.skinPathRes);
-                        loadSkinFile(skinPathRes);
+                        loadSkinFileForRN(skinPathRes);
                         SpUtils.setCustomSkinName(context, strings[0]);
                         mResources = resource;
                         return resource;
@@ -240,7 +240,7 @@ public class SkinManager implements SubObserver {
         }.execute(skinName);
     }
 
-    public void loadSkinFile(String skinPathRes) {
+    public void loadSkinFileForRN(String skinPathRes) {
         File file = new File(skinPathRes);
         if (file.exists() && file.isDirectory()) {
             if (skinData != null) {

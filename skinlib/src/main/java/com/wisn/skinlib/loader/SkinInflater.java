@@ -2,6 +2,7 @@ package com.wisn.skinlib.loader;
 
 import android.view.View;
 
+import com.wisn.skinlib.attr.base.SkinAttr;
 import com.wisn.skinlib.attr.base.SkinItem;
 
 /**
@@ -14,6 +15,10 @@ public abstract class SkinInflater {
     public abstract void clear();
 
     public abstract void addSkinView(SkinItem skinItem);
+
+    public abstract void addSkinView(View view, String attrName, int attrValueresId);
+
+    public abstract void addSkinView(View view, SkinAttr skinAttr);
 
     public abstract void removeSkinView(View view);
 }

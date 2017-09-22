@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:radiobutton="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -70,6 +70,49 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:drawableTop="@drawable/radiobutton_bg_gift"/>
+        <LinearLayout
+            android:id="@+id/contentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"/>
     </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/bottom_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/bottomTool"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <com.wisn.skin.view.MyRadioButton
+            android:id="@+id/radiobutton_bg_home"
+            style="@style/rediobutton_style"
+            android:checked="true"
+            android:text="Home"
+            radiobutton:drawableSize="30dp"
+            radiobutton:drawableTop="@drawable/radiobutton_bg_home" />
+
+        <com.wisn.skin.view.MyRadioButton
+            android:id="@+id/radiobutton_bg_gift"
+            style="@style/rediobutton_style"
+            android:text="Gift"
+            radiobutton:drawableSize="30dp"
+            radiobutton:drawableTop="@drawable/radiobutton_bg_gift" />
+
+        <com.wisn.skin.view.MyRadioButton
+            android:id="@+id/radiobutton_bg_start"
+            style="@style/rediobutton_style"
+            android:text="Home"
+            radiobutton:drawableSize="30dp"
+            radiobutton:drawableTop="@drawable/radiobutton_bg_start" />
+
+        <com.wisn.skin.view.MyRadioButton
+            android:id="@+id/radiobutton_bg_watch"
+            style="@style/rediobutton_style"
+            android:text="Watch"
+            radiobutton:drawableSize="30dp"
+            radiobutton:drawableTop="@drawable/radiobutton_bg_watch" />
+    </RadioGroup>
 
 </LinearLayout>

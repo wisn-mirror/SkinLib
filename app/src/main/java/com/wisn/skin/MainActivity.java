@@ -6,15 +6,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.wisn.skin.view.DrawableTopAttr;
+import com.wisn.skin.view.MyRadioButton;
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.base.SkinFragmentActivity;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.utils.LogUtils;
 
+
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG = "MainActivity";
     private Button mChangeSkin, resetSkin, getcolor,getSkinPath;
+
+    private RadioGroup mRadioButton;
+    private MyRadioButton mRadiobutton_bg_home;
+    private MyRadioButton mRadiobutton_bg_gift;
+    private MyRadioButton mRadiobutton_bg_start;
+    private MyRadioButton mRadiobutton_bg_watch;
+    private LinearLayout mContentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +37,11 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         getcolor = (Button) findViewById(R.id.getcolor);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         getSkinPath = (Button) findViewById(R.id.getSkinPath);
+        mContentView = (LinearLayout) findViewById(R.id.contentView);
+        mRadiobutton_bg_home = (MyRadioButton) findViewById(R.id.radiobutton_bg_home);
+        mRadiobutton_bg_gift = (MyRadioButton) findViewById(R.id.radiobutton_bg_gift);
+        mRadiobutton_bg_start = (MyRadioButton) findViewById(R.id.radiobutton_bg_start);
+        mRadiobutton_bg_watch = (MyRadioButton) findViewById(R.id.radiobutton_bg_watch);
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         imageButton.setPressed(true);
         mChangeSkin.setOnClickListener(this);
@@ -33,9 +51,12 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
 //        startActivity(new Intent(this,TestAppCompatActivity.class));
         final float scale = this.getResources().getDisplayMetrics().density;
         LogUtils.e(TAG, "aaa:" + scale);
-//        return (int) (dpValue * scale + 0.5f);
-
-
+//        return (int) (dpValue * scale + 0.5f);@drawable/radiobutton_bg_home
+        addCustomeView(mRadiobutton_bg_home,R.drawable.radiobutton_bg_home);
+        addCustomeView(mRadiobutton_bg_gift,R.drawable.radiobutton_bg_gift);
+        addCustomeView(mRadiobutton_bg_start,R.drawable.radiobutton_bg_start);
+        addCustomeView(mRadiobutton_bg_watch,R.drawable.radiobutton_bg_watch);
+        addNewObjectView();
     }
 
     long sum = 0;
@@ -44,7 +65,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == mChangeSkin) {
-            SkinManager.getInstance().loadSkin("theme-com.wisn.skin1--30-1.0-2017-09-18-09-16-10.skin",
+            SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin",
                                                this);
             Log.e(TAG, "printprintprint--------------------------------------------------");
         } else if (v == resetSkin) {
@@ -69,8 +90,21 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             startActivity(new Intent(this, TestActivity.class));
         }else if(v==getSkinPath){
             startActivity(new Intent(this, TestAppCompatActivity.class));
-
         }
+    }
+    public void addNewObjectView(){
+        for(int i=0;i<5;i++){
+            TextView textView=new TextView(this);
+            textView.setText("test"+i);
+            mContentView.addView(textView);
+            dynamicAddView(textView,"textColor",R.color.colorAccent);
+        }
+    }
+
+    public void addCustomeView(View view,int attrValueresId){
+        DrawableTopAttr  drawableTopAttr=new DrawableTopAttr();
+        drawableTopAttr.setRes("drawableTop",attrValueresId);
+        dynamicAddView(view,drawableTopAttr);
     }
 
     @Override

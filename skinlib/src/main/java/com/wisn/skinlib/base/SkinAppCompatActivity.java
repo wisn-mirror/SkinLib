@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
+import com.wisn.skinlib.attr.base.SkinAttr;
+import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.interfaces.DynamicView;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
@@ -62,7 +64,20 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
 
     @Override
     public void dynamicAddView(View view, String attrName, int attrValueresId) {
+        if(skinInflaterFactory==null)return ;
+        skinInflaterFactory.addSkinView(this,view,attrName,attrValueresId);
+    }
 
+    @Override
+    public void dynamicAddView(SkinItem skinItem) {
+        if(skinInflaterFactory==null)return ;
+        skinInflaterFactory.addSkinView(skinItem);
+    }
+
+    @Override
+    public void dynamicAddView(View view, SkinAttr skinAttr) {
+        if(skinInflaterFactory==null)return ;
+        skinInflaterFactory.addSkinView(view,skinAttr);
     }
 
     @Override

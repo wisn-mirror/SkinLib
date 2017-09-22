@@ -77,11 +77,15 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
                                .getIdentifier(styleName,
                                               SkinConfig.Attrs_deal_char_style,
                                               context.getPackageName());
-                int[] skinAttrs = new int[]{android.R.attr.textColor, android.R.attr.background,android.R.attr.drawableTop};
+                int[]
+                        skinAttrs =
+                        new int[]{android.R.attr.textColor,
+                                  android.R.attr.background,
+                                  android.R.attr.drawableTop};
                 TypedArray typedArray = context.getTheme().obtainStyledAttributes(identifier, skinAttrs);
                 int textColor = typedArray.getResourceId(0, -1);
                 int background = typedArray.getResourceId(1, -1);
-                int drawableTop= typedArray.getResourceId(2, -1);
+                int drawableTop = typedArray.getResourceId(2, -1);
                 // TODO: 2017/9/7 deal textcolor
                 if (textColor != -1) {
                     String resourceEntryName = context.getResources().getResourceEntryName(textColor);
@@ -184,6 +188,20 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         mSkinItemMap = null;
     }
 
+    public void addSkinView(Context context, View view, String attrName, int attrValueResId) {
+
+    }
+
+    public void addSkinView(View view, SkinAttr skinAttr) {
+        SkinItem skinItem = new SkinItem();
+        skinItem.view = view;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        viewAttrs.add(skinAttr);
+        skinItem.attrs = viewAttrs;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
     public void addSkinView(SkinItem skinItem) {
         if (skinItem == null || mSkinItemMap == null) return;
         if (mSkinItemMap.get(skinItem.view) != null) {
@@ -191,6 +209,20 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         } else {
             mSkinItemMap.put(skinItem.view, skinItem);
         }
+    }
+
+    @Override
+    public void addSkinView(View view, String attrName, int attrValueresId) {
+        String entryName = mAppCompatActivity.getResources().getResourceEntryName(attrValueresId);
+        String typeName = mAppCompatActivity.getResources().getResourceTypeName(attrValueresId);
+        SkinAttr mSkinAttr = SkinAttrFactory.get(attrName, attrValueresId, entryName, typeName);
+        SkinItem skinItem = new SkinItem();
+        skinItem.view = view;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        viewAttrs.add(mSkinAttr);
+        skinItem.attrs = viewAttrs;
+        skinItem.apply();
+        addSkinView(skinItem);
     }
 
     public void removeSkinView(View view) {
