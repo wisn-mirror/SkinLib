@@ -7,13 +7,13 @@ Change Skin for Andorid and RN
 
 ### ScreenShot
 
-<img width="50%" src="./app/pic/a1.png" />
+<img width="40%" src="./app/pic/a1.png" />
 
-<img width="50%" src="./app/pic/a2.png" />
+<img width="40%" src="./app/pic/a2.png" />
 
-<img width="50%" src="./app/pic/a3.png" />
+<img width="40%" src="./app/pic/a3.png" />
 
-<img width="50%" src="./app/pic/a4.png" />
+<img width="40%" src="./app/pic/a4.png" />
 
 
 
