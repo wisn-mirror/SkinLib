@@ -168,6 +168,24 @@ public class SkinFileUitls {
     }
 
     /**
+     *  get SkinFontPath
+     * @param context
+     * @return
+     */
+    public static String getSkinFontPath(Context context) {
+        String skinRootPath = SpUtils.getSkinRootPath(context);
+        if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
+            skinRootPath = getCacherDir(context);
+        }
+        File skinDir = new File(skinRootPath,  SkinConfig.FontDir);
+        if (!skinDir.exists()) {
+            skinDir.mkdirs();
+        }
+        Log.d("SkinFileUtils", skinDir.getAbsolutePath());
+        return skinDir.getAbsolutePath();
+    }
+
+    /**
      * @param context
      * @param isRes
      *
