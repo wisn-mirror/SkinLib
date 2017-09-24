@@ -1,15 +1,12 @@
 package com.wisn.skinlib.base;
 
 import android.app.Application;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
-import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +48,7 @@ public class SkinApplication extends Application {
                       "   " + SkinFileUitls.getSkinPath(this, false) + File.separator + fileName);
                 if (!toFile.exists()) {
                     toFile.createNewFile();
-//                    toFile.mkdirs();
-                    SkinFileUitls.copyAssetsToSkinDir(this, fileName, toFile.getPath());
+                    SkinFileUitls.copySkinAssetsToSkinDir(this, fileName, toFile.getPath());
                 }
             }
             //检测皮肤目录和解压目录的一致性
@@ -67,6 +63,19 @@ public class SkinApplication extends Application {
                     continue;
                 }
                 SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName, fileName);
+            }
+            String[] fontFile = getAssets().list(SkinConfig.FontDir);
+            //拷贝assets到皮肤目录
+            if (fontFile == null || fontFile.length == 0) return;
+            for (String fontName : fontFile) {
+                Log.d("SkinApplication", "   " + fontName);
+                File toFile = new File(SkinFileUitls.getSkinFontPath(this), fontName);
+                Log.d("SkinApplication",
+                      "   " + SkinFileUitls.getSkinFontPath(this) + File.separator + fontName);
+                if (!toFile.exists()) {
+                    toFile.createNewFile();
+                    SkinFileUitls.copyFontAssetsToSkinDir(this, fontName, toFile.getPath());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

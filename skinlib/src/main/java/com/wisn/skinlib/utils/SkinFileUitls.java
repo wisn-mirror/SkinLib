@@ -86,7 +86,7 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String copyAssetsToSkinDir(Context context, String skinName, String toFilePath) {
+    public static String copySkinAssetsToSkinDir(Context context, String skinName, String toFilePath) {
         InputStream is = null;
         try {
             is = context.getAssets().open(SkinConfig.SkinDir + File.separator + skinName);
@@ -101,6 +101,23 @@ public class SkinFileUitls {
         return toFilePath;
     }
 
+
+    public static String copyFontAssetsToSkinDir(Context context, String fontName, String toFilePath) {
+        InputStream is = null;
+        try {
+            is = context.getAssets().open(SkinConfig.FontDir + File.separator + fontName);
+            File fileDir = new File(toFilePath);
+            if (!fileDir.exists()) {
+                fileDir.mkdirs();
+            }
+            copyFileStream(is, new FileOutputStream(fileDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return toFilePath;
+    }
+
+
     /**
      * 保存新添加的皮肤
      *
@@ -113,6 +130,12 @@ public class SkinFileUitls {
         if (fromFilePath == null || skinName == null) return false;
         return copyFile(new File(fromFilePath),
                         new File(SkinFileUitls.getSkinPath(context, false), skinName));
+    }
+
+    public static boolean saveFontFile(Context context, String fromFilePath, String fontName) {
+        if (fromFilePath == null || fontName == null) return false;
+        return copyFile(new File(fromFilePath),
+                        new File(SkinFileUitls.getSkinFontPath(context), fontName));
     }
 
     /**
@@ -168,8 +191,10 @@ public class SkinFileUitls {
     }
 
     /**
-     *  get SkinFontPath
+     * get SkinFontPath
+     *
      * @param context
+     *
      * @return
      */
     public static String getSkinFontPath(Context context) {
@@ -177,11 +202,11 @@ public class SkinFileUitls {
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
         }
-        File skinDir = new File(skinRootPath,  SkinConfig.FontDir);
+        File skinDir = new File(skinRootPath, SkinConfig.FontDir);
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
-        Log.d("SkinFileUtils", skinDir.getAbsolutePath());
+        Log.d("getSkinFontPath", skinDir.getAbsolutePath());
         return skinDir.getAbsolutePath();
     }
 
@@ -203,6 +228,18 @@ public class SkinFileUitls {
         return skinDir.listFiles();
     }
 
+    public static File[] getFontListFile(Context context) {
+        String skinRootPath = SpUtils.getSkinRootPath(context);
+        if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
+            skinRootPath = getCacherDir(context);
+        }
+        File skinDir = new File(skinRootPath, SkinConfig.FontDir);
+        if (skinDir == null || !skinDir.exists()) {
+            return null;
+        }
+        return skinDir.listFiles();
+    }
+
 
     /**
      * 获取皮肤名称列表
@@ -214,6 +251,20 @@ public class SkinFileUitls {
      */
     public static List<String> getSkinListName(Context context, boolean isRes, boolean isPath) {
         File[] skinListFile = getSkinListFile(context, isRes);
+        if (skinListFile == null) return null;
+        List<String> skinListName = new ArrayList<>();
+        for (File file : skinListFile) {
+            if (isPath) {
+                skinListName.add(file.getAbsolutePath());
+            } else {
+                skinListName.add(file.getName());
+            }
+        }
+        return skinListName;
+    }
+
+    public static List<String> getFontListName(Context context, boolean isPath) {
+        File[] skinListFile = getFontListFile(context);
         if (skinListFile == null) return null;
         List<String> skinListName = new ArrayList<>();
         for (File file : skinListFile) {

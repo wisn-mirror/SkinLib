@@ -137,6 +137,32 @@ public class SkinManager implements SubObserver {
                 SkinFileUitls.upZipSkin(context, skinFilePath, skinName));
     }
 
+
+    public boolean saveFont(String fontPath, String fontName) {
+        List<String> fontListName = getFontListName(false);
+        if (fontListName != null &&
+            fontListName.contains(fontName)) return true;
+        return SkinFileUitls.saveFontFile(context, fontPath, fontName);
+    }
+
+    public boolean loadFont(String fontName) {
+        try {
+            String fontPath =
+                    SkinFileUitls.getSkinFontPath(context) +
+                    File.separator +
+                    fontName;
+            Typeface typeface = Typeface.createFromFile(fontPath);
+            if (typeface != null) {
+                notifyFontUpdate(typeface);
+                return true;
+            }
+            return false;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * @param skinName
      * @param listener
@@ -277,6 +303,10 @@ public class SkinManager implements SubObserver {
         return SkinFileUitls.getSkinListName(context, isRes, isPath);
     }
 
+    public List<String> getFontListName(boolean isPath) {
+        return SkinFileUitls.getFontListName(context, isPath);
+    }
+
     public void resetDefaultThem() {
         isDefaultSkin = true;
         mNightMode = false;
@@ -287,13 +317,6 @@ public class SkinManager implements SubObserver {
         notifySkinUpdate();
     }
 
-    public void loadFont(String fontName) {
-
-    }
-
-    public void saveFont(String path, String fontName) {
-
-    }
 
     @Override
     public void attach(ISkinUpdateObserver observer) {
