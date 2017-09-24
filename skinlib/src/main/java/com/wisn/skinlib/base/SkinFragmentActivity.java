@@ -1,5 +1,6 @@
 package com.wisn.skinlib.base;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,7 @@ import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
 import com.wisn.skinlib.loader.SkinInflater;
 import com.wisn.skinlib.loader.SkinInflaterFactory;
+import com.wisn.skinlib.utils.TypeFaceUtil;
 
 import java.util.List;
 
@@ -57,6 +59,11 @@ public class SkinFragmentActivity extends FragmentActivity implements ISkinUpdat
     @Override
     public void onThemUpdate() {
         mSkinInflaterFactory.applySkin();
+    }
+
+    @Override
+    public void onFontUpdate(Typeface typeface) {
+        TypeFaceUtil.replaceFont(this, typeface);
     }
 
     @Override

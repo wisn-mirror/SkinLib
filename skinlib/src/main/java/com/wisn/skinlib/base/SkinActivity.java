@@ -1,6 +1,7 @@
 package com.wisn.skinlib.base;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.interfaces.DynamicView;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.loader.SkinInflaterFactory;
+import com.wisn.skinlib.utils.TypeFaceUtil;
 
 import java.util.List;
 
@@ -48,6 +50,11 @@ public class SkinActivity extends Activity implements ISkinUpdateObserver, Dynam
     @Override
     public void onThemUpdate() {
         mSkinInflaterFactory.applySkin();
+    }
+
+    @Override
+    public void onFontUpdate(Typeface typeface) {
+        TypeFaceUtil.replaceFont(this,typeface);
     }
 
     @Override

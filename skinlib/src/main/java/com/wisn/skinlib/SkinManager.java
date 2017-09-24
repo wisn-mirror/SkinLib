@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -38,7 +39,7 @@ import java.util.Map;
 
 public class SkinManager implements SubObserver {
     private static final String TAG = "SkinManager";
-    public  Context context;
+    public Context context;
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean mNightMode = false;
     public boolean isDefaultSkin = true;
@@ -227,7 +228,7 @@ public class SkinManager implements SubObserver {
                                 public void run() {
 
                                     if (listener != null) listener.onSuccess();
-                                    notifyUpdate();
+                                    notifySkinUpdate();
                                 }
                             }
                     );
@@ -261,7 +262,7 @@ public class SkinManager implements SubObserver {
         resetDefaultThem();
         mNightMode = true;
         SpUtils.setNightMode(context, true);
-        notifyUpdate();
+        notifySkinUpdate();
     }
 
     public String getCurrentThemName() {
@@ -283,7 +284,15 @@ public class SkinManager implements SubObserver {
         skinPathRes = null;
         SpUtils.setNightMode(context, false);
         SpUtils.setDefaultSkin(context);
-        notifyUpdate();
+        notifySkinUpdate();
+    }
+
+    public void loadFont(String fontName) {
+
+    }
+
+    public void saveFont(String path, String fontName) {
+
     }
 
     @Override
@@ -302,11 +311,25 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @hide
+     */
     @Override
-    public void notifyUpdate() {
+    public void notifySkinUpdate() {
         if (mSkinObservers == null) return;
         for (ISkinUpdateObserver iSkinUpdate : mSkinObservers) {
             iSkinUpdate.onThemUpdate();
+        }
+    }
+
+    /**
+     * @hide
+     */
+    @Override
+    public void notifyFontUpdate(Typeface typeface) {
+        if (mSkinObservers == null) return;
+        for (ISkinUpdateObserver iSkinUpdate : mSkinObservers) {
+            iSkinUpdate.onFontUpdate(typeface);
         }
     }
 

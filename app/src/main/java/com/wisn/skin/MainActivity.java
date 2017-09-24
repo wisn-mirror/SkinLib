@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -50,7 +51,10 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         getSkinPath.setOnClickListener(this);
 //        startActivity(new Intent(this,TestAppCompatActivity.class));
         final float scale = this.getResources().getDisplayMetrics().density;
-        LogUtils.e(TAG, "aaa:" + scale);
+        Button button=new Button(this);
+        CheckBox checkBox=new CheckBox(this);
+        LogUtils.e(TAG, "aaa:" + scale+(button instanceof TextView));
+        LogUtils.e(TAG, "checkBox:" + scale+(checkBox instanceof TextView));
 //        return (int) (dpValue * scale + 0.5f);@drawable/radiobutton_bg_home
         addCustomeView(mRadiobutton_bg_home,R.drawable.radiobutton_bg_home);
         addCustomeView(mRadiobutton_bg_gift,R.drawable.radiobutton_bg_gift);
