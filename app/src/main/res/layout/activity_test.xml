@@ -17,20 +17,26 @@
             android:id="@+id/changeSkin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="loadPathList"
+            android:text="load\nPathList"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/resetSkin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="loadName（可换肤)"
+            android:text="loadName\n（可换肤)"
             android:textColor="@color/colorAccent" />
         <Button
             android:id="@+id/loadResPathList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="loadResPathList"
+            android:text="load\nResPathList"
+            android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/loadFontList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load\nFontList"
             android:textColor="@color/colorAccent" />
 
     </LinearLayout>

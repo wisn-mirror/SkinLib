@@ -44,6 +44,7 @@ public class SkinManager implements SubObserver {
     private boolean mNightMode = false;
     public boolean isDefaultSkin = true;
     private Resources mResources;
+    private Typeface mTypeface;
     private String mPackageName;
     public String skinPath;
     public String skinPathRes;
@@ -103,7 +104,9 @@ public class SkinManager implements SubObserver {
     public void updateSkinPath(String newSkinRootPath, SkinLoaderListener skinLoaderListener) {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinLoaderListener);
     }
-
+    public Typeface getTypeFace(){
+        return mTypeface;
+    }
     /**
      * @param listener
      */
@@ -145,22 +148,51 @@ public class SkinManager implements SubObserver {
         return SkinFileUitls.saveFontFile(context, fontPath, fontName);
     }
 
-    public boolean loadFont(String fontName) {
-        try {
-            String fontPath =
-                    SkinFileUitls.getSkinFontPath(context) +
-                    File.separator +
-                    fontName;
-            Typeface typeface = Typeface.createFromFile(fontPath);
-            if (typeface != null) {
-                notifyFontUpdate(typeface);
-                return true;
+    public void loadFont(String fontName, final SkinLoaderListener listener) {
+        if (fontName == null) {
+            if (listener != null) {
+                listener.onFailed("fontName is null ");
             }
-            return false;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
         }
+        LogUtils.e(TAG,"fontName:"+fontName);
+        new AsyncTask<String, Void, Typeface>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if (listener != null) {
+                    listener.start();
+                }
+            }
+
+            @Override
+            protected Typeface doInBackground(String... strings) {
+                try {
+                    if (strings != null && strings.length == 1 && strings[0] != null) {
+                        String fontPath =
+                                SkinFileUitls.getSkinFontPath(context) +
+                                File.separator +
+                                strings[0];
+                        return Typeface.createFromFile(fontPath);
+                    }
+                    return null;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Typeface typeface) {
+                if (typeface != null) {
+                    mTypeface=typeface;
+                    notifyFontUpdate(typeface);
+                    if (listener != null) {
+                        listener.onSuccess();
+                    }
+                }
+            }
+        }.execute(fontName);
+
     }
 
     /**

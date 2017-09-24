@@ -34,6 +34,12 @@ public class SkinActivity extends Activity implements ISkinUpdateObserver, Dynam
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        TypeFaceUtil.replaceFont(this,SkinManager.getInstance().getTypeFace());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         SkinManager.getInstance().attach(this);

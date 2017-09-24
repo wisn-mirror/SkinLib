@@ -24,19 +24,21 @@ import java.util.List;
 
 public class TestActivity extends SkinActivity implements View.OnClickListener, SkinLoaderListener ,AdapterView.OnItemClickListener{
     private static final String TAG="TestActivity";
-    private Button mChangeSkin,resetSkin,loadResPathList;
+    private Button mChangeSkin,resetSkin,loadResPathList,loadFontList;
     private ListView mListView;
     private List<String> mSkinListName=new ArrayList<>();
     private BaseAdapter mAdapter;
-
+    private boolean isFont=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
+        loadFontList = (Button) findViewById(R.id.loadFontList);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         loadResPathList = (Button) findViewById(R.id.loadResPathList);
         mListView = (ListView) findViewById(R.id.listview);
+        loadFontList.setOnClickListener(this);
         loadResPathList.setOnClickListener(this);
         mChangeSkin.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
@@ -71,11 +73,17 @@ public class TestActivity extends SkinActivity implements View.OnClickListener, 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SkinManager.getInstance().loadSkin(mSkinListName.get(position), this);
+        if(isFont){
+            SkinManager.getInstance().loadFont(mSkinListName.get(position), this);
+        }else{
+            SkinManager.getInstance().loadSkin(mSkinListName.get(position), this);
+
+        }
     }
 
     @Override
     public void onClick(View v) {
+        isFont=false;
         if (v == mChangeSkin) {
             List<String> mSkinListNameaa= SkinManager.getInstance().getSkinListName(false,true);
             if(mSkinListNameaa==null)return ;
@@ -94,6 +102,13 @@ public class TestActivity extends SkinActivity implements View.OnClickListener, 
             mSkinListName = mSkinListNameaa;
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(null);
+        } else if(v==loadFontList){
+            List<String> fontListName= SkinManager.getInstance().getFontListName(false);
+            if(fontListName==null)return ;
+            isFont=true;
+            mSkinListName = fontListName;
+            mAdapter.notifyDataSetChanged();
+            mListView.setOnItemClickListener(this);
         }
     }
 

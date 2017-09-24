@@ -35,7 +35,12 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
         mSkinInflaterFactory.setAppCompatActivity(this);
         LayoutInflaterCompat.setFactory(getLayoutInflater(), mSkinInflaterFactory);
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TypeFaceUtil.replaceFont(this, SkinManager.getInstance().getTypeFace());
     }
 
     @Override

@@ -19,8 +19,9 @@ public class TypeFaceUtil {
             ((TextView) view).setTypeface(typeface);
         } else if (view instanceof ViewGroup) {
             ViewGroup vg = ((ViewGroup) view);
-            for (int i = 0; i < vg.getChildCount(); i++) {
-                replaceFont(vg, typeface);
+            int childCount = vg.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                replaceFont(vg.getChildAt(i), typeface);
             }
         }
     }
