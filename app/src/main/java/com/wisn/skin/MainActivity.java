@@ -99,6 +99,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             startActivity(new Intent(this, TestAppCompatActivity.class));
         }else if(v==changeFont){
             LogUtils.e(TAG,"changeFont:"+SkinManager.getInstance().saveFont(Environment.getExternalStorageDirectory()+"/dd/font.ttf","aaaa.ttf"));
+            SkinManager.getInstance().loadFont("aaaa.ttf",this);
         }
     }
     public void addNewObjectView(){

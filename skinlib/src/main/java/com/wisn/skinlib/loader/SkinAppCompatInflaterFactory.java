@@ -43,10 +43,6 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
                 attrs.getAttributeBooleanValue(SkinConfig.NameSpace, SkinConfig.Attr_Skin_Enable, false);
         AppCompatDelegate delegate = mAppCompatActivity.getDelegate();
         View view = delegate.createView(parent, name, context, attrs);
-        if (view instanceof TextView && SkinConfig.isChangeFont) {
-            // TODO: 2017/9/7 change font style
-            FontRepository.add(mAppCompatActivity, view);
-        }
         if (attributeBooleanValue || SkinConfig.isGlobalChangeSkin) {
             if (view == null) {
                 view = ViewInflat.createViewFromTag(context, name, attrs);
@@ -184,7 +180,6 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
 
     public void clear() {
         if (mSkinItemMap == null || mSkinItemMap.isEmpty()) return;
-        FontRepository.remove(mAppCompatActivity);
         mSkinItemMap.clear();
         mSkinItemMap = null;
     }
@@ -238,9 +233,6 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
 
     public void removeSkinView(View view) {
         if (view == null || mSkinItemMap == null) return;
-        SkinItem skinItem = mSkinItemMap.remove(view);
-        if (skinItem != null && SkinConfig.isChangeFont && view instanceof TextView) {
-            FontRepository.remove(mAppCompatActivity, view);
-        }
+       mSkinItemMap.remove(view);
     }
 }

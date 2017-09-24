@@ -74,10 +74,6 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         boolean
                 attributeBooleanValue =
                 attrs.getAttributeBooleanValue(SkinConfig.NameSpace, SkinConfig.Attr_Skin_Enable, false);
-        if (view instanceof TextView && SkinConfig.isChangeFont) {
-            // TODO: 2017/9/7 change font style
-            FontRepository.add(mActivity, view);
-        }
         if (attributeBooleanValue || SkinConfig.isGlobalChangeSkin) {
             dealSkinAttr(context, attrs, view);
         }
@@ -207,7 +203,6 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
 
     public void clear() {
         if (mSkinItemMap == null || mSkinItemMap.isEmpty()) return;
-        FontRepository.remove(mActivity);
         mSkinItemMap.clear();
         mSkinItemMap = null;
     }
@@ -262,9 +257,6 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
 
     public void removeSkinView(View view) {
         if (view == null || mSkinItemMap == null) return;
-        SkinItem skinItem = mSkinItemMap.remove(view);
-        if (skinItem != null && SkinConfig.isChangeFont && view instanceof TextView) {
-            FontRepository.remove(mActivity, view);
-        }
+        mSkinItemMap.remove(view);
     }
 }

@@ -15,14 +15,13 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.font.TypeFaceUtils;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.utils.ColorUtils;
+import com.wisn.skinlib.utils.DBUtils;
 import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
-import com.wisn.skinlib.utils.SpUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -69,8 +68,11 @@ public class SkinManager implements SubObserver {
         context = ctx.getApplicationContext();
         SkinConfig.Density = context.getResources().getDisplayMetrics().density;
         SkinConfig.FirstIndex = getFirstIndex();
-        TypeFaceUtils.getTypeFace(context);
-        if (SpUtils.isNightMode(context)) {
+        String fontName = DBUtils.getFontName(context);
+        if (!SkinConfig.SP_Font_Path.equals(fontName)) {
+            loadFont(fontName, null);
+        }
+        if (DBUtils.isNightMode(context)) {
             SkinManager.getInstance().nightMode();
         } else {
             SkinManager.getInstance().loadSkin(null);
@@ -79,9 +81,9 @@ public class SkinManager implements SubObserver {
     }
 
     public void printInfo() {
-        LogUtils.e(TAG, "printInfo:getCustomSkinName:" + SpUtils.getCustomSkinName(context));
-        LogUtils.e(TAG, "printInfo:isDefaultSkin:" + SpUtils.isDefaultSkin(context));
-        LogUtils.e(TAG, "printInfo:getSkinRootPath:" + SpUtils.getSkinRootPath(context));
+        LogUtils.e(TAG, "printInfo:getCustomSkinName:" + DBUtils.getCustomSkinName(context));
+        LogUtils.e(TAG, "printInfo:isDefaultSkin:" + DBUtils.isDefaultSkin(context));
+        LogUtils.e(TAG, "printInfo:getSkinRootPath:" + DBUtils.getSkinRootPath(context));
         LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, false));
         LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, true));
     }
@@ -104,20 +106,22 @@ public class SkinManager implements SubObserver {
     public void updateSkinPath(String newSkinRootPath, SkinLoaderListener skinLoaderListener) {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinLoaderListener);
     }
-    public Typeface getTypeFace(){
+
+    public Typeface getTypeFace() {
         return mTypeface;
     }
+
     /**
      * @param listener
      */
     public void loadSkin(SkinLoaderListener listener) {
-        if (SpUtils.isDefaultSkin(context)) {
+        if (DBUtils.isDefaultSkin(context)) {
             skinPath = null;
             skinPathRes = null;
             LogUtils.e(TAG, "default skin");
             return;
         } else {
-            String customSkinName = SpUtils.getCustomSkinName(context);
+            String customSkinName = DBUtils.getCustomSkinName(context);
             loadSkin(customSkinName, listener);
         }
     }
@@ -154,7 +158,7 @@ public class SkinManager implements SubObserver {
                 listener.onFailed("fontName is null ");
             }
         }
-        LogUtils.e(TAG,"fontName:"+fontName);
+        LogUtils.e(TAG, "fontName:" + fontName);
         new AsyncTask<String, Void, Typeface>() {
             @Override
             protected void onPreExecute() {
@@ -172,8 +176,12 @@ public class SkinManager implements SubObserver {
                                 SkinFileUitls.getSkinFontPath(context) +
                                 File.separator +
                                 strings[0];
-                        LogUtils.e(TAG,"fontPath"+fontPath);
-                        return Typeface.createFromFile(fontPath);
+                        LogUtils.e(TAG, "fontPath" + fontPath);
+                        Typeface typeface = Typeface.createFromFile(fontPath);
+                        if (typeface != null) {
+                            DBUtils.setCustomFontName(context, strings[0]);
+                        }
+                        return typeface;
                     }
                     return null;
                 } catch (Exception ex) {
@@ -188,7 +196,7 @@ public class SkinManager implements SubObserver {
             @Override
             protected void onPostExecute(Typeface typeface) {
                 if (typeface != null) {
-                    mTypeface=typeface;
+                    mTypeface = typeface;
                     notifyFontUpdate(typeface);
                     if (listener != null) {
                         listener.onSuccess();
@@ -261,7 +269,7 @@ public class SkinManager implements SubObserver {
                                    "   skinPathRes:" +
                                    SkinManager.this.skinPathRes);
                         loadSkinFileForRN(skinPathRes);
-                        SpUtils.setCustomSkinName(context, strings[0]);
+                        DBUtils.setCustomSkinName(context, strings[0]);
                         mResources = resource;
                         return resource;
                     }
@@ -283,7 +291,7 @@ public class SkinManager implements SubObserver {
                     mResources = resources;
                     isDefaultSkin = false;
                     mNightMode = false;
-                    SpUtils.setNightMode(context, false);
+                    DBUtils.setNightMode(context, false);
                     new Handler(Looper.getMainLooper()).post(
                             new Runnable() {
                                 @Override
@@ -323,15 +331,15 @@ public class SkinManager implements SubObserver {
     public void nightMode() {
         resetDefaultThem();
         mNightMode = true;
-        SpUtils.setNightMode(context, true);
+        DBUtils.setNightMode(context, true);
         notifySkinUpdate();
     }
 
     public String getCurrentThemName() {
-        if (SpUtils.isDefaultSkin(context)) {
+        if (DBUtils.isDefaultSkin(context)) {
             return null;
         } else {
-            return SpUtils.getCustomSkinName(context);
+            return DBUtils.getCustomSkinName(context);
         }
     }
 
@@ -348,8 +356,8 @@ public class SkinManager implements SubObserver {
         mNightMode = false;
         skinPath = null;
         skinPathRes = null;
-        SpUtils.setNightMode(context, false);
-        SpUtils.setDefaultSkin(context);
+        DBUtils.setNightMode(context, false);
+        DBUtils.setDefaultSkin(context);
         notifySkinUpdate();
     }
 
@@ -517,7 +525,7 @@ public class SkinManager implements SubObserver {
     public void setSkinRootPath(String newSkinRootPath) {
         File file = new File(newSkinRootPath);
         file.mkdirs();
-        SpUtils.setSkinRootPath(context, newSkinRootPath);
+        DBUtils.setSkinRootPath(context, newSkinRootPath);
     }
 
 

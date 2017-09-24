@@ -8,7 +8,7 @@ import com.wisn.skinlib.config.SkinConfig;
  * Created by wisn on 2017/9/6.
  */
 
-public class SpUtils {
+public class DBUtils {
     public static String getCustomSkinName(Context context) {
         return SkinPreferencesUtils.getString(context,
                                               SkinConfig.SP_Custom_Skin_Path,
@@ -29,8 +29,14 @@ public class SpUtils {
         SkinPreferencesUtils.putString(context, SkinConfig.SP_Custom_Skin_Path, path);
     }
 
-    public static void setCustomFontName(Context context, String path) {
-        SkinPreferencesUtils.putString(context, SkinConfig.SP_Font_Path, path);
+    public static void setCustomFontName(Context context, String fontName) {
+        SkinPreferencesUtils.putString(context, SkinConfig.SP_Font_Path, fontName);
+    }
+
+    public static String getFontName(Context context) {
+        return SkinPreferencesUtils.getString(context,
+                                              SkinConfig.SP_Font_Path,
+                                              SkinConfig.SP_Font_Path);
     }
 
     public static void setSkinRootPath(Context context, String path) {

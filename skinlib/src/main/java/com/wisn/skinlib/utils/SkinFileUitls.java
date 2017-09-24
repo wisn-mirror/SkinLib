@@ -73,7 +73,7 @@ public class SkinFileUitls {
                         }
                     }
 
-                    SpUtils.setSkinRootPath(context, newSkinRootPath);
+                    DBUtils.setSkinRootPath(context, newSkinRootPath);
                     if (skinLoaderListener != null) {
                         skinLoaderListener.onSuccess();
                     }
@@ -188,7 +188,7 @@ public class SkinFileUitls {
      * @return
      */
     public static String getSkinPath(Context context, boolean isRes) {
-        String skinRootPath = SpUtils.getSkinRootPath(context);
+        String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
         }
@@ -208,7 +208,7 @@ public class SkinFileUitls {
      * @return
      */
     public static String getSkinFontPath(Context context) {
-        String skinRootPath = SpUtils.getSkinRootPath(context);
+        String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
         }
@@ -227,7 +227,7 @@ public class SkinFileUitls {
      * @return
      */
     public static File[] getSkinListFile(Context context, boolean isRes) {
-        String skinRootPath = SpUtils.getSkinRootPath(context);
+        String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
         }
@@ -239,7 +239,7 @@ public class SkinFileUitls {
     }
 
     public static File[] getFontListFile(Context context) {
-        String skinRootPath = SpUtils.getSkinRootPath(context);
+        String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
         }
