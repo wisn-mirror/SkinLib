@@ -2,6 +2,7 @@ package com.wisn.skin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,7 @@ import com.wisn.skinlib.utils.LogUtils;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG = "MainActivity";
-    private Button mChangeSkin, resetSkin, getcolor,getSkinPath;
+    private Button mChangeSkin, resetSkin, getcolor,getSkinPath,changeFont;
 
     private RadioGroup mRadioButton;
     private MyRadioButton mRadiobutton_bg_home;
@@ -38,6 +39,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         getcolor = (Button) findViewById(R.id.getcolor);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         getSkinPath = (Button) findViewById(R.id.getSkinPath);
+        changeFont = (Button) findViewById(R.id.changeFont);
         mContentView = (LinearLayout) findViewById(R.id.contentView);
         mRadiobutton_bg_home = (MyRadioButton) findViewById(R.id.radiobutton_bg_home);
         mRadiobutton_bg_gift = (MyRadioButton) findViewById(R.id.radiobutton_bg_gift);
@@ -49,6 +51,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         resetSkin.setOnClickListener(this);
         getcolor.setOnClickListener(this);
         getSkinPath.setOnClickListener(this);
+        changeFont.setOnClickListener(this);
 //        startActivity(new Intent(this,TestAppCompatActivity.class));
         final float scale = this.getResources().getDisplayMetrics().density;
         Button button=new Button(this);
@@ -94,6 +97,8 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             startActivity(new Intent(this, TestActivity.class));
         }else if(v==getSkinPath){
             startActivity(new Intent(this, TestAppCompatActivity.class));
+        }else if(v==changeFont){
+            LogUtils.e(TAG,"changeFont:"+SkinManager.getInstance().saveFont(Environment.getExternalStorageDirectory()+"/dd/font.ttf","aaaa.ttf"));
         }
     }
     public void addNewObjectView(){

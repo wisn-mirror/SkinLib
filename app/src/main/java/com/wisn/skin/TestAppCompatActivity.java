@@ -109,8 +109,7 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
             mAdapter.notifyDataSetChanged();
             mListView.setOnItemClickListener(this);
         }else if(v==changSkinPath){
-            SkinManager.getInstance().updateSkinPath(Environment.getExternalStorageDirectory()
-                                                                .getAbsolutePath() + "/aa",
+            SkinManager.getInstance().updateSkinPath(mSdcardpath.getText().toString(),
                                                      new SkinLoaderListener() {
                                                          @Override
                                                          public void start() {

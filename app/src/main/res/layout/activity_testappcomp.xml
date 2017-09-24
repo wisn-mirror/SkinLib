@@ -32,7 +32,7 @@
             android:id="@+id/changSkinPath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="changSkinPath 更目录 aa"
+            android:text="更目录"
             android:textColor="@color/colorAccent" />
             </LinearLayout>
 

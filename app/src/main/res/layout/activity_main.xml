@@ -38,7 +38,14 @@
             android:id="@+id/getSkinPath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SkinPathFromSdcard"
+            android:text="SkinPath\nFromSdcard"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:id="@+id/changeFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="changeFont"
             android:textColor="@color/colorAccent" />
 
     </LinearLayout>

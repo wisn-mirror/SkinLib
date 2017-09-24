@@ -148,7 +148,7 @@ public class SkinManager implements SubObserver {
         return SkinFileUitls.saveFontFile(context, fontPath, fontName);
     }
 
-    public void loadFont(String fontName, final SkinLoaderListener listener) {
+    public void loadFont(final String fontName, final SkinLoaderListener listener) {
         if (fontName == null) {
             if (listener != null) {
                 listener.onFailed("fontName is null ");
@@ -172,11 +172,15 @@ public class SkinManager implements SubObserver {
                                 SkinFileUitls.getSkinFontPath(context) +
                                 File.separator +
                                 strings[0];
+                        LogUtils.e(TAG,"fontPath"+fontPath);
                         return Typeface.createFromFile(fontPath);
                     }
                     return null;
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    if (listener != null) {
+                        listener.onFailed(ex.getMessage());
+                    }
                 }
                 return null;
             }

@@ -36,33 +36,43 @@ public class SkinFileUitls {
                         skinLoaderListener.start();
                     }
                     String skinPath = getSkinPath(context, false);
+                    String fontPath = getSkinFontPath(context);
                     if (skinPath.equals(newSkinRootPath + File.separator + SkinConfig.SkinDir)) {
                         if (skinLoaderListener != null) {
                             skinLoaderListener.onFailed("skin rootPath already set");
                         }
                         return;
                     }
-                    File skinFile = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
-                    File skinFileRes = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
+                    File skinFileDir = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
+                    File skinFileResDir = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
+                    File fontFileDir = new File(newSkinRootPath + File.separator + SkinConfig.FontDir);
+                    if (!skinFileDir.exists())skinFileDir.mkdirs();
+                    if (!skinFileResDir.exists())skinFileResDir.mkdirs();
+                    if (!fontFileDir.exists())fontFileDir.mkdirs();
                     String[] Skin = new File(skinPath).list();
-                    if (!skinFile.exists()) {
-                        skinFile.mkdirs();
-                    }
-                    if (!skinFileRes.exists()) {
-                        skinFileRes.mkdirs();
-                    }
+                    String[] Font = new File(fontPath).list();
                     int i = 0;
+                    int sum=Skin.length+Font.length;
                     for (String fileName : Skin) {
                         copyFile(new File(skinPath + File.separator + fileName),
-                                 new File(skinFile, fileName));
+                                 new File(skinFileDir, fileName));
                         upZipFile(new File(skinPath + File.separator + fileName),
-                                  skinFileRes.getAbsolutePath() + File.separator
+                                  skinFileResDir.getAbsolutePath() + File.separator
                                   + fileName);
                         i++;
                         if (skinLoaderListener != null) {
-                            skinLoaderListener.onProgress(i, Skin.length);
+                            skinLoaderListener.onProgress(i, sum);
                         }
                     }
+                    for (String fontName : Font) {
+                        copyFile(new File(fontPath + File.separator + fontName),
+                                 new File(fontFileDir, fontName));
+                        i++;
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onProgress(i, sum);
+                        }
+                    }
+
                     SpUtils.setSkinRootPath(context, newSkinRootPath);
                     if (skinLoaderListener != null) {
                         skinLoaderListener.onSuccess();
@@ -159,7 +169,7 @@ public class SkinFileUitls {
      * @return
      */
     private static boolean copyFile(File fromFile, File toFile) {
-        if (fromFile == null || toFile == null) return false;
+        if (fromFile == null || toFile == null||!fromFile.exists()) return false;
         try {
             if (!toFile.exists()) toFile.createNewFile();
             return copyFileStream(new FileInputStream(fromFile), new FileOutputStream(toFile));
