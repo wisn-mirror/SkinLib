@@ -4,6 +4,8 @@
 Change Skin for Andorid and RN
 
 
+###  USE
+ git submodule add https://github.com/wisn-mirror/SkinLib.git /your project/lib
 
 ### ScreenShot
 
@@ -22,11 +24,11 @@ Change Skin for Andorid and RN
 ```java
  设置指定皮肤
  SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin", new SkinLoaderListener());
- 恢复默认皮肤
+恢复默认皮肤
  SkinManager.getInstance().resetDefaultThem();
                                               
 ```
-## 保存皮肤
+## 加载皮肤文件
 
 ```java
  
@@ -43,7 +45,7 @@ Change Skin for Andorid and RN
                                                
 ```
 
-##  自定义View换肤：
+## 自定义View换肤：
 
 ```java
 
@@ -51,6 +53,20 @@ Change Skin for Andorid and RN
  drawableTopAttr.setRes("drawableTop",attrValueresId);
  dynamicAddView(view,drawableTopAttr);
        
+```
+## 加载字体文件
+
+```java
+
+SkinManager.getInstance().saveFont("字体路径")     
+                                          
+```
+## 切换字体文件
+
+```java
+
+SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))     
+                                          
 ```
 ##  React Native 本地Module：
 
