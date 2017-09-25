@@ -216,7 +216,6 @@ public class SkinFileUitls {
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
-        Log.d("getSkinFontPath", skinDir.getAbsolutePath());
         return skinDir.getAbsolutePath();
     }
 

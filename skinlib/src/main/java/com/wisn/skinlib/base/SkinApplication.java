@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 
 public class SkinApplication extends Application {
-    private static String TAG="SkinApplication";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -38,29 +37,32 @@ public class SkinApplication extends Application {
         try {
             String[] skinFile = getAssets().list(SkinConfig.SkinDir);
             //拷贝assets到皮肤目录
-            if (skinFile == null || skinFile.length == 0) return;
-            for (String fileName : skinFile) {
-                File toFile = new File(SkinFileUitls.getSkinPath(this, false), fileName);
-                if (!toFile.exists()) {
-                    toFile.createNewFile();
-                    SkinFileUitls.copySkinAssetsToSkinDir(this, fileName, toFile.getPath());
+            if (skinFile != null && skinFile.length == 0){
+                for (String fileName : skinFile) {
+                    File toFile = new File(SkinFileUitls.getSkinPath(this, false), fileName);
+                    if (!toFile.exists()) {
+                        toFile.createNewFile();
+                        SkinFileUitls.copySkinAssetsToSkinDir(this, fileName, toFile.getPath());
+                    }
                 }
             }
             //检测皮肤目录和解压目录的一致性
             String skinPath = SkinFileUitls.getSkinPath(this, false);
             File file = new File(skinPath);
-            if (!file.exists()) return;
-            String[] Skin = file.list();
-            if (Skin == null) return;
-            for (String fileName : Skin) {
-                File skinRes = new File(SkinFileUitls.getSkinPath(this, true), fileName);
-                if (skinRes.exists() && skinRes.isDirectory()) {
-                    continue;
+            if (file.exists()){
+                String[] Skin = file.list();
+                if (Skin != null){
+                    for (String fileName : Skin) {
+                        File skinRes = new File(SkinFileUitls.getSkinPath(this, true), fileName);
+                        if (skinRes.exists() && skinRes.isDirectory()) {
+                            continue;
+                        }
+                        SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName, fileName);
+                    }
                 }
-                SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName, fileName);
             }
             String[] fontFile = getAssets().list(SkinConfig.FontDir);
-            //拷贝assets到皮肤目录
+            //拷贝assets font 到font目录
             if (fontFile == null || fontFile.length == 0) return;
             for (String fontName : fontFile) {
                 File toFile = new File(SkinFileUitls.getSkinFontPath(this), fontName);

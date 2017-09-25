@@ -12,7 +12,6 @@ import java.util.HashMap;
  */
 
 public class SkinAttrFactory {
-    private static final String TAG="SkinAttrFactory";
     private static HashMap<String, SkinAttr> attrs = new HashMap<>();
 
     static {

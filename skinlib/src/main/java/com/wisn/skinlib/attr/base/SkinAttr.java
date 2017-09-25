@@ -4,9 +4,6 @@ import android.view.View;
 
 import com.wisn.skinlib.SkinManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by wisn on 2017/9/5.
  */
@@ -36,8 +33,8 @@ public abstract class SkinAttr implements Cloneable {
                        int attrValueRefId){
         this.attrName = attrName;
         this.attrValueRefId = attrValueRefId;
-        this.attrValueRefName=SkinManager.getInstance().context.getResources().getResourceEntryName(attrValueRefId);
-        this.attrValueTypeName=SkinManager.getInstance().context.getResources().getResourceTypeName(attrValueRefId);
+        this.attrValueRefName=SkinManager.getInstance().mContext.getResources().getResourceEntryName(attrValueRefId);
+        this.attrValueTypeName=SkinManager.getInstance().mContext.getResources().getResourceTypeName(attrValueRefId);
     }
 
 

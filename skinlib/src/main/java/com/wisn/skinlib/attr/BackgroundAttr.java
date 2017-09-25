@@ -11,8 +11,6 @@ import com.wisn.skinlib.utils.LogUtils;
  */
 
 public class BackgroundAttr extends SkinAttr {
-    private static final String TAG = "BackgroundAttr";
-
     @Override
     public void applySkin(View view) {
         if (isColor()) {

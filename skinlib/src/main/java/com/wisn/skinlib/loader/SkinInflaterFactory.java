@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater.Factory2;
 import android.view.View;
-import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
@@ -15,7 +14,6 @@ import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.ArrayUtils;
-import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +25,8 @@ import java.util.Map;
  */
 
 public class SkinInflaterFactory extends SkinInflater implements Factory2 {
-    private static final String TAG = "SkinInflaterFactory";
-    private Activity mActivity = null;
     private Map<View, SkinItem> mSkinItemMap = new HashMap<>();
+    private Activity mActivity = null;
 
     /**
      * api <=11
@@ -130,8 +127,8 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                 }
                 //TODO: 2017/9/7   deal  drawableTop
               /*  if (drawableTop != -1) {
-                    String resourceEntryName = context.getResources().getResourceEntryName(drawableTop);
-                    String resourceTypeName = context.getResources().getResourceTypeName(drawableTop);
+                    String resourceEntryName = mContext.getResources().getResourceEntryName(drawableTop);
+                    String resourceTypeName = mContext.getResources().getResourceTypeName(drawableTop);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(SkinConfig.Attrs_Support_drawableTop,

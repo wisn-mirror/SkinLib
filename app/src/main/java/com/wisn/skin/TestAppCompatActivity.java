@@ -38,7 +38,7 @@ public class TestAppCompatActivity extends SkinAppCompatActivity implements View
         mChangeSkin = (Button) findViewById(R.id.changeSkin);
         changSkinPath = (Button) findViewById(R.id.changSkinPath);
         mSdcardpath = (EditText) findViewById(R.id.sdcardpath);
-        mSdcardpath.setText(Environment.getExternalStorageDirectory().getAbsolutePath()+"/skinPath");
+        mSdcardpath.setText(Environment.getExternalStorageDirectory().getAbsolutePath()+"/mSkinPath");
         mListView = (ListView) findViewById(R.id.listview);
         mChangeSkin.setOnClickListener(this);
         changSkinPath.setOnClickListener(this);

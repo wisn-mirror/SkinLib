@@ -28,7 +28,6 @@ import java.util.Map;
  */
 
 public class SkinAppCompatInflaterFactory extends SkinInflater implements LayoutInflaterFactory {
-    private static final String TAG = "SkinAppCompatInflaterFactory";
     private Map<View, SkinItem> mSkinItemMap = new HashMap<>();
     private AppCompatActivity mAppCompatActivity;
 
@@ -106,8 +105,8 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
                 }
                 //TODO: 2017/9/7   deal  drawableTop
             /*    if (drawableTop != -1) {
-                    String resourceEntryName = context.getResources().getResourceEntryName(drawableTop);
-                    String resourceTypeName = context.getResources().getResourceTypeName(drawableTop);
+                    String resourceEntryName = mContext.getResources().getResourceEntryName(drawableTop);
+                    String resourceTypeName = mContext.getResources().getResourceTypeName(drawableTop);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(SkinConfig.Attrs_Support_drawableTop,
