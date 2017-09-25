@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wisn on 2017/9/6.
@@ -64,6 +63,9 @@ public class SkinManager implements SubObserver {
         return manager;
     }
 
+    /**
+     * @param ctx
+     */
     public void init(Context ctx) {
         context = ctx.getApplicationContext();
         SkinConfig.Density = context.getResources().getDisplayMetrics().density;
@@ -79,10 +81,20 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param imageName
+     *
+     * @return
+     */
     public String getPathForRN(String imageName) {
         return getPath(imageName, true);
     }
 
+    /**
+     * @param imageName
+     *
+     * @return
+     */
     public String getPath(String imageName) {
         return getPath(imageName, false);
     }
@@ -97,6 +109,9 @@ public class SkinManager implements SubObserver {
         SkinFileUitls.updateSkinPath(context, newSkinRootPath, skinLoaderListener);
     }
 
+    /**
+     * @return
+     */
     public Typeface getTypeFace() {
         return mTypeface;
     }
@@ -133,7 +148,14 @@ public class SkinManager implements SubObserver {
                 SkinFileUitls.upZipSkin(context, skinFilePath, skinName));
     }
 
-
+    /**
+     * 保存字体
+     *
+     * @param fontPath
+     * @param fontName
+     *
+     * @return
+     */
     public boolean saveFont(String fontPath, String fontName) {
         List<String> fontListName = getFontListName(false);
         if (fontListName != null &&
@@ -141,13 +163,24 @@ public class SkinManager implements SubObserver {
         return SkinFileUitls.saveFontFile(context, fontPath, fontName);
     }
 
+    /**
+     * 设置默认字体
+     */
+    public void resetDefaultFont() {
+        mTypeface = Typeface.DEFAULT;
+        notifyFontUpdate(mTypeface);
+    }
+
+    /**
+     * @param fontName
+     * @param listener
+     */
     public void loadFont(final String fontName, final SkinLoaderListener listener) {
         if (fontName == null) {
             if (listener != null) {
                 listener.onFailed("fontName is null ");
             }
         }
-        LogUtils.e(TAG, "fontName:" + fontName);
         new AsyncTask<String, Void, Typeface>() {
             @Override
             protected void onPreExecute() {
@@ -288,6 +321,9 @@ public class SkinManager implements SubObserver {
         }.execute(skinName);
     }
 
+    /**
+     * @param skinPathRes
+     */
     public void loadSkinFileForRN(String skinPathRes) {
         File file = new File(skinPathRes);
         if (file.exists() && file.isDirectory()) {
@@ -298,21 +334,33 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @return
+     */
     public boolean isExternalSkin() {
         return mResources != null && !isDefaultSkin;
     }
 
+    /**
+     * @return
+     */
     public boolean isNightMode() {
         return mNightMode;
     }
 
+    /**
+     *
+     */
     public void nightMode() {
-        resetDefaultThem();
+        resetDefaultSkin();
         mNightMode = true;
         DBUtils.setNightMode(context, true);
         notifySkinUpdate();
     }
 
+    /**
+     * @return
+     */
     public String getCurrentThemName() {
         if (DBUtils.isDefaultSkin(context)) {
             return null;
@@ -321,15 +369,30 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param isRes
+     * @param isPath
+     *
+     * @return
+     */
     public List<String> getSkinListName(boolean isRes, boolean isPath) {
         return SkinFileUitls.getSkinListName(context, isRes, isPath);
     }
 
+    /**
+     * @param isPath
+     *
+     * @return
+     */
     public List<String> getFontListName(boolean isPath) {
         return SkinFileUitls.getFontListName(context, isPath);
     }
 
-    public void resetDefaultThem() {
+
+    /**
+     *
+     */
+    public void resetDefaultSkin() {
         isDefaultSkin = true;
         mNightMode = false;
         skinPath = null;
@@ -340,6 +403,9 @@ public class SkinManager implements SubObserver {
     }
 
 
+    /**
+     * @param observer
+     */
     @Override
     public void attach(ISkinUpdateObserver observer) {
         if (mSkinObservers == null) {
@@ -348,6 +414,9 @@ public class SkinManager implements SubObserver {
         mSkinObservers.add(observer);
     }
 
+    /**
+     * @param observer
+     */
     @Override
     public void detach(ISkinUpdateObserver observer) {
         if (mSkinObservers == null) return;
@@ -491,13 +560,18 @@ public class SkinManager implements SubObserver {
     /**
      * @param newSkinRootPath
      */
-    public void setSkinRootPath(String newSkinRootPath) {
+    public boolean setSkinRootPath(String newSkinRootPath) {
         File file = new File(newSkinRootPath);
         file.mkdirs();
+        if (!file.exists()) return false;
         DBUtils.setSkinRootPath(context, newSkinRootPath);
+        return true;
     }
 
 
+    /**
+     * @return
+     */
     private int getFirstIndex() {
         int firstIndex = 1;
         if (SkinConfig.Density < 1) {
@@ -519,6 +593,9 @@ public class SkinManager implements SubObserver {
         return firstIndex;
     }
 
+    /**
+     * @param fileDir
+     */
     private void pasFileIndex(File fileDir) {
         File[] files = fileDir.listFiles();
         for (File file : files) {
@@ -540,6 +617,12 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param imageName
+     * @param isRN
+     *
+     * @return
+     */
     private String getPath(String imageName, boolean isRN) {
         if (SkinManager.getInstance().skinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
             return imageName;
@@ -562,6 +645,11 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param densityMap
+     *
+     * @return
+     */
     private String getBestIndex(LinkedHashMap<String, String> densityMap) {
         String[] index = new String[7];
         Iterator<String> iterator = densityMap.keySet().iterator();
@@ -590,6 +678,12 @@ public class SkinManager implements SubObserver {
         return keyForindex;
     }
 
+    /**
+     * @param index
+     * @param firstIndex
+     *
+     * @return
+     */
     private String getIndexForLow(String[] index, int firstIndex) {
         if (firstIndex < 0) return null;
         String str0 = index[firstIndex];
@@ -600,6 +694,12 @@ public class SkinManager implements SubObserver {
         }
     }
 
+    /**
+     * @param index
+     * @param firstIndex
+     *
+     * @return
+     */
     private String getIndexForHight(String[] index, int firstIndex) {
         if (firstIndex >= 7) return null;
         String str0 = index[firstIndex];

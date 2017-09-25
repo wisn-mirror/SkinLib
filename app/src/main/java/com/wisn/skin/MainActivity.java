@@ -87,7 +87,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             count = count + 200 * 3;
             sum = sum + end;
             Log.e(TAG, end + ":" + path);
-            SkinManager.getInstance().resetDefaultThem();
+            SkinManager.getInstance().resetDefaultSkin();
         } else if (v == getcolor) {
             Log.e(TAG, " " + SkinManager.getInstance().getColorForRN("colorPrimary"));
 //            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
