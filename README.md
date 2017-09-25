@@ -183,8 +183,9 @@ SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))
         MainModule.getImageMap(map,(result) =>this.setState(result))
        
 ```
-......
 
+......
+## 注意 皮肤制作的时候，文件名不能带"："
 ## License
 
 The MIT License

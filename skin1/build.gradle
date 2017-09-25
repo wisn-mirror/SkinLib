@@ -47,7 +47,7 @@ android {
 }
 
 def releaseTime() {
-    return new Date().format("yyyy-MM-dd-hh-mm-ss", TimeZone.getTimeZone("Asia/Shanghai"))
+    return new Date().format("yyyy-MM-dd--hh-mm-ss", TimeZone.getTimeZone("Asia/Shanghai"))
 }
 
 def getGitVersion() {

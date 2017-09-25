@@ -1,7 +1,6 @@
 package com.wisn.skinlib.attr.base;
 
 import com.wisn.skinlib.attr.BackgroundAttr;
-import com.wisn.skinlib.attr.DrawableTopAttr;
 import com.wisn.skinlib.attr.ImageDrawableAttr;
 import com.wisn.skinlib.attr.TextColorAttr;
 import com.wisn.skinlib.config.SkinConfig;
@@ -20,16 +19,13 @@ public class SkinAttrFactory {
         attrs.put(SkinConfig.Attrs_Support_background, new BackgroundAttr());
         attrs.put(SkinConfig.Attrs_Support_src, new ImageDrawableAttr());
         attrs.put(SkinConfig.Attrs_Support_textColor, new TextColorAttr());
-//        attrs.put(SkinConfig.Attrs_Support_drawableTop, new DrawableTopAttr());
     }
 
     public static SkinAttr get(String attrName,
                                int attrValueRefId,
                                String attrValueRefName,
                                String attrValueTypeName) {
-//        LogUtils.e(TAG,"skinAttr:"+attrs+" -------[[[[[ "+attrs.get(attrName));
         SkinAttr skinAttr = attrs.get(attrName).clone();
-//        LogUtils.e(TAG,"skinAttr:"+skinAttr.toString());
         if (skinAttr == null) return null;
         skinAttr.attrName = attrName;
         skinAttr.attrValueRefId = attrValueRefId;

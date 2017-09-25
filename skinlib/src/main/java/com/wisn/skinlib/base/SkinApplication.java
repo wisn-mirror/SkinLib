@@ -20,13 +20,11 @@ public class SkinApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.e(TAG,"onCreate");
         configSkin();
     }
 
     public void configSkin() {
         SkinManager.getInstance().init(this);
-//        SkinManager.getInstance().setSkinRootPath(SkinConfig.SP_Default_Skin_Root_Path);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -42,10 +40,7 @@ public class SkinApplication extends Application {
             //拷贝assets到皮肤目录
             if (skinFile == null || skinFile.length == 0) return;
             for (String fileName : skinFile) {
-                Log.d("SkinApplication", "   " + fileName);
                 File toFile = new File(SkinFileUitls.getSkinPath(this, false), fileName);
-                Log.d("SkinApplication",
-                      "   " + SkinFileUitls.getSkinPath(this, false) + File.separator + fileName);
                 if (!toFile.exists()) {
                     toFile.createNewFile();
                     SkinFileUitls.copySkinAssetsToSkinDir(this, fileName, toFile.getPath());
@@ -68,10 +63,7 @@ public class SkinApplication extends Application {
             //拷贝assets到皮肤目录
             if (fontFile == null || fontFile.length == 0) return;
             for (String fontName : fontFile) {
-                Log.d("SkinApplication", "   " + fontName);
                 File toFile = new File(SkinFileUitls.getSkinFontPath(this), fontName);
-                Log.d("SkinApplication",
-                      "   " + SkinFileUitls.getSkinFontPath(this) + File.separator + fontName);
                 if (!toFile.exists()) {
                     toFile.createNewFile();
                     SkinFileUitls.copyFontAssetsToSkinDir(this, fontName, toFile.getPath());

@@ -85,11 +85,9 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         for (int i = 0; i < attributeCount; i++) {
             String attributeName = attrs.getAttributeName(i);
             String attributeValue = attrs.getAttributeValue(i);
-            LogUtils.i(TAG, attributeName + " " + attributeValue);
             // TODO: 2017/9/7 style
             if (SkinConfig.Attrs_deal_char_style.equals(attributeName)) {
 //                style="@style/AppTheme"
-                LogUtils.i(TAG, "Attrs_deal_char_style");
                 String styleName = attributeValue.substring(attributeValue.indexOf("/") + 1);
                 int
                         identifier =
@@ -131,7 +129,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                     if (skinAttr != null) viewAttrs.add(skinAttr);
                 }
                 //TODO: 2017/9/7   deal  drawableTop
-                if (drawableTop != -1) {
+              /*  if (drawableTop != -1) {
                     String resourceEntryName = context.getResources().getResourceEntryName(drawableTop);
                     String resourceTypeName = context.getResources().getResourceTypeName(drawableTop);
                     SkinAttr
@@ -141,7 +139,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                                                 resourceEntryName,
                                                 resourceTypeName);
                     if (skinAttr != null) viewAttrs.add(skinAttr);
-                }
+                }*/
                 typedArray.recycle();
                 continue;
             }
@@ -149,21 +147,11 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
             // TODO: 2017/9/7 endregion
             if (attributeValue.startsWith(SkinConfig.Attrs_deal_char_index) &&
                 SkinAttrFactory.isSupport(attributeName)) {
-                LogUtils.i(TAG, "Attrs_deal_char_index");
                 try {
                     int id = Integer.parseInt(attributeValue.substring(1));
                     if (id == 0) continue;
                     String resourceEntryName = context.getResources().getResourceEntryName(id);
                     String resourceTypeName = context.getResources().getResourceTypeName(id);
-                    LogUtils.i(TAG,
-                               "attributeName:" +
-                               attributeName +
-                               " id" +
-                               id +
-                               " resourceEntryName:" +
-                               resourceEntryName +
-                               " resourceTypeName:" +
-                               resourceTypeName);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(attributeName,
@@ -178,9 +166,6 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
         if (!ArrayUtils.isEmpty(viewAttrs)) {
             // TODO: 2017/9/7 attrs add map
-            for (SkinAttr skinAttr : viewAttrs) {
-                LogUtils.e(TAG, "skinAttr:" + skinAttr.toString());
-            }
             SkinItem skinItem = new SkinItem();
             skinItem.view = view;
             skinItem.attrs = viewAttrs;

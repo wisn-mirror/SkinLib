@@ -77,17 +77,7 @@ public class SkinManager implements SubObserver {
         } else {
             SkinManager.getInstance().loadSkin(null);
         }
-        printInfo();
     }
-
-    public void printInfo() {
-        LogUtils.e(TAG, "printInfo:getCustomSkinName:" + DBUtils.getCustomSkinName(context));
-        LogUtils.e(TAG, "printInfo:isDefaultSkin:" + DBUtils.isDefaultSkin(context));
-        LogUtils.e(TAG, "printInfo:getSkinRootPath:" + DBUtils.getSkinRootPath(context));
-        LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, false));
-        LogUtils.e(TAG, "printInfo:getSkinPath:" + SkinFileUitls.getSkinPath(context, true));
-    }
-
 
     public String getPathForRN(String imageName) {
         return getPath(imageName, true);
@@ -118,7 +108,6 @@ public class SkinManager implements SubObserver {
         if (DBUtils.isDefaultSkin(context)) {
             skinPath = null;
             skinPathRes = null;
-            LogUtils.e(TAG, "default skin");
             return;
         } else {
             String customSkinName = DBUtils.getCustomSkinName(context);
@@ -176,7 +165,6 @@ public class SkinManager implements SubObserver {
                                 SkinFileUitls.getSkinFontPath(context) +
                                 File.separator +
                                 strings[0];
-                        LogUtils.e(TAG, "fontPath" + fontPath);
                         Typeface typeface = Typeface.createFromFile(fontPath);
                         if (typeface != null) {
                             DBUtils.setCustomFontName(context, strings[0]);
@@ -247,14 +235,9 @@ public class SkinManager implements SubObserver {
                                 packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
                         if (packageArchiveInfo == null) return null;
                         mPackageName = packageArchiveInfo.packageName;
-
                         AssetManager assetManager = AssetManager.class.newInstance();
-
-
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
-
                         addAssetPath.invoke(assetManager, skinPath);
-
                         Resources superRes = context.getResources();
                         Resources
                                 resource =
@@ -263,11 +246,6 @@ public class SkinManager implements SubObserver {
                                               superRes.getConfiguration());
                         SkinManager.this.skinPath = skinPath;
                         SkinManager.this.skinPathRes = skinPathRes;
-                        LogUtils.e(TAG,
-                                   "skinPath:" +
-                                   SkinManager.this.skinPath +
-                                   "   skinPathRes:" +
-                                   SkinManager.this.skinPathRes);
                         loadSkinFileForRN(skinPathRes);
                         DBUtils.setCustomSkinName(context, strings[0]);
                         mResources = resource;
@@ -438,14 +416,12 @@ public class SkinManager implements SubObserver {
                                                               "color",
                                                               context.getPackageName());
             color = context.getResources().getColor(colorResId);
-            LogUtils.e(TAG, "colorName aaa:" + colorName + "value:" + color);
         } else {
             colorResId =
                     mResources.getIdentifier(colorName,
                                              "color",
                                              mPackageName);
             color = mResources.getColor(colorResId);
-            LogUtils.e(TAG, "colorName:" + colorName + "value:" + color);
         }
         if (color == 0) return null;
         return ColorUtils.colorToRGB(color);
@@ -459,25 +435,19 @@ public class SkinManager implements SubObserver {
     public Drawable getDrawable(int attrValueRefId) {
         Drawable drawable = null;
         if (mResources == null || isDefaultSkin) {
-            LogUtils.i(TAG, "  mResources is null");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
             return drawable;
         }
-        LogUtils.i(TAG, "  getDrawable drawableid");
         int drawableid =
                 mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                          "drawable",
                                          mPackageName);
-        LogUtils.i(TAG, "  drawableid :" + drawableid + " mPackageName:" + mPackageName);
         if (drawableid == 0) {
             drawableid = mResources.getIdentifier(context.getResources().getResourceEntryName(attrValueRefId),
                                                   "mipmap",
                                                   mPackageName);
-            LogUtils.i(TAG, "  drawableid :" + drawableid);
-
         }
         if (drawableid == 0) {
-            LogUtils.i(TAG, "  drawableid is 0 ");
             drawable = ContextCompat.getDrawable(context, attrValueRefId);
         } else {
             if (Build.VERSION.SDK_INT < 22) {
@@ -486,7 +456,6 @@ public class SkinManager implements SubObserver {
                 drawable = mResources.getDrawable(drawableid, null);
             }
         }
-        LogUtils.i(TAG, " drawable: " + drawable);
         return drawable;
     }
 
@@ -638,22 +607,6 @@ public class SkinManager implements SubObserver {
             return str0;
         } else {
             return getIndexForHight(index, ++firstIndex);
-        }
-    }
-
-
-    public void print() {
-        Iterator<Map.Entry<String, LinkedHashMap<String, String>>> iterator = skinData.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, LinkedHashMap<String, String>> next = iterator.next();
-            LinkedHashMap<String, String> value1 = next.getValue();
-            Iterator<Map.Entry<String, String>> iterator2 = value1.entrySet().iterator();
-            String value = " value :";
-            while (iterator2.hasNext()) {
-                Map.Entry<String, String> next1 = iterator2.next();
-                value = value + " getKey:" + next1.getKey() + " getValue:" + next1.getValue();
-            }
-            LogUtils.e(TAG, next.getKey() + value);
         }
     }
 }
