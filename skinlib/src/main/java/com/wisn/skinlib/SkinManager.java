@@ -256,13 +256,21 @@ public class SkinManager implements SubObserver {
                                 strings[0] + "/res/";
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
+                            if (listener != null) {
+                                listener.onFailed("skinFile not exists");
+                            }
                             return null;
                         }
                         PackageManager packageManager = mContext.getPackageManager();
                         PackageInfo
                                 packageArchiveInfo =
                                 packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
-                        if (packageArchiveInfo == null) return null;
+                        if (packageArchiveInfo == null){
+                            if (listener != null) {
+                                listener.onFailed("packageArchiveInfo is null");
+                            }
+                            return null;
+                        }
                         mPackageName = packageArchiveInfo.packageName;
                         AssetManager assetManager = AssetManager.class.newInstance();
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
@@ -280,18 +288,14 @@ public class SkinManager implements SubObserver {
                         mResources = resource;
                         return resource;
                     }
-                } catch (InstantiationException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    if (listener != null) {
+                        listener.onFailed(e.getMessage());
+                    }
                 }
                 return null;
             }
-
             @Override
             protected void onPostExecute(Resources resources) {
                 if (resources != null) {

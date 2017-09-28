@@ -37,7 +37,7 @@ public class SkinApplication extends Application {
         try {
             String[] skinFile = getAssets().list(SkinConfig.SkinDir);
             //拷贝assets到皮肤目录
-            if (skinFile != null && skinFile.length == 0){
+            if (skinFile != null && skinFile.length != 0){
                 for (String fileName : skinFile) {
                     File toFile = new File(SkinFileUitls.getSkinPath(this, false), fileName);
                     if (!toFile.exists()) {

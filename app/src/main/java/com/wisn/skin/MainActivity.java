@@ -111,6 +111,11 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         }
     }
 
+    /**
+     *
+     * @param view  控件ID
+     * @param attrValueresId  控件资源ID
+     */
     public void addCustomeView(View view,int attrValueresId){
         DrawableTopAttr  drawableTopAttr=new DrawableTopAttr();
         drawableTopAttr.setRes("drawableTop",attrValueresId);
