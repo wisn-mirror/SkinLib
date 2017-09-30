@@ -20,12 +20,15 @@ import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SubObserver;
 import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.DBUtils;
+import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +40,7 @@ import java.util.List;
 public class SkinManager implements SubObserver {
     public static SkinManager skinManager;
     private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex = new LinkedHashMap<>();
+    private HashMap<String,String>  sColorNameMap = new HashMap<>();
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean isNightMode = false;
     public boolean isDefaultSkin = true;
@@ -285,7 +289,6 @@ public class SkinManager implements SubObserver {
                         SkinManager.this.mSkinPathRes = skinPathRes;
                         loadSkinFileForRN(skinPathRes);
                         DBUtils.setCustomSkinName(mContext, strings[0]);
-                        mResources = resource;
                         return resource;
                     }
                 } catch (Exception e) {
@@ -300,6 +303,7 @@ public class SkinManager implements SubObserver {
             protected void onPostExecute(Resources resources) {
                 if (resources != null) {
                     mResources = resources;
+                    sColorNameMap.clear();
                     isDefaultSkin = false;
                     isNightMode = false;
                     DBUtils.setNightMode(mContext, false);
@@ -397,6 +401,7 @@ public class SkinManager implements SubObserver {
         isNightMode = false;
         mSkinPath = null;
         mSkinPathRes = null;
+        sColorNameMap.clear();
         DBUtils.setNightMode(mContext, false);
         DBUtils.setDefaultSkin(mContext);
         notifySkinUpdate();
@@ -477,7 +482,9 @@ public class SkinManager implements SubObserver {
      *
      * @return
      */
-    public String getColorForRN(String colorName) {
+    public  synchronized  String  getColorForRN(String colorName) {
+        String s = sColorNameMap.get(colorName);
+        if(s!=null) return s;
         int color = 0;
         int colorResId = 0;
         if (mResources == null || isDefaultSkin) {
@@ -493,7 +500,9 @@ public class SkinManager implements SubObserver {
             color = mResources.getColor(colorResId);
         }
         if (color == 0) return null;
-        return ColorUtils.colorToRGB(color);
+        s= ColorUtils.colorToRGB(color);
+        sColorNameMap.put(colorName,s);
+        return s;
     }
 
     /**
