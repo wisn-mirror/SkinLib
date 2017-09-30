@@ -41,6 +41,7 @@ public class SkinManager implements SubObserver {
     public static SkinManager skinManager;
     private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex = new LinkedHashMap<>();
     private HashMap<String,String>  sColorNameMap = new HashMap<>();
+    private HashMap<String,String> sImageNameMap = new HashMap<>();
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean isNightMode = false;
     public boolean isDefaultSkin = true;
@@ -304,6 +305,7 @@ public class SkinManager implements SubObserver {
                 if (resources != null) {
                     mResources = resources;
                     sColorNameMap.clear();
+                    sImageNameMap.clear();
                     isDefaultSkin = false;
                     isNightMode = false;
                     DBUtils.setNightMode(mContext, false);
@@ -402,6 +404,7 @@ public class SkinManager implements SubObserver {
         mSkinPath = null;
         mSkinPathRes = null;
         sColorNameMap.clear();
+        sImageNameMap.clear();
         DBUtils.setNightMode(mContext, false);
         DBUtils.setDefaultSkin(mContext);
         notifySkinUpdate();
@@ -633,6 +636,8 @@ public class SkinManager implements SubObserver {
      * @return
      */
     private String getPath(String imageName, boolean isRN) {
+        String path=sImageNameMap.get(imageName);
+        if(path!=null) return path;
         if (SkinManager.getInstance().mSkinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
             return imageName;
         }
@@ -646,12 +651,14 @@ public class SkinManager implements SubObserver {
                 return imageName;
             }
             if (isRN) {
-                return "file://" +
+                path= "file://" +
                        SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
             } else {
-                return SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
+                path= SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
             }
         }
+        sImageNameMap.put(imageName,path);
+        return path;
     }
 
     /**
