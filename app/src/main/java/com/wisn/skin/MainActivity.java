@@ -78,27 +78,29 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         } else if (v == resetSkin) {
             long start = System.currentTimeMillis();
             String path = SkinManager.getInstance().getPath("aaaaa");
-            for (int i = 0; i < 200; i++) {
-               /* SkinManager.getInstance().getPath("gift_0");
-                SkinManager.getInstance().getPath("gift_1");
-                SkinManager.getInstance().getPath("ic_launcher_round");*/
+          /*  for (int i = 0; i < 800; i++) {
+                Log.e(TAG," "+SkinManager.getInstance().getPath("gift_0"));
+                Log.e(TAG," "+SkinManager.getInstance().getPath("gift_1"));
+                Log.e(TAG," "+SkinManager.getInstance().getPath("ic_launcher_round"));
+                Log.e(TAG," "+SkinManager.getInstance().getPath("gift_1"));
                 SkinManager.getInstance().getColorForRN("colorPrimaryDark");
                 SkinManager.getInstance().getColorForRN("colorAccent");
                 SkinManager.getInstance().getColorForRN("colorAccent");
                 SkinManager.getInstance().getColorForRN("primary");
             }
+            */
             long end = System.currentTimeMillis() - start;
-            count = count + 200 * 3;
+            count = count + 800 * 4;
             sum = sum + end;
             Log.e(TAG, end + ":" + path);
-//            SkinManager.getInstance().resetDefaultSkin();
+            SkinManager.getInstance().resetDefaultSkin();
         } else if (v == getcolor) {
             Log.e(TAG, " " + SkinManager.getInstance().getColorForRN("colorPrimary"));
 //            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorPrimaryDark"));
 //            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("colorAccent"));
 //            Log.e(TAG," "+SkinManager.getInstance().getColorForRN("primary"));
             Log.e(TAG, "count:" + count + "sum:" + sum + " v:" + ((double) sum) / ((double) count));
-//            startActivity(new Intent(this, TestActivity.class));
+            startActivity(new Intent(this, TestActivity.class));
         }else if(v==getSkinPath){
             startActivity(new Intent(this, TestAppCompatActivity.class));
         }else if(v==changeFont){
