@@ -54,6 +54,7 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         return view;
     }
 
+    @SuppressWarnings("ResourceType")
     private void dealSkinAttr(Context context, AttributeSet attrs, View view) {
         int attributeCount = attrs.getAttributeCount();
         List<SkinAttr> viewAttrs = new ArrayList<>();

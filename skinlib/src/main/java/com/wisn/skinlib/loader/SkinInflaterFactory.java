@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater.Factory2;
 import android.view.View;
 
+import com.wisn.skinlib.R;
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.attr.base.SkinAttr;
@@ -76,6 +77,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
     }
 
+    @SuppressWarnings("ResourceType")
     private void dealSkinAttr(Context context, AttributeSet attrs, View view) {
         int attributeCount = attrs.getAttributeCount();
         List<SkinAttr> viewAttrs = new ArrayList<>();

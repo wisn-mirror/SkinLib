@@ -261,9 +261,7 @@ public class SkinManager implements SubObserver {
                                 strings[0] + "/res/";
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
-                            if (listener != null) {
-                                listener.onFailed("skinFile not exists");
-                            }
+                            LogUtils.e("loadSkin","skinFile not exists");
                             return null;
                         }
                         PackageManager packageManager = mContext.getPackageManager();
@@ -271,9 +269,7 @@ public class SkinManager implements SubObserver {
                                 packageArchiveInfo =
                                 packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
                         if (packageArchiveInfo == null){
-                            if (listener != null) {
-                                listener.onFailed("packageArchiveInfo is null");
-                            }
+                            LogUtils.e("loadSkin","packageArchiveInfo is null");
                             return null;
                         }
                         mPackageName = packageArchiveInfo.packageName;
@@ -485,29 +481,29 @@ public class SkinManager implements SubObserver {
      *
      * @return
      */
-    public  synchronized  String  getColorForRN(String colorName) {
+    public synchronized String getColorForRN(String colorName) {
         String s = sColorNameMap.get(colorName);
-        if(s!=null) return s;
+        if(s!=null)return s;
         int color = 0;
         int colorResId = 0;
-        if (mResources == null || isDefaultSkin) {
-            colorResId = mContext.getResources().getIdentifier(colorName,
-                                                               "color",
-                                                               mContext.getPackageName());
+        try{
+            if (mResources == null || isDefaultSkin) {
+                colorResId = mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
+                color = mContext.getResources().getColor(colorResId);
+            }else{
+                colorResId = mResources.getIdentifier(colorName,"color", mPackageName);
+                color = mResources.getColor(colorResId);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            colorResId = mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
             color = mContext.getResources().getColor(colorResId);
-        } else {
-            colorResId =
-                    mResources.getIdentifier(colorName,
-                                             "color",
-                                             mPackageName);
-            color = mResources.getColor(colorResId);
+        }finally {
+            s= ColorUtils.colorToRGB(color);
+            sColorNameMap.put(colorName,s);
+            return s;
         }
-        if (color == 0) return null;
-        s= ColorUtils.colorToRGB(color);
-        sColorNameMap.put(colorName,s);
-        return s;
     }
-
     /**
      * @param attrValueRefId
      *
