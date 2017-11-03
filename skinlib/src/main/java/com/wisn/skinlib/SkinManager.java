@@ -24,11 +24,9 @@ import com.wisn.skinlib.utils.LogUtils;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,8 +38,8 @@ import java.util.List;
 public class SkinManager implements SubObserver {
     public static SkinManager skinManager;
     private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex = new LinkedHashMap<>();
-    private HashMap<String,String>  sColorNameMap = new HashMap<>();
-    private HashMap<String,String> sImageNameMap = new HashMap<>();
+    private HashMap<String, String> sColorNameMap = new HashMap<>();
+    private HashMap<String, String> sImageNameMap = new HashMap<>();
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean isNightMode = false;
     public boolean isDefaultSkin = true;
@@ -194,13 +192,14 @@ public class SkinManager implements SubObserver {
 
             @Override
             protected Typeface doInBackground(String... strings) {
+                Typeface typeface = null;
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
                         String fontPath =
                                 SkinFileUitls.getSkinFontPath(mContext) +
                                 File.separator +
                                 strings[0];
-                        Typeface typeface = Typeface.createFromFile(fontPath);
+                        typeface = Typeface.createFromFile(fontPath);
                         if (typeface != null) {
                             DBUtils.setCustomFontName(mContext, strings[0]);
                         }
@@ -209,11 +208,9 @@ public class SkinManager implements SubObserver {
                     return null;
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    if (listener != null) {
-                        listener.onFailed(ex.getMessage());
-                    }
+                } finally {
+                    return typeface;
                 }
-                return null;
             }
 
             @Override
@@ -223,6 +220,10 @@ public class SkinManager implements SubObserver {
                     notifyFontUpdate(typeface);
                     if (listener != null) {
                         listener.onSuccess();
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFailed("typeface resource is null ");
                     }
                 }
             }
@@ -249,6 +250,7 @@ public class SkinManager implements SubObserver {
 
             @Override
             protected Resources doInBackground(String... strings) {
+                Resources resource=null;
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
                         String skinPath =
@@ -261,15 +263,15 @@ public class SkinManager implements SubObserver {
                                 strings[0] + "/res/";
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
-                            LogUtils.e("loadSkin","skinFile not exists");
+                            LogUtils.e("loadSkin", "skinFile not exists");
                             return null;
                         }
                         PackageManager packageManager = mContext.getPackageManager();
                         PackageInfo
                                 packageArchiveInfo =
                                 packageManager.getPackageArchiveInfo(skinPath, PackageManager.GET_ACTIVITIES);
-                        if (packageArchiveInfo == null){
-                            LogUtils.e("loadSkin","packageArchiveInfo is null");
+                        if (packageArchiveInfo == null) {
+                            LogUtils.e("loadSkin", "packageArchiveInfo is null");
                             return null;
                         }
                         mPackageName = packageArchiveInfo.packageName;
@@ -277,25 +279,21 @@ public class SkinManager implements SubObserver {
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
                         addAssetPath.invoke(assetManager, skinPath);
                         Resources superRes = mContext.getResources();
-                        Resources
-                                resource =
-                                new Resources(assetManager,
+                        resource= new Resources(assetManager,
                                               superRes.getDisplayMetrics(),
                                               superRes.getConfiguration());
                         SkinManager.this.mSkinPath = skinPath;
                         SkinManager.this.mSkinPathRes = skinPathRes;
                         loadSkinFileForRN(skinPathRes);
                         DBUtils.setCustomSkinName(mContext, strings[0]);
-                        return resource;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (listener != null) {
-                        listener.onFailed(e.getMessage());
-                    }
+                }finally {
+                    return resource;
                 }
-                return null;
             }
+
             @Override
             protected void onPostExecute(Resources resources) {
                 if (resources != null) {
@@ -483,27 +481,29 @@ public class SkinManager implements SubObserver {
      */
     public synchronized String getColorForRN(String colorName) {
         String s = sColorNameMap.get(colorName);
-        if(s!=null)return s;
+        if (s != null) return s;
         int color = 0;
         int colorResId = 0;
-        try{
+        try {
             if (mResources == null || isDefaultSkin) {
-                colorResId = mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
+                colorResId =
+                        mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
                 color = mContext.getResources().getColor(colorResId);
-            }else{
-                colorResId = mResources.getIdentifier(colorName,"color", mPackageName);
+            } else {
+                colorResId = mResources.getIdentifier(colorName, "color", mPackageName);
                 color = mResources.getColor(colorResId);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             colorResId = mContext.getResources().getIdentifier(colorName, "color", mContext.getPackageName());
             color = mContext.getResources().getColor(colorResId);
-        }finally {
-            s= ColorUtils.colorToRGB(color);
-            sColorNameMap.put(colorName,s);
+        } finally {
+            s = ColorUtils.colorToRGB(color);
+            sColorNameMap.put(colorName, s);
             return s;
         }
     }
+
     /**
      * @param attrValueRefId
      *
@@ -520,9 +520,10 @@ public class SkinManager implements SubObserver {
                                          "drawable",
                                          mPackageName);
         if (drawableid == 0) {
-            drawableid = mResources.getIdentifier(mContext.getResources().getResourceEntryName(attrValueRefId),
-                                                  "mipmap",
-                                                  mPackageName);
+            drawableid =
+                    mResources.getIdentifier(mContext.getResources().getResourceEntryName(attrValueRefId),
+                                             "mipmap",
+                                             mPackageName);
         }
         if (drawableid == 0) {
             drawable = ContextCompat.getDrawable(mContext, attrValueRefId);
@@ -632,8 +633,8 @@ public class SkinManager implements SubObserver {
      * @return
      */
     private String getPath(String imageName, boolean isRN) {
-        String path=sImageNameMap.get(imageName);
-        if(path!=null) return path;
+        String path = sImageNameMap.get(imageName);
+        if (path != null) return path;
         if (SkinManager.getInstance().mSkinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
             return imageName;
         }
@@ -647,13 +648,13 @@ public class SkinManager implements SubObserver {
                 return imageName;
             }
             if (isRN) {
-                path= "file://" +
+                path = "file://" +
                        SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
             } else {
-                path= SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
+                path = SkinManager.getInstance().mSkinPathRes + indexFirst + "/" + s;
             }
         }
-        sImageNameMap.put(imageName,path);
+        sImageNameMap.put(imageName, path);
         return path;
     }
 
