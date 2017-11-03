@@ -197,7 +197,7 @@ public class SkinFileUitls {
      * @return
      */
     public static String getSkinFontPath(Context context) {
-        return getPath(context,false,false);
+        return getPath(context,false,true);
     }
 
     /**
