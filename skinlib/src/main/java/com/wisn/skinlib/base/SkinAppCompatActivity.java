@@ -64,6 +64,14 @@ public class SkinAppCompatActivity extends AppCompatActivity implements ISkinUpd
     @Override
     public void onThemUpdate() {
         mSkinInflaterFactory.applySkin();
+        updateSkin();
+    }
+
+    /**
+     * 皮肤改变的时候通知
+     */
+    public void updateSkin(){
+
     }
 
     @Override
