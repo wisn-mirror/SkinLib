@@ -7,6 +7,9 @@ Change Skin for Andorid and RN
 ###  USE
  git submodule add https://github.com/wisn-mirror/SkinLib.git /your project/lib
 
+ example code  :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid
+
+ esample apk  :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid/android/apkFile/
 ### ScreenShot
 
 <img width="40%" src="./app/pic/a1.png" />
@@ -24,8 +27,13 @@ Change Skin for Andorid and RN
 ```java
  设置指定皮肤
  SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin", new SkinLoaderListener());
-恢复默认皮肤
+ 恢复默认皮肤
  SkinManager.getInstance().resetDefaultThem();
+ 夜间模式
+ SkinManager.getInstance().nightMode();
+ 设置夜间模式指定皮肤
+ SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin", true,new SkinLoaderListener());
+
                                               
 ```
 ## 加载皮肤文件
@@ -140,47 +148,83 @@ SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))
         }
         callback.invoke(params);
     }
+    ......
        
 ```
 ##  React Native 通过本地调用换肤 Example
 
 ```js
-	/**
-     * 接收换主题消息后回调的方法
-     *
-     * @param props
-     */
-    nativeChangeThem(props){
-        super.nativeChangeThem(props);
-        MainModule.getColor("primary","primary",(result) =>this.setState(result));
-        MainModule.getImage("image","gift_0",(result) =>this.setState(result));
-        var a=new Array();
-        a.push("primary");
-        a.push("colorPrimary");
-        a.push("colorPrimaryDark");
-        a.push("colorPrimary");
-        MainModule.getColorList(a,(result) =>this.setState(result))
 
-        var a=new Array();
-        a.push("gift_0");
-        a.push("gift_1");
-        a.push("colorPrimaryDark");
-        a.push("ic_launcher");
-        MainModule.getImageList(a,(result) =>this.setState(result))
+    export default class BaseComponent extends Component {
+        componentWillMount() {
+            this.nativeChangeThemListener = DeviceEventEmitter.addListener("nativeChangeSkin",
+                (params) => this.updateSkin(params));
+            BackHandler.addEventListener("hardwareBackPress", this.onBackClicked);
+        }
+
+        componentWillUnmount() {
+            BackHandler.removeEventListener("hardwareBackPress", this.onBackClicked);
+            if (this.nativeChangeThemListener)
+                this.nativeChangeThemListener.remove();
+        }
+
+        updateSkin(params){
+
+        }
+    }
 
 
-        var map={};
-        map['primary333']="primary";
-        map['colorPrimary222']="colorPrimary";
-        map['colorPrimaryDark111']="colorPrimaryDark";
-        MainModule.getColorMap(map,(result) =>this.setState(result))
+    const SkinModule = NativeModules.SkinModule;
+    export default class SkinSetting extends BaseComponent {
+        constructor(props) {
+            super(props);
+            this.state = {
+                gift_0:props.gift_0,
+                home_0:props.home_0,
+                watch_0:props.watch_0,
+                primary:props.primary,
+                colorPrimary:props.colorPrimary,
+            };
+        }
 
-        var map={};
-        map['primary3rewq33']="gift_0";
-        map['coloreePrimaqqqry222']="gift_1";
-        map['colorPrimaryDark111']="colorPrimaryDark";
-        map['ic_launcher']="ic_launcher";
-        MainModule.getImageMap(map,(result) =>this.setState(result))
+        /** 重写componentWillMount 方法一定要加 super.componentWillMount() 方法添加监听器*/
+        componentWillMount() {
+            this.updateSkin("");
+            super.componentWillMount();
+        }
+
+        /**重写 updateSkin 在换肤的时候重新获取皮肤资源*/
+        updateSkin(params) {
+            var colorList = new Array();
+            colorList.push("primary");
+            colorList.push("colorPrimary");
+            var imageList = new Array();
+            imageList.push("home_0");
+            imageList.push("watch_0");
+            imageList.push("gift_0");
+            SkinModule.getColorImageList(colorList, imageList, (result) => this.setState(result))
+        }
+        render() {
+            return (
+                <View style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    backgroundColor:this.state.primary,
+
+                }}>
+                    <TouchableOpacity onPress={() => this.changeSkin1()}>
+                        <Text style={{color: this.state.colorPrimary, fontSize: 30}}>changeSkin1</Text>
+                    </TouchableOpacity>
+                    <View>
+                        <Image source={{uri: this.state.gift_0}} style={{width: 100, height: 100}}/>
+                        <Image source={{uri: this.state.home_0}} style={{width: 100, height: 100}}/>
+                        <Image source={{uri: this.state.watch_0}} style={{width: 100, height: 100}}/>
+                    </View>
+                </View>
+            );
+        }
+    }
+
        
 ```
 
