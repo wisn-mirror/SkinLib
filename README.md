@@ -9,7 +9,7 @@ Change Skin for Andorid and RN
 
  example RN code :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid
 
- example apk     :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid/android/apkFile/com.thembyandroid--1-1.0-2017-11-20--01-05-32.apk
+ example apk     :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid/android/apkFile/
 ### ScreenShot
 
 <img width="40%" src="./app/pic/a1.png" />
