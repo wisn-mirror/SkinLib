@@ -66,11 +66,12 @@ public class SkinManager implements SubObserver {
     /**
      * @param ctx
      */
-    public void init(Context ctx) {
+    public void init(Context ctx, String rootPath) {
         mContext = ctx.getApplicationContext();
         SkinConfig.Density = mContext.getResources().getDisplayMetrics().density;
         SkinConfig.FirstIndex = getFirstIndex();
-        String fontName = DBUtils.getFontName(mContext);
+        if (rootPath != null) setSkinRootPath(rootPath);
+        String fontName = DBUtils.getCustomFontName(mContext);
         if (!SkinConfig.SP_Font_Path.equals(fontName)) {
             loadFont(fontName, null);
         }
@@ -231,11 +232,16 @@ public class SkinManager implements SubObserver {
 
     }
 
+    public void loadSkin(String skinName, final SkinLoaderListener listener) {
+        loadSkin(skinName, false, listener);
+    }
+
     /**
      * @param skinName
+     * @param isNight  是否是夜间模式
      * @param listener
      */
-    public void loadSkin(String skinName, final SkinLoaderListener listener) {
+    public void loadSkin(final String skinName, final boolean isNight, final SkinLoaderListener listener) {
         if (skinName == null) {
             return;
         }
@@ -250,7 +256,7 @@ public class SkinManager implements SubObserver {
 
             @Override
             protected Resources doInBackground(String... strings) {
-                Resources resource=null;
+                Resources resource = null;
                 try {
                     if (strings != null && strings.length == 1 && strings[0] != null) {
                         String skinPath =
@@ -279,9 +285,9 @@ public class SkinManager implements SubObserver {
                         Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
                         addAssetPath.invoke(assetManager, skinPath);
                         Resources superRes = mContext.getResources();
-                        resource= new Resources(assetManager,
-                                              superRes.getDisplayMetrics(),
-                                              superRes.getConfiguration());
+                        resource = new Resources(assetManager,
+                                                 superRes.getDisplayMetrics(),
+                                                 superRes.getConfiguration());
                         SkinManager.this.mSkinPath = skinPath;
                         SkinManager.this.mSkinPathRes = skinPathRes;
                         loadSkinFileForRN(skinPathRes);
@@ -289,7 +295,7 @@ public class SkinManager implements SubObserver {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     return resource;
                 }
             }
@@ -301,13 +307,15 @@ public class SkinManager implements SubObserver {
                     sColorNameMap.clear();
                     sImageNameMap.clear();
                     isDefaultSkin = false;
-                    isNightMode = false;
-                    DBUtils.setNightMode(mContext, false);
+                    isNightMode = isNight;
+                    DBUtils.setNightMode(mContext, isNightMode);
+                    if (isNight) {
+                        DBUtils.setNightName(mContext, skinName);
+                    }
                     new Handler(Looper.getMainLooper()).post(
                             new Runnable() {
                                 @Override
                                 public void run() {
-
                                     if (listener != null) listener.onSuccess();
                                     notifySkinUpdate();
                                 }
@@ -352,10 +360,7 @@ public class SkinManager implements SubObserver {
      *
      */
     public void nightMode() {
-        resetDefaultSkin();
-        isNightMode = true;
-        DBUtils.setNightMode(mContext, true);
-        notifySkinUpdate();
+        loadSkin(DBUtils.getNightName(mContext), true, null);
     }
 
     /**
@@ -390,7 +395,7 @@ public class SkinManager implements SubObserver {
 
 
     /**
-     *
+     * 重置皮肤
      */
     public void resetDefaultSkin() {
         isDefaultSkin = true;
@@ -400,7 +405,6 @@ public class SkinManager implements SubObserver {
         sColorNameMap.clear();
         sImageNameMap.clear();
         DBUtils.setNightMode(mContext, false);
-        DBUtils.setDefaultSkin(mContext);
         notifySkinUpdate();
     }
 

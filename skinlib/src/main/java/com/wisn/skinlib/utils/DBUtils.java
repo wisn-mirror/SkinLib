@@ -9,11 +9,6 @@ import com.wisn.skinlib.config.SkinConfig;
  */
 
 public class DBUtils {
-    public static String getCustomSkinName(Context context) {
-        return SkinPreferencesUtils.getString(context,
-                                              SkinConfig.SP_Custom_Skin_Path,
-                                              SkinConfig.SP_Default_Skin_Path);
-    }
 
     public static boolean isDefaultSkin(Context context) {
         return SkinConfig.SP_Default_Skin_Path.equals(getCustomSkinName(context));
@@ -29,11 +24,17 @@ public class DBUtils {
         SkinPreferencesUtils.putString(context, SkinConfig.SP_Custom_Skin_Path, path);
     }
 
+    public static String getCustomSkinName(Context context) {
+        return SkinPreferencesUtils.getString(context,
+                                              SkinConfig.SP_Custom_Skin_Path,
+                                              SkinConfig.SP_Default_Skin_Path);
+    }
+
     public static void setCustomFontName(Context context, String fontName) {
         SkinPreferencesUtils.putString(context, SkinConfig.SP_Font_Path, fontName);
     }
 
-    public static String getFontName(Context context) {
+    public static String getCustomFontName(Context context) {
         return SkinPreferencesUtils.getString(context,
                                               SkinConfig.SP_Font_Path,
                                               SkinConfig.SP_Font_Path);
@@ -49,12 +50,20 @@ public class DBUtils {
                                               SkinConfig.SP_Default_Skin_Root_Path);
     }
 
-    public static boolean isNightMode(Context context) {
-        return SkinPreferencesUtils.getBoolean(context, SkinConfig.SP_Night_Mode, false);
+    public static String getNightName(Context context) {
+        return SkinPreferencesUtils.getString(context, SkinConfig.SP_Night_Name,"0");
     }
 
-    public static void setNightMode(Context context, boolean isNightMode) {
-        SkinPreferencesUtils.putBoolean(context, SkinConfig.SP_Night_Mode, isNightMode);
+    public static void setNightName(Context context, String nightName) {
+        SkinPreferencesUtils.putString(context, SkinConfig.SP_Night_Name, nightName);
+    }
+
+    public static boolean isNightMode(Context context) {
+        return SkinPreferencesUtils.getBoolean(context, SkinConfig.SP_Night_Mode,false);
+    }
+
+    public static void setNightMode(Context context, boolean isNight) {
+        SkinPreferencesUtils.putBoolean(context, SkinConfig.SP_Night_Mode, isNight);
     }
 
 }

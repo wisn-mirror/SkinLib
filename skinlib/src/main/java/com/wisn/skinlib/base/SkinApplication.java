@@ -23,15 +23,16 @@ public class SkinApplication extends Application {
     }
 
     public void configSkin() {
-        SkinManager.getInstance().init(this);
+        SkinManager.getInstance().init(this,setSkinRootPath());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 initSkinLoader();
             }
         }).start();
-
     }
+
+
 
     private void initSkinLoader() {
         try {
@@ -77,4 +78,7 @@ public class SkinApplication extends Application {
 
     }
 
+    public String setSkinRootPath() {
+        return null;
+    }
 }

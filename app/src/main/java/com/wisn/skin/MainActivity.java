@@ -24,7 +24,6 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
     private static final String TAG = "MainActivity";
     private Button mChangeSkin, resetSkin, getcolor,getSkinPath,changeFont;
 
-    private RadioGroup mRadioButton;
     private MyRadioButton mRadiobutton_bg_home;
     private MyRadioButton mRadiobutton_bg_gift;
     private MyRadioButton mRadiobutton_bg_start;
@@ -72,8 +71,8 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == mChangeSkin) {
-            SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin",
-                                               this);
+            SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--56-1.0-2017-09-25--09-26-17.skin"
+                                               ,true,this);
             Log.e(TAG, "printprintprint--------------------------------------------------");
         } else if (v == resetSkin) {
             long start = System.currentTimeMillis();
@@ -106,6 +105,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         }else if(v==changeFont){
             LogUtils.e(TAG,"changeFont:"+SkinManager.getInstance().saveFont(Environment.getExternalStorageDirectory()+"/dd/font.ttf","aaaa.ttf"));
             SkinManager.getInstance().loadFont("aaaa.ttf",this);
+            SkinManager.getInstance().nightMode();
         }
     }
     public void addNewObjectView(){

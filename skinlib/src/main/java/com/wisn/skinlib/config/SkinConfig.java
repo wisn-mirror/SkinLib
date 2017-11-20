@@ -21,6 +21,8 @@ public class SkinConfig {
 
     public static final  String SP_Night_Mode="SP_Night_Mode";
 
+    public static final  String SP_Night_Name="SP_Night_Name";
+
     //
     public static final  String NameSpace="http://schemas.android.com/android/skin";
     public static final  String Attr_Skin_Enable="enable";
