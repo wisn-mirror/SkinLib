@@ -7,9 +7,9 @@ Change Skin for Andorid and RN
 ###  USE
  git submodule add https://github.com/wisn-mirror/SkinLib.git /your project/lib
 
- example code  :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid
+ example RN code :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid
 
- esample apk  :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid/android/apkFile/
+ example apk     :https://github.com/wisn-mirror/React-NativeDemo/tree/master/ThemByAndroid/android/apkFile/com.thembyandroid--1-1.0-2017-11-20--01-05-32.apk
 ### ScreenShot
 
 <img width="40%" src="./app/pic/a1.png" />
@@ -33,15 +33,13 @@ Change Skin for Andorid and RN
  SkinManager.getInstance().nightMode();
  设置夜间模式指定皮肤
  SkinManager.getInstance().loadSkin("theme-com.wisn.skin2--43-1.0-2017-09-22-04-10-49.skin", true,new SkinLoaderListener());
-
                                               
 ```
 ## 加载皮肤文件
 
 ```java
  
- SkinManager.getInstance().saveSkin(String skinFilePath,
-                            String skinName)
+ SkinManager.getInstance().saveSkin(String skinFilePath,String skinName)
                                                
 ```
 ## 切换皮肤路径
@@ -49,7 +47,6 @@ Change Skin for Andorid and RN
 ```java
  
  SkinManager.getInstance().updateSkinPath(“皮肤根路径”,new SkinLoaderListener());
-
                                                
 ```
 
@@ -76,6 +73,11 @@ SkinManager.getInstance().saveFont("字体路径")
 SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))     
                                           
 ```
+##  皮肤制作：
+
+ 参考 :https://github.com/wisn-mirror/SkinLib  中的skin1,skin2,skin3, 皮肤包打包打包为android正常的打包流程，无需混淆
+
+
 ##  React Native 本地Module：
 
 ```java
@@ -155,6 +157,26 @@ SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))
 
 ```js
 
+    public class SettingActivity extends BaseReactActivity {
+        @Nullable
+        @Override
+        protected Bundle getLaunchOptions() {
+            Bundle initialProperties = new Bundle();
+            initialProperties.putString("primary", SkinManager.getInstance().getColorForRN("primary"));
+            initialProperties.putString("colorPrimary", SkinManager.getInstance().getColorForRN("colorPrimary"));
+            initialProperties.putString("gift_0", SkinManager.getInstance().getPathForRN("gift_0"));
+            initialProperties.putString("home_0", SkinManager.getInstance().getPathForRN("home_0"));
+            initialProperties.putString("watch_0", SkinManager.getInstance().getPathForRN("watch_0"));
+            return initialProperties;
+        }
+
+        @Nullable
+        @Override
+        protected String getMainComponentName() {
+            return "Setting";
+        }
+    }
+
     export default class BaseComponent extends Component {
         componentWillMount() {
             this.nativeChangeThemListener = DeviceEventEmitter.addListener("nativeChangeSkin",
@@ -224,7 +246,6 @@ SkinManager.getInstance().loadFont("字体名称" ,new SkinLoaderListener()))
             );
         }
     }
-
        
 ```
 
