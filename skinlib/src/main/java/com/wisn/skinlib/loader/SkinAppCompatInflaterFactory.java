@@ -186,8 +186,7 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
         for (DynamicAttr dynamicAttr : attr) {
             String entryName = mAppCompatActivity.getResources().getResourceEntryName(dynamicAttr.refResId);
             String typeName = mAppCompatActivity.getResources().getResourceTypeName(dynamicAttr.refResId);
-            SkinAttr
-                    mSkinAttr =
+            SkinAttr  mSkinAttr =
                     SkinAttrFactory.get(dynamicAttr.attrName, dynamicAttr.refResId, entryName, typeName);
             viewAttrs.add(mSkinAttr);
         }

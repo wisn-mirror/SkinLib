@@ -69,14 +69,14 @@ public class SkinFragment extends Fragment implements DynamicView {
 
     @Override
     public void dynamicAddView(View view, List<DynamicAttr> attr) {
-        if(mSkinInflaterFactory==null)return ;
-        mSkinInflaterFactory.addSkinView(view,attr);
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, attr);
     }
 
     @Override
     public void dynamicAddView(View view, String attrName, int attrValueresId) {
-        if(mSkinInflaterFactory==null)return ;
-        mSkinInflaterFactory.addSkinView(view,attrName,attrValueresId);
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, attrName, attrValueresId);
     }
 
     @Override
@@ -86,12 +86,13 @@ public class SkinFragment extends Fragment implements DynamicView {
 
     @Override
     public void dynamicAddView(View view, SkinAttr skinAttr) {
-        if(mSkinInflaterFactory==null)return ;
-        mSkinInflaterFactory.addSkinView(view,skinAttr);
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, skinAttr);
     }
+
     @Override
     public void dynamicAddView(SkinItem skinItem) {
-        if (mSkinInflaterFactory == null) return;
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
         mSkinInflaterFactory.addSkinView(skinItem);
     }
 }

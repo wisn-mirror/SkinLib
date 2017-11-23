@@ -19,8 +19,6 @@ public abstract class SkinAttr implements Cloneable {
 
     public abstract void applySkin(View view);
 
-    public void applyNightSkin(View view) {}
-
     public SkinAttr() {
         super();
     }
@@ -39,11 +37,7 @@ public abstract class SkinAttr implements Cloneable {
 
 
     public void apply(View view) {
-        if (SkinManager.getInstance().isNightMode()) {
-            applySkin(view);
-        } else {
-            applySkin(view);
-        }
+        applySkin(view);
     }
 
     protected boolean isDrawable() {
