@@ -44,7 +44,7 @@ public class SkinFragment extends Fragment implements DynamicView {
         if (mSkinInflaterFactory == null) {
             synchronized (SkinFragment.class) {
                 Object obj = getActivity();
-                if (obj instanceof SkinInflater) {
+                if (obj instanceof LayoutInflaterIns) {
                     mSkinInflaterFactory = ((LayoutInflaterIns) getActivity()).getSkinInflaterFactory();
                     return mSkinInflaterFactory;
                 } else {
