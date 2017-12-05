@@ -29,8 +29,7 @@ public class SkinConfig {
 
 
     //
-    public static final  boolean isChangeFont=false;
-    public static final  boolean isGlobalChangeSkin=true;
+    public static   boolean isGlobalChangeSkin=true;
 
 
     //suport Attr
@@ -38,6 +37,7 @@ public class SkinConfig {
     public static final  String Attrs_Support_src="src";
     public static final  String Attrs_Support_textColor="textColor";
     public static final  String Attrs_Support_drawableTop="drawableTop";
+
     //deal
     public static final  String Attrs_deal_char_style="style";
     public static final  String Attrs_deal_char_index="@";
