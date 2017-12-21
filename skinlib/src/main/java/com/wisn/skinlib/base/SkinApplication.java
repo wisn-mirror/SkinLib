@@ -1,11 +1,10 @@
 package com.wisn.skinlib.base;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.utils.LogUtils;
+import com.wisn.skinlib.task.SkinThreadPool;
 import com.wisn.skinlib.utils.SkinFileUitls;
 
 import java.io.File;
@@ -23,22 +22,21 @@ public class SkinApplication extends Application {
     }
 
     public void configSkin() {
-        SkinManager.getInstance().init(this,setSkinRootPath());
-        new Thread(new Runnable() {
+        SkinManager.getInstance().init(this, setSkinRootPath(),isSupplyRN());
+        SkinThreadPool.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 initSkinLoader();
             }
-        }).start();
+        });
     }
-
 
 
     private void initSkinLoader() {
         try {
             String[] skinFile = getAssets().list(SkinConfig.SkinDir);
             //拷贝assets到皮肤目录
-            if (skinFile != null && skinFile.length != 0){
+            if (skinFile != null && skinFile.length != 0) {
                 for (String fileName : skinFile) {
                     File toFile = new File(SkinFileUitls.getSkinPath(this, false), fileName);
                     if (!toFile.exists()) {
@@ -50,9 +48,9 @@ public class SkinApplication extends Application {
             //检测皮肤目录和解压目录的一致性
             String skinPath = SkinFileUitls.getSkinPath(this, false);
             File file = new File(skinPath);
-            if (file.exists()){
+            if (file.exists()) {
                 String[] Skin = file.list();
-                if (Skin != null){
+                if (Skin != null) {
                     for (String fileName : Skin) {
                         File skinRes = new File(SkinFileUitls.getSkinPath(this, true), fileName);
                         if (skinRes.exists() && skinRes.isDirectory()) {
@@ -81,4 +79,6 @@ public class SkinApplication extends Application {
     public String setSkinRootPath() {
         return null;
     }
+
+    public boolean isSupplyRN() {return false;}
 }

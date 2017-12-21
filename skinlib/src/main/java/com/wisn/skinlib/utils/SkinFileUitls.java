@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.task.SkinThreadPool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +36,7 @@ public class SkinFileUitls {
     public static void updateSkinPath(final Context context,
                                       final String newSkinRootPath,
                                       final SkinLoaderListener skinLoaderListener) {
-        new Thread(new Runnable() {
+        SkinThreadPool.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -91,7 +92,7 @@ public class SkinFileUitls {
                     }
                 }
             }
-        }).start();
+        });
     }
 
     /**

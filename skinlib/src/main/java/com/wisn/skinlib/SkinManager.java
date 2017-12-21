@@ -37,9 +37,9 @@ import java.util.List;
 
 public class SkinManager implements SubObserver {
     public static SkinManager skinManager;
-    private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex = new LinkedHashMap<>();
-    private HashMap<String, String> sColorNameMap = new HashMap<>();
-    private HashMap<String, String> sImageNameMap = new HashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex;
+    private HashMap<String, String> sColorNameMap;
+    private HashMap<String, String> sImageNameMap;
     private List<ISkinUpdateObserver> mSkinObservers;
     private boolean isNightMode = false;
     public boolean isDefaultSkin = true;
@@ -49,7 +49,7 @@ public class SkinManager implements SubObserver {
     public Context mContext;
     public String mSkinPath;
     public String mSkinPathRes;
-
+    public boolean isSupplyRN;
     private SkinManager() {}
 
     public static SkinManager getInstance() {
@@ -64,9 +64,18 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 设置皮肤的根目录
      * @param ctx
+     * @param rootPath
+     * @param isSupplyRN
      */
-    public void init(Context ctx, String rootPath) {
+    public void init(Context ctx, String rootPath,boolean isSupplyRN) {
+        if(isSupplyRN){
+           mSkinResDataIndex = new LinkedHashMap<>();
+           sColorNameMap = new HashMap<>();
+           sImageNameMap = new HashMap<>();
+        }
+        this.isSupplyRN=isSupplyRN;
         mContext = ctx.getApplicationContext();
         SkinConfig.Density = mContext.getResources().getDisplayMetrics().density;
         SkinConfig.FirstIndex = getFirstIndex();
@@ -140,13 +149,19 @@ public class SkinManager implements SubObserver {
     public boolean saveSkin(String skinFilePath,
                             String skinName) {
         List<String> skinListName = getSkinListName(false, false);
-        List<String> skinResListName = getSkinListName(true, false);
-        if (skinListName != null &&
-            skinListName.contains(skinName) &&
-            skinResListName != null &&
-            skinResListName.contains(skinName)) return true;
-        return (SkinFileUitls.saveSkinFile(mContext, skinFilePath, skinName) &&
-                SkinFileUitls.upZipSkin(mContext, skinFilePath, skinName));
+        if(!isSupplyRN){
+            if (skinListName != null &&
+                skinListName.contains(skinName)) return true;
+            return SkinFileUitls.saveSkinFile(mContext, skinFilePath, skinName);
+        }else{
+            List<String> skinResListName = getSkinListName(true, false);
+            if (skinListName != null &&
+                skinListName.contains(skinName) &&
+                skinResListName != null &&
+                skinResListName.contains(skinName)) return true;
+            return (SkinFileUitls.saveSkinFile(mContext, skinFilePath, skinName) &&
+                    SkinFileUitls.upZipSkin(mContext, skinFilePath, skinName));
+        }
     }
 
     /**
@@ -243,6 +258,7 @@ public class SkinManager implements SubObserver {
      */
     public void loadSkin(final String skinName, final boolean isNight, final SkinLoaderListener listener) {
         if (skinName == null) {
+            LogUtils.e("loadSkin", "skinName is null");
             return;
         }
         new AsyncTask<String, Void, Resources>() {
@@ -263,10 +279,6 @@ public class SkinManager implements SubObserver {
                                 SkinFileUitls.getSkinPath(mContext, false) +
                                 File.separator +
                                 strings[0];
-                        String skinPathRes =
-                                SkinFileUitls.getSkinPath(mContext, true) +
-                                File.separator +
-                                strings[0] + "/res/";
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
                             LogUtils.e("loadSkin", "skinFile not exists");
@@ -289,8 +301,14 @@ public class SkinManager implements SubObserver {
                                                  superRes.getDisplayMetrics(),
                                                  superRes.getConfiguration());
                         SkinManager.this.mSkinPath = skinPath;
-                        SkinManager.this.mSkinPathRes = skinPathRes;
-                        loadSkinFileForRN(skinPathRes);
+                        if(isSupplyRN){
+                            String skinPathRes =
+                                    SkinFileUitls.getSkinPath(mContext, true) +
+                                    File.separator +
+                                    strings[0] + "/res/";
+                            SkinManager.this.mSkinPathRes = skinPathRes;
+                            loadSkinFileForRN(skinPathRes);
+                        }
                         DBUtils.setCustomSkinName(mContext, strings[0]);
                     }
                 } catch (Exception e) {
@@ -304,23 +322,18 @@ public class SkinManager implements SubObserver {
             protected void onPostExecute(Resources resources) {
                 if (resources != null) {
                     mResources = resources;
-                    sColorNameMap.clear();
-                    sImageNameMap.clear();
+                    if(sColorNameMap!=null&&sImageNameMap!=null){
+                        sColorNameMap.clear();
+                        sImageNameMap.clear();
+                    }
                     isDefaultSkin = false;
                     isNightMode = isNight;
                     DBUtils.setNightMode(mContext, isNightMode);
                     if (isNight) {
                         DBUtils.setNightName(mContext, skinName);
                     }
-                    new Handler(Looper.getMainLooper()).post(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (listener != null) listener.onSuccess();
-                                    notifySkinUpdate();
-                                }
-                            }
-                    );
+                    if (listener != null) listener.onSuccess();
+                    notifySkinUpdate();
                 } else {
                     isDefaultSkin = true;
                     if (listener != null) listener.onFailed(" Resource is null ");
@@ -333,6 +346,7 @@ public class SkinManager implements SubObserver {
      * @param skinPathRes
      */
     public void loadSkinFileForRN(String skinPathRes) {
+        if(!isSupplyRN)return ;
         File file = new File(skinPathRes);
         if (file.exists() && file.isDirectory()) {
             if (mSkinResDataIndex != null) {
@@ -402,8 +416,10 @@ public class SkinManager implements SubObserver {
         isNightMode = false;
         mSkinPath = null;
         mSkinPathRes = null;
-        sColorNameMap.clear();
-        sImageNameMap.clear();
+        if(sColorNameMap!=null&&sImageNameMap!=null){
+            sColorNameMap.clear();
+            sImageNameMap.clear();
+        }
         DBUtils.setNightMode(mContext, false);
         notifySkinUpdate();
     }
@@ -610,6 +626,7 @@ public class SkinManager implements SubObserver {
      * @param fileDir
      */
     private void pasFileIndex(File fileDir) {
+        if(!isSupplyRN)return ;
         File[] files = fileDir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
@@ -637,6 +654,7 @@ public class SkinManager implements SubObserver {
      * @return
      */
     private String getPath(String imageName, boolean isRN) {
+        if(!isSupplyRN)return imageName;
         String path = sImageNameMap.get(imageName);
         if (path != null) return path;
         if (SkinManager.getInstance().mSkinPathRes == null || SkinManager.getInstance().isDefaultSkin) {
