@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.wisn.skin1"
@@ -39,7 +39,8 @@ android {
             if (outputFile != null && buildType.contains("release") && outputFile.name.endsWith('.apk')) {
                 def fileName = "theme-${applicationId}-${variant.flavorName}-${versionCode}-${versionName}-${date}.skin"
 //                output.outputFile = new File(outputFile.parent, fileName)
-                output.outputFile = new File("$rootDir/apkFile", fileName)
+//                output.outputFile = new File("$rootDir/apkFile", fileName)
+                output.outputFile.parent.replace(outputFile.parent,"$rootDir/apkFile")
 
             }
         }
@@ -55,11 +56,11 @@ def getGitVersion() {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:25.3.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
 }
