@@ -18,6 +18,7 @@ import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.ISkinUpdateObserver;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.interfaces.SubObserver;
+import com.wisn.skinlib.task.SkinThreadPool;
 import com.wisn.skinlib.utils.ColorUtils;
 import com.wisn.skinlib.utils.DBUtils;
 import com.wisn.skinlib.utils.LogUtils;
@@ -89,6 +90,17 @@ public class SkinManager implements SubObserver {
         } else {
             SkinManager.getInstance().loadSkin(null);
         }
+    }
+
+    public void clearSkin(){
+        resetDefaultSkin();
+        resetDefaultFont();
+        SkinThreadPool.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                SkinFileUitls.deleteSkinFile(mContext);
+            }
+        });
     }
 
     /**
