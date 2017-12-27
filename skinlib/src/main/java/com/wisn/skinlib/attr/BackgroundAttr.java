@@ -11,6 +11,8 @@ import com.wisn.skinlib.utils.LogUtils;
  */
 
 public class BackgroundAttr extends SkinAttr {
+    private static final String TAG = "BackgroundAttr";
+
     @Override
     public void applySkin(View view) {
         if (isColor()) {
@@ -18,5 +20,6 @@ public class BackgroundAttr extends SkinAttr {
         } else {
             view.setBackgroundDrawable(SkinManager.getInstance().getDrawable(attrValueRefId));
         }
+        LogUtils.i(TAG, " applySkin view:" + view + " attrValueRefId:" + attrValueRefId);
     }
 }

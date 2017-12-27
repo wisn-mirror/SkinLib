@@ -45,18 +45,20 @@ public class SkinApplication extends Application {
                     }
                 }
             }
-            //检测皮肤目录和解压目录的一致性
-            String skinPath = SkinFileUitls.getSkinPath(this, false);
-            File file = new File(skinPath);
-            if (file.exists()) {
-                String[] Skin = file.list();
-                if (Skin != null) {
-                    for (String fileName : Skin) {
-                        File skinRes = new File(SkinFileUitls.getSkinPath(this, true), fileName);
-                        if (skinRes.exists() && skinRes.isDirectory()) {
-                            continue;
+            if(isSupplyRN()){
+                //检测皮肤目录和解压目录的一致性
+                String skinPath = SkinFileUitls.getSkinPath(this, false);
+                File file = new File(skinPath);
+                if (file.exists()) {
+                    String[] Skin = file.list();
+                    if (Skin != null) {
+                        for (String fileName : Skin) {
+                            File skinRes = new File(SkinFileUitls.getSkinPath(this, true), fileName);
+                            if (skinRes.exists() && skinRes.isDirectory()) {
+                                continue;
+                            }
+                            SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName, fileName);
                         }
-                        SkinFileUitls.upZipSkin(this, skinPath + File.separator + fileName, fileName);
                     }
                 }
             }

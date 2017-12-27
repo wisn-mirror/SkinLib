@@ -22,7 +22,7 @@ import com.wisn.skinlib.utils.LogUtils;
 
 public class MainActivity extends SkinFragmentActivity implements View.OnClickListener, SkinLoaderListener {
     private static final String TAG = "MainActivity";
-    private Button mChangeSkin, resetSkin, getcolor,getSkinPath,changeFont;
+    private Button mChangeSkin, resetSkin, getcolor,getSkinPath,changeFont,delete;
 
     private MyRadioButton mRadiobutton_bg_home;
     private MyRadioButton mRadiobutton_bg_gift;
@@ -38,6 +38,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         getcolor = (Button) findViewById(R.id.getcolor);
         resetSkin = (Button) findViewById(R.id.resetSkin);
         getSkinPath = (Button) findViewById(R.id.getSkinPath);
+        delete = (Button) findViewById(R.id.delete);
         changeFont = (Button) findViewById(R.id.changeFont);
         mContentView = (LinearLayout) findViewById(R.id.contentView);
         mRadiobutton_bg_home = (MyRadioButton) findViewById(R.id.radiobutton_bg_home);
@@ -47,6 +48,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         imageButton.setPressed(true);
         mChangeSkin.setOnClickListener(this);
+        delete.setOnClickListener(this);
         resetSkin.setOnClickListener(this);
         getcolor.setOnClickListener(this);
         getSkinPath.setOnClickListener(this);
@@ -106,6 +108,8 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             LogUtils.e(TAG,"changeFont:"+SkinManager.getInstance().saveFont(Environment.getExternalStorageDirectory()+"/dd/font.ttf","aaaa.ttf"));
             SkinManager.getInstance().loadFont("aaaa.ttf",this);
             SkinManager.getInstance().nightMode();
+        }else if(v==delete){
+            SkinManager.getInstance().clearSkin();
         }
     }
     public void addNewObjectView(){

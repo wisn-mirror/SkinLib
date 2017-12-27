@@ -13,7 +13,12 @@ import java.io.File;
 public class BaseApplication extends SkinApplication {
     @Override
     public String setSkinRootPath() {
-        return Environment.getExternalStorageDirectory()
-               + File.separator+"skinRootPath";
+//        return Environment.getExternalStoragePublicDirectory("skinRootPath").getAbsolutePath();
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+"/skinfile";
+    }
+
+    @Override
+    public boolean isSupplyRN() {
+        return false;
     }
 }

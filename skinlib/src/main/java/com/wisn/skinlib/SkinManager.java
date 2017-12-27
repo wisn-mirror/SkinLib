@@ -1,5 +1,6 @@
 package com.wisn.skinlib;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,8 +10,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
@@ -32,11 +31,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+
 /**
  * Created by wisn on 2017/9/6.
  */
 
 public class SkinManager implements SubObserver {
+    public static final String  TAG="SkinManager";
     public static SkinManager skinManager;
     private LinkedHashMap<String, LinkedHashMap<String, String>> mSkinResDataIndex;
     private HashMap<String, String> sColorNameMap;
@@ -67,8 +68,8 @@ public class SkinManager implements SubObserver {
     /**
      * 设置皮肤的根目录
      * @param ctx
-     * @param rootPath
-     * @param isSupplyRN
+     * @param rootPath 皮肤根路径 如果指定的路径不存在，会使用默认的路径
+     * @param isSupplyRN  是否支持RN换肤
      */
     public void init(Context ctx, String rootPath,boolean isSupplyRN) {
         if(isSupplyRN){
@@ -92,69 +93,43 @@ public class SkinManager implements SubObserver {
         }
     }
 
-    public void clearSkin(){
+    /**
+     * 删除皮肤文件
+     * @param isClearFont 是否删除字体文件
+     */
+    public void clearSkin(final boolean isClearFont){
         resetDefaultSkin();
-        resetDefaultFont();
+        if(isClearFont)resetDefaultFont();
         SkinThreadPool.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                SkinFileUitls.deleteSkinFile(mContext);
+                SkinFileUitls.deleteSkinFile(mContext,isClearFont);
             }
         });
     }
 
     /**
-     * @param imageName
-     *
-     * @return
-     */
-    public String getPathForRN(String imageName) {
-        return getPath(imageName, true);
-    }
-
-    /**
-     * @param imageName
-     *
-     * @return
-     */
-    public String getPath(String imageName) {
-        return getPath(imageName, false);
-    }
-
-    /**
-     * updateSkinPath
-     *
-     * @param newSkinRootPath
-     * @param skinLoaderListener
+     * 切换皮肤根路径
+     * @param newSkinRootPath 新的皮肤根路径
+     * @param skinLoaderListener  切换监听
      */
     public void updateSkinPath(String newSkinRootPath, SkinLoaderListener skinLoaderListener) {
         SkinFileUitls.updateSkinPath(mContext, newSkinRootPath, skinLoaderListener);
     }
 
     /**
+     * 获取当前字体
      * @return
      */
     public Typeface getTypeFace() {
         return mTypeface;
     }
 
-    /**
-     * @param listener
-     */
-    public void loadSkin(SkinLoaderListener listener) {
-        if (DBUtils.isDefaultSkin(mContext)) {
-            mSkinPath = null;
-            mSkinPathRes = null;
-            return;
-        } else {
-            String customSkinName = DBUtils.getCustomSkinName(mContext);
-            loadSkin(customSkinName, listener);
-        }
-    }
 
     /**
+     * 保存皮肤
      * @param skinFilePath
-     * @param skinName
+     * @param skinName 指定皮肤的名称
      *
      * @return
      */
@@ -200,9 +175,11 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     *  指定切换字体
      * @param fontName
      * @param listener
      */
+    @SuppressLint("StaticFieldLeak")
     public void loadFont(final String fontName, final SkinLoaderListener listener) {
         if (fontName == null) {
             if (listener != null) {
@@ -256,18 +233,38 @@ public class SkinManager implements SubObserver {
                 }
             }
         }.execute(fontName);
-
     }
 
+    /**
+     * 程序加载时切换皮肤
+     * @param listener
+     */
+    public void loadSkin(SkinLoaderListener listener) {
+        if (DBUtils.isDefaultSkin(mContext)) {
+            mSkinPath = null;
+            mSkinPathRes = null;
+            return;
+        } else {
+            String customSkinName = DBUtils.getCustomSkinName(mContext);
+            loadSkin(customSkinName, listener);
+        }
+    }
+    /**
+     * 加载指定的皮肤
+     * @param skinName
+     * @param listener
+     */
     public void loadSkin(String skinName, final SkinLoaderListener listener) {
         loadSkin(skinName, false, listener);
     }
 
     /**
+     * 加载指定的皮肤 并指定是否时夜间模式
      * @param skinName
      * @param isNight  是否是夜间模式
      * @param listener
      */
+    @SuppressLint("StaticFieldLeak")
     public void loadSkin(final String skinName, final boolean isNight, final SkinLoaderListener listener) {
         if (skinName == null) {
             LogUtils.e("loadSkin", "skinName is null");
@@ -293,7 +290,7 @@ public class SkinManager implements SubObserver {
                                 strings[0];
                         File skinFile = new File(skinPath);
                         if (!skinFile.exists()) {
-                            LogUtils.e("loadSkin", "skinFile not exists");
+                            LogUtils.e("loadSkin", skinPath+"skinFile not exists");
                             return null;
                         }
                         PackageManager packageManager = mContext.getPackageManager();
@@ -338,12 +335,11 @@ public class SkinManager implements SubObserver {
                         sColorNameMap.clear();
                         sImageNameMap.clear();
                     }
-                    isDefaultSkin = false;
+                    //在成功后这个值才生效
                     isNightMode = isNight;
+                    isDefaultSkin = false;
                     DBUtils.setNightMode(mContext, isNightMode);
-                    if (isNight) {
-                        DBUtils.setNightName(mContext, skinName);
-                    }
+                    if (isNight)DBUtils.setNightName(mContext, skinName);
                     if (listener != null) listener.onSuccess();
                     notifySkinUpdate();
                 } else {
@@ -355,6 +351,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 加载皮肤文件
      * @param skinPathRes
      */
     public void loadSkinFileForRN(String skinPathRes) {
@@ -369,6 +366,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 是否加载过皮肤  true 正加载了皮肤，false 没有加载皮肤
      * @return
      */
     public boolean isExternalSkin() {
@@ -376,6 +374,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 是否是夜间模式
      * @return
      */
     public boolean isNightMode() {
@@ -383,13 +382,14 @@ public class SkinManager implements SubObserver {
     }
 
     /**
-     *
+     * 启动夜间模式
      */
     public void nightMode() {
         loadSkin(DBUtils.getNightName(mContext), true, null);
     }
 
     /**
+     * 获取当前皮肤的名称
      * @return
      */
     public String getCurrentThemName() {
@@ -401,8 +401,9 @@ public class SkinManager implements SubObserver {
     }
 
     /**
-     * @param isRes
-     * @param isPath
+     * 获取皮肤列表
+     * @param isRes 是否是res（RN）目录
+     * @param isPath 是否返回绝对路径
      *
      * @return
      */
@@ -411,7 +412,8 @@ public class SkinManager implements SubObserver {
     }
 
     /**
-     * @param isPath
+     * 获取字体列表
+     * @param isPath 是否返回绝对路径
      *
      * @return
      */
@@ -421,7 +423,7 @@ public class SkinManager implements SubObserver {
 
 
     /**
-     * 重置皮肤
+     * 重置默认皮肤
      */
     public void resetDefaultSkin() {
         isDefaultSkin = true;
@@ -438,6 +440,7 @@ public class SkinManager implements SubObserver {
 
 
     /**
+     * 添加页面皮肤的被观察者
      * @param observer
      */
     @Override
@@ -449,6 +452,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 取消页面皮肤的被观察者
      * @param observer
      */
     @Override
@@ -460,6 +464,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 通知皮肤切换
      * @hide
      */
     @Override
@@ -471,6 +476,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 通知字体切换
      * @hide
      */
     @Override
@@ -482,6 +488,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 获取颜色值
      * @param resId
      *
      * @return
@@ -512,6 +519,7 @@ public class SkinManager implements SubObserver {
      * @return
      */
     public synchronized String getColorForRN(String colorName) {
+        if(!this.isSupplyRN)return colorName;
         String s = sColorNameMap.get(colorName);
         if (s != null) return s;
         int color = 0;
@@ -537,6 +545,7 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 获取drawable
      * @param attrValueRefId
      *
      * @return
@@ -571,6 +580,7 @@ public class SkinManager implements SubObserver {
 
 
     /**
+     * 指定drawable/mipmap 目录获取drawable
      * @param attrValueRefId
      * @param dir            drawable/mipmap
      *
@@ -599,70 +609,43 @@ public class SkinManager implements SubObserver {
     }
 
     /**
+     * 设置皮肤目录的根路径
      * @param newSkinRootPath
      */
     public boolean setSkinRootPath(String newSkinRootPath) {
         File file = new File(newSkinRootPath);
         file.mkdirs();
-        if (!file.exists()) return false;
+        if (!file.exists()){
+            LogUtils.e(TAG,newSkinRootPath +" is not exist");
+            return false;
+        }
         DBUtils.setSkinRootPath(mContext, newSkinRootPath);
         return true;
     }
 
-
     /**
+     * @param imageName
+     *
      * @return
      */
-    private int getFirstIndex() {
-        int firstIndex = 1;
-        if (SkinConfig.Density < 1) {
-            //ldpi
-            firstIndex = 0;
-        } else if (SkinConfig.Density < 1.5) {
-            //mdpi
-            firstIndex = 1;
-        } else if (SkinConfig.Density < 2) {
-            //hdpi
-            firstIndex = 3;
-        } else if (SkinConfig.Density < 3) {
-            //xhdpi
-            firstIndex = 4;
-        } else if (SkinConfig.Density < 4) {
-            //xxhdpi
-            firstIndex = 5;
-        }
-        return firstIndex;
+    public String getPathForRN(String imageName) {
+        return getPath(imageName, true);
     }
 
     /**
-     * @param fileDir
+     *
+     * @param imageName
+     *
+     * @return
      */
-    private void pasFileIndex(File fileDir) {
-        if(!isSupplyRN)return ;
-        File[] files = fileDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                pasFileIndex(file);
-            } else {
-                if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
-                    String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
-                    LinkedHashMap<String, String> strings = mSkinResDataIndex.get(fileName);
-                    if (strings != null) {
-                        strings.put(file.getParentFile().getName(), file.getName());
-                    } else {
-                        LinkedHashMap<String, String> strings1 = new LinkedHashMap<>();
-                        strings1.put(file.getParentFile().getName(), file.getName());
-                        mSkinResDataIndex.put(fileName, strings1);
-                    }
-                }
-            }
-        }
+    public String getPath(String imageName) {
+        return getPath(imageName, false);
     }
 
     /**
      * @param imageName
      * @param isRN
-     *
+     * @hide
      * @return
      */
     private String getPath(String imageName, boolean isRN) {
@@ -693,8 +676,62 @@ public class SkinManager implements SubObserver {
     }
 
     /**
-     * @param densityMap
      *
+     * @return
+     * @hide
+     */
+    private int getFirstIndex() {
+        int firstIndex = 1;
+        if (SkinConfig.Density < 1) {
+            //ldpi
+            firstIndex = 0;
+        } else if (SkinConfig.Density < 1.5) {
+            //mdpi
+            firstIndex = 1;
+        } else if (SkinConfig.Density < 2) {
+            //hdpi
+            firstIndex = 3;
+        } else if (SkinConfig.Density < 3) {
+            //xhdpi
+            firstIndex = 4;
+        } else if (SkinConfig.Density < 4) {
+            //xxhdpi
+            firstIndex = 5;
+        }
+        return firstIndex;
+    }
+
+    /**
+     * @param fileDir
+     * @hide
+     */
+    private void pasFileIndex(File fileDir) {
+        if(!isSupplyRN)return ;
+        File[] files = fileDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                pasFileIndex(file);
+            } else {
+                if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
+                    String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
+                    LinkedHashMap<String, String> strings = mSkinResDataIndex.get(fileName);
+                    if (strings != null) {
+                        strings.put(file.getParentFile().getName(), file.getName());
+                    } else {
+                        LinkedHashMap<String, String> strings1 = new LinkedHashMap<>();
+                        strings1.put(file.getParentFile().getName(), file.getName());
+                        mSkinResDataIndex.put(fileName, strings1);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    /**
+     * @param densityMap
+     * @hide
      * @return
      */
     private String getBestIndex(LinkedHashMap<String, String> densityMap) {
@@ -728,7 +765,7 @@ public class SkinManager implements SubObserver {
     /**
      * @param index
      * @param firstIndex
-     *
+     * @hide
      * @return
      */
     private String getIndexForLow(String[] index, int firstIndex) {
@@ -744,7 +781,7 @@ public class SkinManager implements SubObserver {
     /**
      * @param index
      * @param firstIndex
-     *
+     * @hide
      * @return
      */
     private String getIndexForHight(String[] index, int firstIndex) {

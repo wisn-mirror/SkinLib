@@ -39,7 +39,7 @@ android {
                 def fileName = "theme-${applicationId}-${variant.flavorName}-${versionCode}-${versionName}-${date}.skin"
 //                output.outputFile = new File(outputFile.parent, fileName)
 //                output.outputFile = new File("$rootDir/apkFile", fileName)
-                output.outputFile.parent.replace(outputFile.parent,"$rootDir/apkFile")
+               // output.outputFile.parent.replace(outputFile.parent,"$rootDir/apkFile")
 
             }
         }

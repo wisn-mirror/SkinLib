@@ -5,7 +5,7 @@ package com.wisn.skinlib.config;
  */
 
 public class SkinConfig {
-    public static final  boolean isDebug=true;
+    public static   boolean isDebug=true;
 
     public static final  String SkinDir="skin";
     public static final  String SkinResDir="skinres";

@@ -15,35 +15,46 @@
 
         <Button
             android:id="@+id/changeSkin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="change"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/resetSkin"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Reset"
             android:textColor="@color/colorAccent" />
-
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="delete Skin"
+            android:textColor="@color/colorAccent" />
         <Button
             android:id="@+id/getcolor"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="ExistSkin"
+            android:text="Exist\nSkin"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/getSkinPath"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="SkinPath\nFromSdcard"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/changeFont"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="changeFont"
             android:textColor="@color/colorAccent" />

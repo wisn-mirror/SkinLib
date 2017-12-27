@@ -25,6 +25,7 @@ import java.util.zip.ZipFile;
  */
 
 public class SkinFileUitls {
+    private  static final String TAG="SkinFileUtils";
 
     /**
      * update skin root path
@@ -309,7 +310,7 @@ public class SkinFileUitls {
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
-        Log.d("SkinFileUtils", skinDir.getAbsolutePath());
+        LogUtils.i(TAG, skinDir.getAbsolutePath());
         return skinDir.getAbsolutePath();
     }
 
@@ -369,9 +370,10 @@ public class SkinFileUitls {
     /**
      * 删除皮肤文件
      * @param context
+     * @param isclearFont 是否删除字体文件
      * @return
      */
-    public static boolean deleteSkinFile(Context context) {
+    public static boolean deleteSkinFile(Context context,boolean isclearFont) {
         String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);
@@ -379,7 +381,7 @@ public class SkinFileUitls {
         File skinDir = new File(skinRootPath, SkinConfig.SkinDir);
         File skinResDir = new File(skinRootPath, SkinConfig.SkinResDir);
         File skinFontDir = new File(skinRootPath, SkinConfig.FontDir);
-        return deleteDir(skinDir) && deleteDir(skinResDir) && deleteDir(skinFontDir);
+        return deleteDir(skinDir) && deleteDir(skinResDir) && (!isclearFont || deleteDir(skinFontDir));
     }
 
     /**
