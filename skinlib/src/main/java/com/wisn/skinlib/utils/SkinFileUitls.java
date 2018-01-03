@@ -2,8 +2,8 @@ package com.wisn.skinlib.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
+import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.interfaces.SkinLoaderListener;
 import com.wisn.skinlib.task.SkinThreadPool;
@@ -25,7 +25,7 @@ import java.util.zip.ZipFile;
  */
 
 public class SkinFileUitls {
-    private  static final String TAG="SkinFileUtils";
+    private static final String TAG = "SkinFileUtils";
 
     /**
      * update skin root path
@@ -82,10 +82,13 @@ public class SkinFileUitls {
                         }
                     }
 
+                    deleteSkinFile(context,true);
                     DBUtils.setSkinRootPath(context, newSkinRootPath);
+                    SkinManager.getInstance().reloadSkin();
                     if (skinLoaderListener != null) {
                         skinLoaderListener.onSuccess();
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (skinLoaderListener != null) {
@@ -369,11 +372,13 @@ public class SkinFileUitls {
 
     /**
      * 删除皮肤文件
+     *
      * @param context
      * @param isclearFont 是否删除字体文件
+     *
      * @return
      */
-    public static boolean deleteSkinFile(Context context,boolean isclearFont) {
+    public static boolean deleteSkinFile(Context context, boolean isclearFont) {
         String skinRootPath = DBUtils.getSkinRootPath(context);
         if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
             skinRootPath = getCacherDir(context);

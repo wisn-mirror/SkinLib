@@ -109,7 +109,7 @@ public class MainActivity extends SkinFragmentActivity implements View.OnClickLi
             SkinManager.getInstance().loadFont("aaaa.ttf",this);
             SkinManager.getInstance().nightMode();
         }else if(v==delete){
-            SkinManager.getInstance().clearSkin();
+            SkinManager.getInstance().clearSkin(true);
         }
     }
     public void addNewObjectView(){
