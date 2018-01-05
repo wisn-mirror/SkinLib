@@ -9,9 +9,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/skin1" />
-            <option value="$PROJECT_DIR$/skin2" />
-            <option value="$PROJECT_DIR$/skin3" />
             <option value="$PROJECT_DIR$/skinlib" />
           </set>
         </option>
