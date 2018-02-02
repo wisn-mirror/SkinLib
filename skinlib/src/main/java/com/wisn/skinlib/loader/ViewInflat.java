@@ -50,7 +50,7 @@ public class ViewInflat {
             // try
             return null;
         } finally {
-            // Don't retain references on context.
+            // Don't retain references on mContext.
             mConstructorArgs[0] = null;
             mConstructorArgs[1] = null;
         }
@@ -62,7 +62,6 @@ public class ViewInflat {
 
         try {
             if (constructor == null) {
-                // Class not found in the cache, see if it's real, and try to add it
                 Class<? extends View> clazz = context.getClassLoader().loadClass(
                         prefix != null ? (prefix + name) : name).asSubclass(View.class);
 
@@ -72,8 +71,6 @@ public class ViewInflat {
             constructor.setAccessible(true);
             return constructor.newInstance(mConstructorArgs);
         } catch (Exception e) {
-            // We do not want to catch these, lets return null and let the actual LayoutInflater
-            // try
             return null;
         }
     }

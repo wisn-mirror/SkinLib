@@ -10,26 +10,42 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/changeSkin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="change"
+            android:text="load\nPathList"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/resetSkin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reset"
+            android:text="loadName\n（可换肤)"
+            android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/loadResPathList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load\nResPathList"
+            android:textColor="@color/colorAccent" />
+        <Button
+            android:id="@+id/loadFontList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load\nFontList"
             android:textColor="@color/colorAccent" />
 
     </LinearLayout>
-
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,17 +53,27 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/radiobutton_bg_gift"/>
+
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/tabbar_home"
-            />
+            android:background="@mipmap/tabbar_home" />
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@mipmap/tabbar_home_highlighted" />
+        <RadioButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:drawableTop="@drawable/radiobutton_bg_gift"/>
     </LinearLayout>
 
 </LinearLayout>

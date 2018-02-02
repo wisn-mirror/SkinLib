@@ -2,10 +2,11 @@ package com.wisn.skinlib.utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
+import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.config.SkinConfig;
-import com.wisn.skinlib.interfaces.SkinPathChangeLister;
+import com.wisn.skinlib.interfaces.SkinLoaderListener;
+import com.wisn.skinlib.task.SkinThreadPool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +14,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -22,42 +25,82 @@ import java.util.zip.ZipFile;
  */
 
 public class SkinFileUitls {
+    private static final String TAG = "SkinFileUtils";
 
-    public static  void updateSkinPath(Context context,String newSkinRootPath, SkinPathChangeLister skinPathChangeLister) {
-        if (skinPathChangeLister != null) {
-            skinPathChangeLister.start();
-        }
-        //// TODO: 2017/9/16复制皮肤到新的皮肤文件中
-        File skinFile = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
-        File skinFileRes = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
-        if (!skinFile.exists()) {
-            skinFile.mkdirs();
-        }
-        if (!skinFileRes.exists()) {
-            skinFileRes.mkdirs();
-        }
-        String skinPath = getSkinPath(context, false);
-        String[] Skin = new File(skinPath).list();
-        int i = 0;
-        for (String fileName : Skin) {
-            copyFile(new File(skinPath + File.separator + fileName),
-                                   new File(skinFile, fileName));
-            upZipFile(new File(skinPath + File.separator + fileName),
-                                    skinFileRes.getAbsolutePath() + File.separator
-                                    + fileName);
-            i++;
-            if (skinPathChangeLister != null) {
-                skinPathChangeLister.progress(i, Skin.length);
+    /**
+     * update skin root path
+     *
+     * @param context
+     * @param newSkinRootPath
+     * @param skinLoaderListener
+     */
+    public static void updateSkinPath(final Context context,
+                                      final String newSkinRootPath,
+                                      final SkinLoaderListener skinLoaderListener) {
+        SkinThreadPool.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.start();
+                    }
+                    String skinPath = getSkinPath(context, false);
+                    String fontPath = getSkinFontPath(context);
+                    if (skinPath.equals(newSkinRootPath + File.separator + SkinConfig.SkinDir)) {
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onFailed("skin rootPath already set");
+                        }
+                        return;
+                    }
+                    File skinFileDir = new File(newSkinRootPath + File.separator + SkinConfig.SkinDir);
+                    File skinFileResDir = new File(newSkinRootPath + File.separator + SkinConfig.SkinResDir);
+                    File fontFileDir = new File(newSkinRootPath + File.separator + SkinConfig.FontDir);
+                    if (!skinFileDir.exists()) skinFileDir.mkdirs();
+                    if (!skinFileResDir.exists()) skinFileResDir.mkdirs();
+                    if (!fontFileDir.exists()) fontFileDir.mkdirs();
+                    String[] Skin = new File(skinPath).list();
+                    String[] Font = new File(fontPath).list();
+                    int i = 0;
+                    int sum = Skin.length + Font.length;
+                    for (String fileName : Skin) {
+                        copyFile(new File(skinPath + File.separator + fileName),
+                                 new File(skinFileDir, fileName));
+                        upZipFile(new File(skinPath + File.separator + fileName),
+                                  skinFileResDir.getAbsolutePath() + File.separator
+                                  + fileName);
+                        i++;
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onProgress(i, sum);
+                        }
+                    }
+                    for (String fontName : Font) {
+                        copyFile(new File(fontPath + File.separator + fontName),
+                                 new File(fontFileDir, fontName));
+                        i++;
+                        if (skinLoaderListener != null) {
+                            skinLoaderListener.onProgress(i, sum);
+                        }
+                    }
+
+                    deleteSkinFile(context,true);
+                    DBUtils.setSkinRootPath(context, newSkinRootPath);
+                    SkinManager.getInstance().reloadSkin();
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.onSuccess();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (skinLoaderListener != null) {
+                        skinLoaderListener.onFailed(e.getMessage());
+                    }
+                }
             }
-        }
-        SpUtils.setSkinRootPath(context, newSkinRootPath);
-        if (skinPathChangeLister != null) {
-            skinPathChangeLister.finish();
-        }
+        });
     }
 
     /**
-     * copy skin from assets
+     * copy skin file from assets
      *
      * @param context
      * @param skinName
@@ -65,19 +108,22 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String copyAssetsToSkinDir(Context context, String skinName, String toFilePath) {
-        InputStream is = null;
-        try {
-            is = context.getAssets().open(SkinConfig.SkinDir + File.separator + skinName);
-            File fileDir = new File(toFilePath);
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-            }
-            copyFileStream(is, new FileOutputStream(fileDir));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return toFilePath;
+    public static String copySkinAssetsToSkinDir(Context context, String skinName, String toFilePath) {
+        return copyAssetsToSkinDir(context, skinName, toFilePath, false);
+    }
+
+
+    /**
+     * copy font file from assets
+     *
+     * @param context
+     * @param fontName
+     * @param toFilePath
+     *
+     * @return
+     */
+    public static String copyFontAssetsToSkinDir(Context context, String fontName, String toFilePath) {
+        return copyAssetsToSkinDir(context, fontName, toFilePath, true);
     }
 
     /**
@@ -90,19 +136,35 @@ public class SkinFileUitls {
      */
     public static boolean saveSkinFile(Context context, String fromFilePath, String skinName) {
         if (fromFilePath == null || skinName == null) return false;
-        return copyFile(new File(fromFilePath), new File(SkinFileUitls.getSkinPath(context,false), skinName));
+        return copyFile(new File(fromFilePath),
+                        new File(SkinFileUitls.getSkinPath(context, false), skinName));
     }
 
     /**
+     * save font file
      *
+     * @param context
+     * @param fromFilePath
+     * @param fontName
+     *
+     * @return
+     */
+    public static boolean saveFontFile(Context context, String fromFilePath, String fontName) {
+        if (fromFilePath == null || fontName == null) return false;
+        return copyFile(new File(fromFilePath),
+                        new File(SkinFileUitls.getSkinFontPath(context), fontName));
+    }
+
+    /**
      * @param context
      * @param zipFile
      * @param skinName
+     *
      * @return
      */
     public static boolean upZipSkin(Context context, String zipFile, String skinName) {
         if (zipFile == null) return false;
-        return upZipFile(new File(zipFile), getSkinPath(context,true) + File.separator + skinName);
+        return upZipFile(new File(zipFile), getSkinPath(context, true) + File.separator + skinName);
     }
 
     /**
@@ -114,7 +176,7 @@ public class SkinFileUitls {
      * @return
      */
     private static boolean copyFile(File fromFile, File toFile) {
-        if (fromFile == null || toFile == null) return false;
+        if (fromFile == null || toFile == null || !fromFile.exists()) return false;
         try {
             if (!toFile.exists()) toFile.createNewFile();
             return copyFileStream(new FileInputStream(fromFile), new FileOutputStream(toFile));
@@ -132,18 +194,221 @@ public class SkinFileUitls {
      *
      * @return
      */
-    public static String getSkinPath(Context context,boolean isRes) {
-        String skinRootPath = SpUtils.getSkinRootPath(context);
-        if(SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)){
-            skinRootPath=getCacherDir(context);
+    public static String getSkinPath(Context context, boolean isRes) {
+        return getPath(context, isRes, false);
+    }
+
+    /**
+     * get SkinFontPath
+     *
+     * @param context
+     *
+     * @return
+     */
+    public static String getSkinFontPath(Context context) {
+        return getPath(context, false, true);
+    }
+
+    /**
+     * get skin File list
+     *
+     * @param context
+     * @param isRes
+     *
+     * @return
+     */
+    public static File[] getSkinListFile(Context context, boolean isRes) {
+        return getListFile(context, isRes, false);
+    }
+
+
+    /**
+     * get font File list
+     *
+     * @param context
+     *
+     * @return
+     */
+    public static File[] getFontListFile(Context context) {
+        return getListFile(context, false, true);
+    }
+
+
+    /**
+     * 获取皮肤名称列表
+     *
+     * @param context
+     * @param isRes
+     *
+     * @return
+     */
+    public static List<String> getSkinListName(Context context, boolean isRes, boolean isPath) {
+        return getListName(context, isRes, isPath, false);
+    }
+
+    /**
+     * get font Name list
+     *
+     * @param context
+     * @param isPath
+     *
+     * @return
+     */
+    public static List<String> getFontListName(Context context, boolean isPath) {
+        return getListName(context, false, isPath, true);
+    }
+
+    /**
+     * copy File from Assets
+     *
+     * @param context
+     * @param fileName
+     * @param toFilePath
+     * @param isFont
+     *
+     * @return
+     */
+    private static String copyAssetsToSkinDir(Context context,
+                                              String fileName,
+                                              String toFilePath,
+                                              boolean isFont) {
+        InputStream is = null;
+        try {
+            if (isFont) {
+                is = context.getAssets().open(SkinConfig.FontDir + File.separator + fileName);
+            } else {
+                is = context.getAssets().open(SkinConfig.SkinDir + File.separator + fileName);
+            }
+            File fileDir = new File(toFilePath);
+            if (!fileDir.exists()) {
+                fileDir.mkdirs();
+            }
+            copyFileStream(is, new FileOutputStream(fileDir));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        File skinDir = new File(skinRootPath, isRes?SkinConfig.SkinResDir:SkinConfig.SkinDir);
+        return toFilePath;
+    }
+
+    /**
+     * get Path
+     *
+     * @param context
+     * @param isRes
+     * @param isFont
+     *
+     * @return
+     */
+    private static String getPath(Context context, boolean isRes, boolean isFont) {
+        String skinRootPath = DBUtils.getSkinRootPath(context);
+        if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
+            skinRootPath = getCacherDir(context);
+        }
+        File skinDir = null;
+        if (isFont) {
+            skinDir = new File(skinRootPath, SkinConfig.FontDir);
+        } else {
+            skinDir = new File(skinRootPath, isRes ? SkinConfig.SkinResDir : SkinConfig.SkinDir);
+        }
         if (!skinDir.exists()) {
             skinDir.mkdirs();
         }
-        Log.d("SkinFileUtils",skinDir.getAbsolutePath());
+        LogUtils.i(TAG, skinDir.getAbsolutePath());
         return skinDir.getAbsolutePath();
     }
+
+    /**
+     * get list File
+     *
+     * @param context
+     * @param isRes
+     * @param isFontFileList
+     *
+     * @return
+     */
+    private static File[] getListFile(Context context, boolean isRes, boolean isFontFileList) {
+        String skinRootPath = DBUtils.getSkinRootPath(context);
+        if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
+            skinRootPath = getCacherDir(context);
+        }
+        File skinDir = null;
+        if (isFontFileList) {
+            skinDir = new File(skinRootPath, SkinConfig.FontDir);
+        } else {
+            skinDir = new File(skinRootPath, isRes ? SkinConfig.SkinResDir : SkinConfig.SkinDir);
+        }
+        if (skinDir == null || !skinDir.exists()) {
+            return null;
+        }
+        return skinDir.listFiles();
+    }
+
+    /**
+     * @param context
+     * @param isRes
+     * @param isPath
+     * @param isFont
+     *
+     * @return
+     */
+    private static List<String> getListName(Context context, boolean isRes, boolean isPath, boolean isFont) {
+        File[] skinListFile = null;
+        if (isFont) {
+            skinListFile = getFontListFile(context);
+        } else {
+            skinListFile = getSkinListFile(context, isRes);
+        }
+        if (skinListFile == null) return null;
+        List<String> skinListName = new ArrayList<>();
+        for (File file : skinListFile) {
+            if (isPath) {
+                skinListName.add(file.getAbsolutePath());
+            } else {
+                skinListName.add(file.getName());
+            }
+        }
+        return skinListName;
+    }
+
+    /**
+     * 删除皮肤文件
+     *
+     * @param context
+     * @param isclearFont 是否删除字体文件
+     *
+     * @return
+     */
+    public static boolean deleteSkinFile(Context context, boolean isclearFont) {
+        String skinRootPath = DBUtils.getSkinRootPath(context);
+        if (SkinConfig.SP_Default_Skin_Root_Path.equals(skinRootPath)) {
+            skinRootPath = getCacherDir(context);
+        }
+        File skinDir = new File(skinRootPath, SkinConfig.SkinDir);
+        File skinResDir = new File(skinRootPath, SkinConfig.SkinResDir);
+        File skinFontDir = new File(skinRootPath, SkinConfig.FontDir);
+        return deleteDir(skinDir) && deleteDir(skinResDir) && (!isclearFont || deleteDir(skinFontDir));
+    }
+
+    /**
+     * 删除文件夹
+     *
+     * @param dir
+     *
+     * @return
+     */
+    private static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+
 
     /**
      * get CacheDir

@@ -15,13 +15,11 @@ public class BackgroundAttr extends SkinAttr {
 
     @Override
     public void applySkin(View view) {
-        LogUtils.i(TAG,"isColor:"+view);
         if (isColor()) {
-            LogUtils.i(TAG,"isColor:"+view);
             view.setBackgroundColor(SkinManager.getInstance().getColor(attrValueRefId));
         } else {
-            LogUtils.i(TAG,"is Drawable:"+view);
             view.setBackgroundDrawable(SkinManager.getInstance().getDrawable(attrValueRefId));
         }
+        LogUtils.i(TAG, " applySkin view:" + view + " attrValueRefId:" + attrValueRefId);
     }
 }

@@ -4,19 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.LayoutInflater.Factory2;
 import android.view.View;
-import android.widget.TextView;
 
+import com.wisn.skinlib.R;
 import com.wisn.skinlib.SkinManager;
+import com.wisn.skinlib.attr.base.DynamicAttr;
 import com.wisn.skinlib.attr.base.SkinAttr;
 import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.ArrayUtils;
-import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,9 +26,8 @@ import java.util.Map;
  */
 
 public class SkinInflaterFactory extends SkinInflater implements Factory2 {
-    private static final String TAG = "SkinInflaterFactory";
-    private Activity mActivity = null;
     private Map<View, SkinItem> mSkinItemMap = new HashMap<>();
+    private Activity mActivity = null;
 
     /**
      * api <=11
@@ -43,7 +40,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
      */
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View  view = ViewInflat.createViewFromTag(context, name, attrs);
+        View view = ViewInflat.createViewFromTag(context, name, attrs);
         if (view == null) {
             return null;
         }
@@ -75,26 +72,21 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         boolean
                 attributeBooleanValue =
                 attrs.getAttributeBooleanValue(SkinConfig.NameSpace, SkinConfig.Attr_Skin_Enable, false);
-        if (view instanceof TextView && SkinConfig.isChangeFont) {
-            // TODO: 2017/9/7 change font style
-            FontRepository.add(mActivity, view);
-        }
         if (attributeBooleanValue || SkinConfig.isGlobalChangeSkin) {
             dealSkinAttr(context, attrs, view);
         }
     }
 
+    @SuppressWarnings("ResourceType")
     private void dealSkinAttr(Context context, AttributeSet attrs, View view) {
         int attributeCount = attrs.getAttributeCount();
         List<SkinAttr> viewAttrs = new ArrayList<>();
         for (int i = 0; i < attributeCount; i++) {
             String attributeName = attrs.getAttributeName(i);
             String attributeValue = attrs.getAttributeValue(i);
-            LogUtils.i(TAG, attributeName + " " + attributeValue);
             // TODO: 2017/9/7 style
             if (SkinConfig.Attrs_deal_char_style.equals(attributeName)) {
 //                style="@style/AppTheme"
-                LogUtils.i(TAG, "Attrs_deal_char_style");
                 String styleName = attributeValue.substring(attributeValue.indexOf("/") + 1);
                 int
                         identifier =
@@ -102,11 +94,15 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                                .getIdentifier(styleName,
                                               SkinConfig.Attrs_deal_char_style,
                                               context.getPackageName());
-                int[] skinAttrs = new int[]{android.R.attr.textColor, android.R.attr.background,android.R.attr.drawableTop};
+                int[]
+                        skinAttrs =
+                        new int[]{android.R.attr.textColor,
+                                  android.R.attr.background,
+                                  android.R.attr.drawableTop};
                 TypedArray typedArray = context.getTheme().obtainStyledAttributes(identifier, skinAttrs);
                 int textColor = typedArray.getResourceId(0, -1);
                 int background = typedArray.getResourceId(1, -1);
-                int drawableTop= typedArray.getResourceId(2, -1);
+                int drawableTop = typedArray.getResourceId(2, -1);
                 // TODO: 2017/9/7 deal textcolor
                 if (textColor != -1) {
                     String resourceEntryName = context.getResources().getResourceEntryName(textColor);
@@ -132,9 +128,9 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                     if (skinAttr != null) viewAttrs.add(skinAttr);
                 }
                 //TODO: 2017/9/7   deal  drawableTop
-                if (drawableTop != -1) {
-                    String resourceEntryName = context.getResources().getResourceEntryName(drawableTop);
-                    String resourceTypeName = context.getResources().getResourceTypeName(drawableTop);
+              /*  if (drawableTop != -1) {
+                    String resourceEntryName = mContext.getResources().getResourceEntryName(drawableTop);
+                    String resourceTypeName = mContext.getResources().getResourceTypeName(drawableTop);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(SkinConfig.Attrs_Support_drawableTop,
@@ -142,7 +138,7 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
                                                 resourceEntryName,
                                                 resourceTypeName);
                     if (skinAttr != null) viewAttrs.add(skinAttr);
-                }
+                }*/
                 typedArray.recycle();
                 continue;
             }
@@ -150,21 +146,11 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
             // TODO: 2017/9/7 endregion
             if (attributeValue.startsWith(SkinConfig.Attrs_deal_char_index) &&
                 SkinAttrFactory.isSupport(attributeName)) {
-                LogUtils.i(TAG, "Attrs_deal_char_index");
                 try {
                     int id = Integer.parseInt(attributeValue.substring(1));
                     if (id == 0) continue;
                     String resourceEntryName = context.getResources().getResourceEntryName(id);
                     String resourceTypeName = context.getResources().getResourceTypeName(id);
-                    LogUtils.i(TAG,
-                               "attributeName:" +
-                               attributeName +
-                               " id" +
-                               id +
-                               " resourceEntryName:" +
-                               resourceEntryName +
-                               " resourceTypeName:" +
-                               resourceTypeName);
                     SkinAttr
                             skinAttr =
                             SkinAttrFactory.get(attributeName,
@@ -179,9 +165,6 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
         if (!ArrayUtils.isEmpty(viewAttrs)) {
             // TODO: 2017/9/7 attrs add map
-            for (SkinAttr skinAttr : viewAttrs) {
-                LogUtils.e(TAG, "skinAttr:" + skinAttr.toString());
-            }
             SkinItem skinItem = new SkinItem();
             skinItem.view = view;
             skinItem.attrs = viewAttrs;
@@ -204,10 +187,47 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
 
     public void clear() {
         if (mSkinItemMap == null || mSkinItemMap.isEmpty()) return;
-        FontRepository.remove(mActivity);
         mSkinItemMap.clear();
         mSkinItemMap = null;
     }
+
+    public void addSkinView(View view, SkinAttr skinAttr) {
+        SkinItem skinItem = new SkinItem();
+        skinItem.view = view;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        viewAttrs.add(skinAttr);
+        skinItem.attrs = viewAttrs;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
+    @Override
+    public void addSkinView(View view, List<DynamicAttr> attr) {
+        if (attr == null || attr.size() == 0) return;
+        List<SkinAttr> viewAttrs = new ArrayList<>();
+        SkinItem skinItem = new SkinItem();
+        for (DynamicAttr dynamicAttr : attr) {
+            String entryName = mActivity.getResources().getResourceEntryName(dynamicAttr.refResId);
+            String typeName = mActivity.getResources().getResourceTypeName(dynamicAttr.refResId);
+            SkinAttr
+                    mSkinAttr =
+                    SkinAttrFactory.get(dynamicAttr.attrName, dynamicAttr.refResId, entryName, typeName);
+            viewAttrs.add(mSkinAttr);
+        }
+        skinItem.attrs = viewAttrs;
+        skinItem.view = view;
+        skinItem.apply();
+        addSkinView(skinItem);
+    }
+
+    @Override
+    public void addSkinView(View view, String attrName, int attrValueresId) {
+        String entryName = mActivity.getResources().getResourceEntryName(attrValueresId);
+        String typeName = mActivity.getResources().getResourceTypeName(attrValueresId);
+        SkinAttr mSkinAttr = SkinAttrFactory.get(attrName, attrValueresId, entryName, typeName);
+        addSkinView(view, mSkinAttr);
+    }
+
 
     public void addSkinView(SkinItem skinItem) {
         if (skinItem == null || mSkinItemMap == null) return;
@@ -218,37 +238,9 @@ public class SkinInflaterFactory extends SkinInflater implements Factory2 {
         }
     }
 
+
     public void removeSkinView(View view) {
         if (view == null || mSkinItemMap == null) return;
-        SkinItem skinItem = mSkinItemMap.remove(view);
-        if (skinItem != null && SkinConfig.isChangeFont && view instanceof TextView) {
-            FontRepository.remove(mActivity, view);
-        }
+        mSkinItemMap.remove(view);
     }
-
-   /* private View createView(Context context, String name, AttributeSet attrs) {
-        View view = null;
-        try {
-            if (-1 == name.indexOf('.')) {
-                if ("View".equals(name)) {
-                    view = LayoutInflater.from(context).createView(name, "android.view.", attrs);
-                }
-                if (view == null) {
-                    view = LayoutInflater.from(context).createView(name, "android.widget.", attrs);
-                }
-                if (view == null) {
-                    view = LayoutInflater.from(context).createView(name, "android.webkit.", attrs);
-                }
-            } else {
-                view = LayoutInflater.from(context).createView(name, null, attrs);
-            }
-
-            Log.i(TAG, "about to create " + name);
-
-        } catch (Exception e) {
-            Log.i(TAG, "error while create 【" + name + "】 : " + e.getMessage());
-            view = null;
-        }
-        return view;
-    }*/
 }

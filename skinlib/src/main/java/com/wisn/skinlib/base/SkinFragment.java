@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wisn.skinlib.attr.base.DynamicAttr;
+import com.wisn.skinlib.attr.base.SkinAttr;
+import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.interfaces.DynamicView;
 import com.wisn.skinlib.interfaces.LayoutInflaterIns;
 import com.wisn.skinlib.loader.SkinInflater;
@@ -42,7 +44,7 @@ public class SkinFragment extends Fragment implements DynamicView {
         if (mSkinInflaterFactory == null) {
             synchronized (SkinFragment.class) {
                 Object obj = getActivity();
-                if (obj instanceof SkinInflater) {
+                if (obj instanceof LayoutInflaterIns) {
                     mSkinInflaterFactory = ((LayoutInflaterIns) getActivity()).getSkinInflaterFactory();
                     return mSkinInflaterFactory;
                 } else {
@@ -67,16 +69,30 @@ public class SkinFragment extends Fragment implements DynamicView {
 
     @Override
     public void dynamicAddView(View view, List<DynamicAttr> attr) {
-
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, attr);
     }
 
     @Override
     public void dynamicAddView(View view, String attrName, int attrValueresId) {
-
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, attrName, attrValueresId);
     }
 
     @Override
     public void dynamicAddFontView(TextView textView) {
 
+    }
+
+    @Override
+    public void dynamicAddView(View view, SkinAttr skinAttr) {
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(view, skinAttr);
+    }
+
+    @Override
+    public void dynamicAddView(SkinItem skinItem) {
+        if (mSkinInflaterFactory == null) getSkinInflaterFactory();
+        mSkinInflaterFactory.addSkinView(skinItem);
     }
 }
