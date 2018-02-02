@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Skin.iml" filepath="$PROJECT_DIR$/Skin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/skin1/skin1.iml" filepath="$PROJECT_DIR$/skin1/skin1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/skin2/skin2.iml" filepath="$PROJECT_DIR$/skin2/skin2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/skinlib/skinlib.iml" filepath="$PROJECT_DIR$/skinlib/skinlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SkinLib.iml" filepath="$PROJECT_DIR$/SkinLib.iml" />
     </modules>
   </component>
 </project>

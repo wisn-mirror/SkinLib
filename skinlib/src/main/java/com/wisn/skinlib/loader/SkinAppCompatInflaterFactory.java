@@ -160,6 +160,7 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
             SkinItem skinItem = new SkinItem();
             skinItem.view = view;
             skinItem.attrs = viewAttrs;
+            if(view==null)return ;
             mSkinItemMap.put(view, skinItem);
             if (SkinManager.getInstance().isExternalSkin()) {
                 skinItem.apply();
