@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
@@ -16,7 +15,6 @@ import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.ArrayUtils;
-import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,7 +143,7 @@ public class SkinAppCompatInflaterFactory extends SkinInflater implements Layout
             SkinItem skinItem = new SkinItem();
             skinItem.view = view;
             skinItem.attrs = viewAttrs;
-            if(view==null)return ;
+            if(view==null||mSkinItemMap==null)return ;
             mSkinItemMap.put(view, skinItem);
             if (SkinManager.getInstance().isExternalSkin()) {
                 skinItem.apply();
