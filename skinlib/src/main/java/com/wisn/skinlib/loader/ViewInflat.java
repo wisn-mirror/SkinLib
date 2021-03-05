@@ -1,10 +1,11 @@
 package com.wisn.skinlib.loader;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.View;
+
+import androidx.collection.ArrayMap;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;

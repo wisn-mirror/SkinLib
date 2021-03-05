@@ -2,12 +2,12 @@ package com.wisn.skinlib.loader;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.view.LayoutInflaterFactory;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.LayoutInflaterFactory;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.wisn.skinlib.SkinManager;
 import com.wisn.skinlib.attr.base.DynamicAttr;
@@ -16,7 +16,6 @@ import com.wisn.skinlib.attr.base.SkinAttrFactory;
 import com.wisn.skinlib.attr.base.SkinItem;
 import com.wisn.skinlib.config.SkinConfig;
 import com.wisn.skinlib.utils.ArrayUtils;
-import com.wisn.skinlib.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

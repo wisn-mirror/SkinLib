@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SkinLib.iml" filepath="$PROJECT_DIR$/SkinLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SkinLib.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SkinLib.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/skinlib/SkinLib.skinlib.iml" filepath="$PROJECT_DIR$/.idea/modules/skinlib/SkinLib.skinlib.iml" />
     </modules>
   </component>
 </project>
